@@ -54,7 +54,7 @@ assert sum(1, 2) == 3
 ```
 - I terminalen (i pycharm's terminal om intalerat via pycharm) så skrivs: *pytest* för att starta testen
 
-### Javascript (mac/windows):
+### Javascript (mac/windows) WARING: DETTA fungera inte för tillfälet:
 	
 ##### Instalation:
 - Behöver installera *npm*
@@ -84,7 +84,7 @@ const varnamn = require('./funktions_namn');
 ```js
 const sum = require('./sum');
 ```
-- För att köra testerna så skrivs:
+- För att skriva testerna så skrivs:
 ```js
 test('Beskriving', () => {
     expect(varnamn(indata)).toBe(utdata);
@@ -96,3 +96,5 @@ test('adds 1 + 2 to equal 3', () => {
     expect(sum(1, 2)).toBe(3);
 });
 ```
+- Sendan så behöver du bara köra följande i terminalen så ska testerna köras:
+- **npm run test**
