@@ -45,10 +45,4 @@ jobs:
       # Run pytest
       - name: Test with pytest
         run: |
-          pytest | echo
-
-#      - name: Publish Unit Test Results
-#        uses: EnricoMi/publish-unit-test-result-action@v1
-#        if: always()
-#        with:
-#          files: test-results/**/*.xml
+          pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
