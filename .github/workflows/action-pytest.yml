@@ -44,6 +44,6 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       
       # Run pytest
-      - name: Test with pytest
+      - name: Test with pytest-cov
         run: |
-          pytest --cov --cov-report=html
+          pytest --cov
