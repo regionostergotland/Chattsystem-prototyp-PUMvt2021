@@ -5,7 +5,8 @@ Detta document är skrivet i *markdown*.
 [Online editor](https://dillinger.io/)  
 
 ## TESTING instruktioner
-### Python(i github):
+### Test python kod
+#### Python(i github):
 I github så finns det möligheten att testa kod som är pushad.  
 ##### Metod 1 (automatiskt):
 - Pusha en pyton fil till github
@@ -36,7 +37,7 @@ I github så finns det möligheten att testa kod som är pushad.
         - Lint with flake8
         - Test with pytest-cov
 
-### Python(windows/mac):
+#### Python(windows/mac):
 Waring pytest i pycharm fungerar inte helt på en mac dator
 
 ##### Instalation: 
@@ -53,6 +54,36 @@ Waring pytest i pycharm fungerar inte helt på en mac dator
 assert sum(1, 2) == 3
 ```
 - I terminalen (i pycharm's terminal om intalerat via pycharm) så skrivs: *pytest* för att starta testen
+
+### Testa javascript kod
+#### Javascript (i github):
+I github så finns det möligheten att testa kod som är pushad.  
+##### Metod 1 (automatiskt):
+- Pusha en javascript fil till github
+- När en ny fill skapen eller uppdateras i github så kommer testerna att köras
+- Resultaten av testerna hittas under (Det tar 1 min innan testet är över):
+    - Actions
+    - Här ska du se en litsta av *workflows* på höger sida av skärmen
+    - Den som är högs upp i listan, altså den senaste ska vara ditt test
+    - Tryck på namnet av testet *(Troligen heter den samma som din commit)*
+    - Tryck på *buld*
+    - Resultaten ska finnas under de följande:
+        - Test with jest
+
+##### Metod 2 (manuellt):
+- Gå till Actions
+- Här ska du se en litsta av *workflows* på vänster sida av skärmen
+- Tryck på jest
+- Tryck sendan på *run wokflow* på höger sida av skärmen
+- Välj vilken branch som testet ska kötas på och tryck senad på *run wokflow*
+- Resultaten av testerna hittas under (Det tar 1 min innan testet är över):
+    - Actions
+    - Här ska du se en litsta av *workflows* på höger sida av skärmen
+    - Den som är högs upp i listan, altså den senaste ska vara ditt test
+    - Tryck på namnet av testet *(Troligen heter den **jest**)*
+    - Tryck på *buld*
+    - Resultaten ska finnas under de följande:
+        - Test with jest
 
 ### Javascript (mac/windows) WARING: DETTA fungera inte för tillfälet:
 	
@@ -97,4 +128,4 @@ test('adds 1 + 2 to equal 3', () => {
 });
 ```
 - Sendan så behöver du bara köra följande i terminalen så ska testerna köras:
-- **npm run test**
+- *npm run test*
