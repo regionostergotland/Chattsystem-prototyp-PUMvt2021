@@ -3,5 +3,5 @@
 # to run type pytest putester.py in terminal in the same file
 
 
-def func(a, b):
+def sum(a, b):
     return a + b
