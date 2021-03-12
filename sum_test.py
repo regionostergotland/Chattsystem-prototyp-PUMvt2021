@@ -7,4 +7,4 @@ from sum import sum
 
 
 def test_sum1():
-	assert func(1, 2) == 3
+	assert sum(1, 2) == 3
