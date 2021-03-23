@@ -1,0 +1,68 @@
+message-component{
+	margin: 1vh 0;
+	display: flex;
+}
+
+message-component.left{
+	
+}
+
+message-component.right{
+	flex-direction: row-reverse;
+}
+
+message-component.right user-icon-component{
+	visibility: collapse;
+	display: none;
+}
+
+.chat-bubble{
+	display: inline-block;
+	background-color: #E5E6E7;
+	border-radius: 3vh;
+	padding: 1.5vh;
+	margin: 0 1vh;
+}
+
+message-component.right .chat-bubble{
+	background-color: #0085FF;
+}
+
+
+.chat-bubble p{
+	width: auto;
+	margin: 0;
+	max-width: 65vw;
+}
+
+message-component.right .chat-bubble p{
+	color: #FFF;
+}
+
+
+
+.circle {
+	height: 5vh;
+	width: 5vh;
+	background-color: #FFF;
+	border-radius: 50%;
+}
+
+user-icon-component{
+	display: block;
+	position: relative;
+	height: 5vh;
+	width: 5vh;
+}
+
+
+user-icon-component div,
+user-icon-component img
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 5vh;
+	width: 5vh;
+}
+

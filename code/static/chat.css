@@ -1,0 +1,88 @@
+.flex-container{
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+	min-height: 100vh;
+}
+
+.chat-container{
+	flex: 1 1 auto;
+	display: flex;
+	flex-flow: column;
+}
+
+.chat-header{
+	position: sticky;
+	top: 8vh;
+	background:#C21B41;
+	z-index: 2;
+}
+
+.chat-image-container{
+	display: table;
+	margin: 0 1vh 0 auto;
+	
+}
+
+.chat-image{
+	width: 5vh;
+	float: left;
+	margin: 0px .5vh;
+}
+
+.chat-header-border{
+	background-color: #FFF;
+	height: 1vh;
+	width: 100%;
+	margin: -4px 0;
+}
+
+
+.chat-image .chat-indicator {
+	width: 0px;
+	height: 0px;
+	border-left: 1vh solid transparent;
+	border-right: 1vh solid transparent;
+	border-bottom: 1vh solid #FFF;
+	margin: 1vh auto -0.1vh auto;
+	visibility: hidden;
+}
+
+.chat-image.active .chat-indicator {
+	visibility: visible;
+}
+
+
+
+.chat{
+	background-color: #FFF;
+	flex: 1 1 auto;
+}
+
+#messages{
+	padding: 1vh;
+	margin: 0 1vh 7vh 1vh;
+}
+
+.writing-box{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background-color: #FFF;
+	display: inline-block;
+}
+
+.writing-box input{
+	display: block;
+	margin: 1vh auto;
+	width: 90%;
+	font-size: 3vh;
+	padding: 1vh;
+	border-radius: 2vh;
+	border: 1px solid #A1C1CC;
+}
+
+.writing-box input:focus{
+	outline: none;
+	border: 1px solid #293134;
+}

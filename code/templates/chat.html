@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vård</title>
+	<link rel="icon" type="image/png" href="../images/favicon.png"/>
+	<link rel="stylesheet" href="/static/styles.css">
+	<link rel="stylesheet" href="/static/components.css">
+	<link rel="stylesheet" href="/static/chat.css">
+	<link rel="stylesheet" href="/static/chat-components.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+	<script src="/scripts/components.js"></script>
+	<script src="/scripts/chat-components.js"></script>
+</head>
+<body>
+	<div class="flex-container">
+		<header-component small></header-component>
+		<div class="chat-container">
+			<div class="chat-header">
+				<div class="chat-image-container">
+					<div class="chat-image">
+						<user-icon-component background-color="#38D19D"></user-icon-component>
+						<div class="chat-indicator"></div>
+					</div>
+					<div class="chat-image active">
+						<user-icon-component src="/images/bot.png"></user-icon-component>
+						<div class="chat-indicator"></div>
+					</div>
+				</div>
+				<div class="chat-header-border"></div>
+			</div>
+			
+			<div class="chat">
+				<div id="messages">
+				</div>
+				<div class="writing-box">
+					<input id="writing-input" placeholder="Aa"></input>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
+	
+	
+	
+</body>
+<script src="/scripts/chat.js"></script>
+</html>
