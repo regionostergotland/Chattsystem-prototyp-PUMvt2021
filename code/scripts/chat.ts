@@ -15,11 +15,17 @@ const writingInput = <HTMLInputElement>document.getElementById("writing-input");
  * @param message The message
  * @param left Whether the message is a "left" or "right" message 
  */
-function addMessage(message: string, left: boolean){
+function addMessage(message: string, sender: string = "", background="", iconSource=""){
 	let messageComponent = new MessageComponent();
-	messageComponent.classList.add((left ? "left" : "right"));
-	messages.appendChild(messageComponent);
+	messageComponent.classList.add((sender == "" ? "right" : "left"));
 	messageComponent.setAttribute("message", message);
+	messageComponent.setAttribute("sender", sender);
+	if(background != "")
+		messageComponent.setAttribute("background-color", background);
+	if(iconSource != "")
+		messageComponent.setAttribute("src", iconSource);
+		
+	messages.appendChild(messageComponent);
 }
 
 /**
@@ -36,7 +42,7 @@ writingInput.addEventListener("keyup", function(event) {
 			});
 
 			// Creates the message locally
-			addMessage(writingInput.value, false);
+			addMessage(writingInput.value);
 
 			// Clears the writing input
 			writingInput.value = "";
@@ -50,5 +56,5 @@ writingInput.addEventListener("keyup", function(event) {
  */
 socket.on('message', function(data){
 	// Creates the message locally
-	addMessage(data['message'], true);
+	addMessage(data['message'], data['sender'], data['background'], data['icon-source']);
 });

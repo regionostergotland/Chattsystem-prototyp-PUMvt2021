@@ -66,3 +66,39 @@ user-icon-component img
 	width: 5vh;
 }
 
+user-icon-component .hover-text-container
+{
+	top: 5vh;
+}
+
+user-icon-component:hover .hover-text-container
+{
+	visibility: visible;
+}
+
+.hover-text-container{
+	position: absolute;
+    z-index: 1;
+    visibility: hidden;
+    display: inline-block;
+}
+
+.hover-text-indicator{
+	width: 0px;
+	height: 0px;
+	border-left: 1vh solid transparent;
+	border-right: 1vh solid transparent;
+	border-bottom: 1vh solid #e9214f;
+	position: absolute;
+	top: 0vh;
+	left: 1.5vh;
+}
+
+.hover-text{
+	position: absolute;
+	top: .5vh;
+	padding: 1vh;
+	color: #FFF;
+	border-radius: 1vh;
+	background-color: #e9214f;
+}

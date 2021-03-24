@@ -1,10 +1,9 @@
 
 header-component{
 	position: sticky;
-	
 	top: 0;
 	background:#C21B41;
-	z-index: 1;
+	z-index: 2;
 }
 
 header-component.small{
@@ -91,23 +90,15 @@ drawer-component .drawer-trigger::after{
 
 	margin: 1vh auto 0 auto;
 	animation: trigger-close .2s linear;
-	/*transition: border-bottom 0.2s ease-in, border-top 0.2s ease-out; 
-	transition: transform 0.2s ease-out;
-	transform: rotate(-180deg);*/
-	/*animation: trigger-open .2s;*/
 	
 }
 
 drawer-component.open .drawer-trigger::after{
-	/*transform: rotate(0deg);*/
-	/*border-top: .5vh solid #222;
-	border-bottom: .5vh solid #222;*/
 	border-left: 1vh solid transparent;
 	border-right: 1vh solid transparent;
 	border-bottom: 1vh solid #222;
 	border-top: 0vh solid #222;
 	animation: trigger-open .2s linear;
-	
 }
 
 @keyframes trigger-close {

@@ -7,7 +7,8 @@
  * Usage:
   	<user-icon-component 
 	  	background-color="[background color]" 
-		src="[path to image]>
+		src="[path to image]
+		hover-text="[text]">
 	</user-icon-component>
   
  * Generated example:
@@ -19,7 +20,10 @@
 class UserIconComponent extends HTMLElement {
 	circle: HTMLElement;
 	image: HTMLElement;
+	hoverTextDiv: HTMLElement;
+	hoverTextSpan: HTMLElement;
 
+	loaded = false;
 	/**
 	 * The constructor initializing the HTMLElement
 	 */
@@ -35,19 +39,32 @@ class UserIconComponent extends HTMLElement {
 		
 		var backgroundColor: string = ("background-color" in this.attributes? (<HTMLElement>this).attributes["background-color"].value: "#FFF")
 		var src: string = ("src" in this.attributes? (<HTMLElement>this).attributes["src"].value: "/images/user.png")
+		var hoverText: string = ("hover-text" in this.attributes? (<HTMLElement>this).attributes["hover-text"].value: "")
 		this.innerHTML = `
 			<div class="circle" style="background-color: `+ backgroundColor +`"></div>
 			<img src="`+ src +`"/>
+			<div class="hover-text-container">
+				<div class="hover-text-indicator"></div>
+				<span class="hover-text">`+ hoverText +`</span
+			</div>
 		`;
 		this.circle = <UserIconComponent>this.children[0];
 		this.image = <HTMLElement>this.children[1];
+		this.hoverTextDiv = <HTMLElement>this.children[2];
+		this.hoverTextSpan = <HTMLElement>this.hoverTextDiv.children[1];
+
+		if(hoverText == ""){
+			this.hoverTextDiv.setAttribute("style", "visibility: hidden");
+		}
+	
+		this.loaded = true;
 	}
 
 	/**
 	 * Sets which attributes that will be observed for changes
 	 */
 	static get observedAttributes() {
-		return ['background-color', 'src'];
+		return ['background-color', 'src', 'hover-text'];
 	}
 
 	/**
@@ -58,7 +75,7 @@ class UserIconComponent extends HTMLElement {
 	 * @param newVal THe new value of the attribute
 	 */
 	attributeChangedCallback(attrName, oldVal, newVal) {  
-		if (oldVal !== newVal) {
+		if (this.loaded && oldVal !== newVal) {
 			switch(attrName){
 				case "background-color":
 					this.circle.style.backgroundColor = newVal;
@@ -66,6 +83,16 @@ class UserIconComponent extends HTMLElement {
 				case "src":
 					this.image.setAttribute("src", newVal);
 					break;
+				case "hover-text":
+					this.hoverTextSpan.innerHTML = newVal;
+					if(newVal == ""){
+						this.hoverTextDiv.setAttribute("style", "visibility: hidden");
+					}else{
+						this.hoverTextDiv.setAttribute("style", "");
+					}
+					break;
+
+					
 			}
 		}
 	}
@@ -76,12 +103,13 @@ class UserIconComponent extends HTMLElement {
   
  * Usage:
   	<message-component 
+	  	sender="[name of sender]"
 		class="[left|right]" 
 		background-color="[background color]"
 		src="[path to image]
 	  	message="[the message]">
   		[content]
-  	</drawer-component>
+  	</message-component>
   
  * Generated example:
 	<message-component class="left" message="hej">
@@ -95,6 +123,7 @@ class UserIconComponent extends HTMLElement {
 	</message-component>
  */
 class MessageComponent extends HTMLElement {
+	sender: string;
 	backgroundColor: string;
 	src: string;
 	message: string = "";
@@ -102,6 +131,8 @@ class MessageComponent extends HTMLElement {
 	userIconComponent: UserIconComponent;
 	chatBubbleDiv: HTMLElement;
 	textElement: HTMLElement;
+
+	loaded = false;
 
 	/**
 	 * The constructor initializing the HTMLElement
@@ -115,11 +146,12 @@ class MessageComponent extends HTMLElement {
 	 * It generates the necessary components and structure for the component.
 	 */
 	connectedCallback() {
+		this.sender = ("sender" in this.attributes? (<HTMLElement>this).attributes["sender"].value: "")
 		this.backgroundColor = ("background-color" in this.attributes? (<HTMLElement>this).attributes["background-color"].value: "#FFF")
 		this.src = ("src" in this.attributes? (<HTMLElement>this).attributes["src"].value: "/images/user.png");
 		this.message = ("message" in this.attributes? (<HTMLElement>this).attributes["message"].value: "");
 		this.innerHTML = `
-			<user-icon-component background-color="` + this.backgroundColor + `" src="`+ this.src +`"></user-icon-component>
+			<user-icon-component background-color="` + this.backgroundColor + `" src="`+ this.src +`" hover-text="`+this.sender+`"></user-icon-component>
 			<div class="chat-bubble">
 				<p>` + this.message + `</p>
 			</div>
@@ -127,13 +159,14 @@ class MessageComponent extends HTMLElement {
 		this.userIconComponent = <UserIconComponent>this.children[0];
 		this.chatBubbleDiv = <HTMLElement>this.children[1];
 		this.textElement = <HTMLElement>this.chatBubbleDiv.children[0];
+		this.loaded = true;
 	}
 
 	/**
 	 * Sets which attributes that will be observed for changes
 	 */
 	static get observedAttributes() {
-		return ['message', 'background-color', 'src'];
+		return ['message', 'background-color', 'src', 'sender'];
 	}
 
 	/**
@@ -144,7 +177,7 @@ class MessageComponent extends HTMLElement {
 	 * @param newVal THe new value of the attribute
 	 */
 	attributeChangedCallback(attrName, oldVal, newVal) {  
-		if (oldVal !== newVal) {
+		if (this.loaded && oldVal !== newVal) {
 			switch(attrName){
 				case "message":
 					this.message = newVal;
@@ -157,6 +190,10 @@ class MessageComponent extends HTMLElement {
 				case "src":
 					this.src = newVal;
 					this.userIconComponent.setAttribute("src", newVal);
+					break;
+				case "sender":
+					this.sender = newVal;
+					this.userIconComponent.setAttribute("hover-text", newVal);
 					break;
 			}
 		}

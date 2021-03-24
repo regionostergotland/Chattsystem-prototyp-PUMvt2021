@@ -1,6 +1,6 @@
 /** This script handle the logic for the chat page */
 // Declares io so not to recieve error when compiling
-var io;
+//var io;
 // Sets up a socket connection to the server
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 const messages = document.getElementById("messages");
@@ -11,11 +11,16 @@ const writingInput = document.getElementById("writing-input");
  * @param message The message
  * @param left Whether the message is a "left" or "right" message
  */
-function addMessage(message, left) {
+function addMessage(message, sender = "", background = "", iconSource = "") {
     let messageComponent = new MessageComponent();
-    messageComponent.classList.add((left ? "left" : "right"));
-    messages.appendChild(messageComponent);
+    messageComponent.classList.add((sender == "" ? "right" : "left"));
     messageComponent.setAttribute("message", message);
+    messageComponent.setAttribute("sender", sender);
+    if (background != "")
+        messageComponent.setAttribute("background-color", background);
+    if (iconSource != "")
+        messageComponent.setAttribute("src", iconSource);
+    messages.appendChild(messageComponent);
 }
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
@@ -29,7 +34,7 @@ writingInput.addEventListener("keyup", function (event) {
                 message: writingInput.value
             });
             // Creates the message locally
-            addMessage(writingInput.value, false);
+            addMessage(writingInput.value);
             // Clears the writing input
             writingInput.value = "";
         }
@@ -40,5 +45,5 @@ writingInput.addEventListener("keyup", function (event) {
  */
 socket.on('message', function (data) {
     // Creates the message locally
-    addMessage(data['message'], true);
+    addMessage(data['message'], data['sender'], data['background'], data['icon-source']);
 });
