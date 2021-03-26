@@ -1,6 +1,6 @@
 /** This script handle the logic for the chat page */
 // Declares io so not to recieve error when compiling
-//var io;
+var io;
 // Sets up a socket connection to the server
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 const messages = document.getElementById("messages");
@@ -39,6 +39,20 @@ writingInput.addEventListener("keyup", function (event) {
             writingInput.value = "";
         }
     }
+});
+
+document.getElementById("sendbutton").addEventListener("click", function() {
+  if (writingInput.value != "") {
+      event.preventDefault();
+      // Sends the message to the server
+      socket.emit('message', {
+          message: writingInput.value
+      });
+      // Creates the message locally
+      addMessage(writingInput.value);
+      // Clears the writing input
+      writingInput.value = "";
+  }
 });
 /**
  * The event that invokes when a message is recieved from the server
