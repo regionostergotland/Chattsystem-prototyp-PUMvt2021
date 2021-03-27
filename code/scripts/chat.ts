@@ -4,7 +4,7 @@
 var io: any;
 
 // Sets up a socket connection to the server
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+var socket = io;//.connect('http://' + document.domain + ':' + location.port);
 
 const messages = document.getElementById("messages");
 const writingInput = <HTMLInputElement>document.getElementById("writing-input");
@@ -25,7 +25,9 @@ function addMessage(message: string, sender: string = "", background="", iconSou
 	if(iconSource != "")
 		messageComponent.setAttribute("src", iconSource);
 		
+		
 	messages.appendChild(messageComponent);
+
 }
 
 /**
@@ -49,6 +51,7 @@ writingInput.addEventListener("keyup", function(event) {
 		}
     
   }
+
 });
 
 /**
