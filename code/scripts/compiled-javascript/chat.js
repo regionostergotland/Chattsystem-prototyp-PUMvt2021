@@ -2,7 +2,7 @@
 // Declares io so not to recieve error when compiling
 var io;
 // Sets up a socket connection to the server
-var socket = io; //.connect('http://' + document.domain + ':' + location.port);
+var socket = io(); //.connect('http://' + document.domain + ':' + location.port);
 const messages = document.getElementById("messages");
 const writingInput = document.getElementById("writing-input");
 /**
