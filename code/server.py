@@ -63,6 +63,8 @@ def connect_event(methods=['GET', 'POST']):
   client = Client(currentSocketId, name, backgroundColor, userIconSource)
   clients.append(client)
   send_chat_history(client)
+  # kallar på funtion som skickar hälsningsfras (startar chattbot). 
+  # Villkor blir att len(clients) = 1, if len(clients) !=1 -> stäng av.
 
 # The event for when a message is recieved from a client
 @socketio.on('message')
@@ -76,6 +78,7 @@ def message_event(json, methods=['GET', 'POST']):
   message = Message(sender, json['message'])
   chatHistory.append(message)
   broadcast_message(message)
+  # Skicka message.getMessage() (Alltså själva texten) till chattbotten.
 
 # Sends the whole chat history to a client
 def send_chat_history(reciever):
@@ -95,6 +98,7 @@ def send_message(message, reciever):
   sender = message.sender
   json = {'sender': sender.name, 'icon-source': sender.userIconSource, 'background': sender.backgroundColor, 'message':message.text}
   socketio.emit('message', json, room=reciever.sid)
+  # If chattbotten är reciever, skicka svar.
 
 # Starts the server
 if __name__ == '__main__':

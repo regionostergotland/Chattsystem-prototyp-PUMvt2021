@@ -5,7 +5,6 @@ var io: any;
 
 // Sets up a socket connection to the server
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-
 const messages = document.getElementById("messages");
 const writingInput = <HTMLInputElement>document.getElementById("writing-input");
 
