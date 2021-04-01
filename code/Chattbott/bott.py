@@ -5,7 +5,7 @@ from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 
 import numpy
-import tflearn
+import tfl
 import tensorflow
 import random
 import json
