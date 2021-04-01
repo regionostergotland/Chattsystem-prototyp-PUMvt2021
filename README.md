@@ -40,16 +40,16 @@ I github så finns det möligheten att testa kod som är pushad.
 #### Python(windows/mac):
 Waring pytest i pycharm fungerar inte helt på en mac dator
 
-##### Instalation: 
+##### Instalation:
 - Installera *pytest*
 - Detta kan göras via *pip install -U pytest* (för att köra i terminalen) eller via inställningar i *pycharm* (för att köra i pycharm)
 
 ##### Det första testet:
-- Skapa en *filnamn_test.py* testfil som importerar funtionerna som ska testas 
+- Skapa en *filnamn_test.py* testfil som importerar funtionerna som ska testas
 - **EX:** *sum_test.py*
 - Denna fil ska impotera *pytest*
 - Skapa funktioner som börjar med namn *filnamn_test*
-- Testerna inuti en testfuntion skrivs: 
+- Testerna inuti en testfuntion skrivs:
 ```py
 assert sum(1, 2) == 3
 ```
@@ -85,14 +85,18 @@ I github så finns det möligheten att testa kod som är pushad.
     - Resultaten ska finnas under de följande:
         - Test with jest
 
-### Javascript (mac/windows) WARING: DETTA fungera inte för tillfälet:
-	
+### Javascript (mac/windows):
+
 ##### Instalation:
 - Behöver installera *npm*
 - Detta kan göras med att intallera [Node js](https://nodejs.org/en/) då *npm* kommer med den
 
 Efter installation så ska *npm* kunna köras i terminalen via comandot **npm**
-	
+
+- Intallera jest genom att skriva *npm install --save-dev jest*
+
+Detta kommer att intalera lockala filer i **node_module** (se till att det finns i *gitnore*)
+
 ##### Det första testet:
 - Skapa en fil som ska testas: *filnamn.js*
 - **EX:** *sum.js*
@@ -100,12 +104,12 @@ Efter installation så ska *npm* kunna köras i terminalen via comandot **npm**
 ```js
 module.exports = funktions_namn;
 ```
-- **EX:** 
+- **EX:**
 ```js
 module.exports = sum;
 ```
 - Där *funktions_namn* är namnen på funktioner som ska testas
-- Skapa en fil som ska inehålla testerna: *filnamn.test.js* 
+- Skapa en fil som ska inehålla testerna: *filnamn.test.js*
 - **EX:** *sum.test.js*
 - I denna fil så ska det följande stå högst upp för att hämta functionerna
 ```js
