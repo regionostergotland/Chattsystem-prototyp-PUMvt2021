@@ -48,6 +48,11 @@ class Message(db.Model):
     user = db.Column(db.String(), nullable = False, unique=False)
     branchID = db.Column(db.Integer, db.ForeignKey('Branch.id'), nullable = False)
 
+    def __init__(self,index, message, user):
+        self.index = index
+        self.message = message
+        self.user = user
+
     def get_message(self):
         return self.message
     def get_index(self):
@@ -59,10 +64,13 @@ class Branch(db.Model):
     __tablename__ = 'Branch'
     id = db.Column(db.Integer, primary_key = True) #primary_keys skapar sig själva
     user = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
-    summary =  db.Column(db.String(), nullable = False, unique=False)
-    writer = db.Column(db.String(), nullable = False, unique=False)
+    summary =  db.Column(db.String(), nullable = True, unique=False)
+    writer = db.Column(db.String(), nullable = True, unique=False)
 
     Message = db.relationship('Message', backref = 'Branch', lazy = True)
+
+    def __init__(self, user):
+        self.user = user
 
     def get_summary(self):
         return self.summary
@@ -82,3 +90,29 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+
+
+
+
+#--------------------------Sepret Functions-----------------------------------
+
+
+
+def add_keyword(keyword):
+    new_keyword = Keyword(keyword)
+    db.session.add(new_keyword)
+    db.session.commit()
+
+def delete_keyword(keyword):
+    pass
+
+def add_question(question, answer):
+    new_question = Questions(question, answer)
+    db.session.add(new_question)
+    db.session.commit()
+
+def add_phrase(situation, answer):
+    new_phrase = Phrases(situation, answer)
+    db.session.add(new_phrase)
+    db.session.commit()
