@@ -5,4 +5,3 @@ eventlet
 gevent-websocket
 tensorflow
 nltk
-pickle
