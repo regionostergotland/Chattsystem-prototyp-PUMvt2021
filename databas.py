@@ -46,6 +46,7 @@ class Message(db.Model):
     message = db.Column(db.String(), nullable = False, unique=False)
     index =  db.Column(db.Integer, nullable = False, unique=False)
     user = db.Column(db.String(), nullable = False, unique=False)
+    branchID = db.Column(db.Integer, db.ForeignKey('Branch.id'), nullable = False)
 
     def get_message(self):
         return self.message
@@ -57,9 +58,11 @@ class Message(db.Model):
 class Branch(db.Model):
     __tablename__ = 'Branch'
     id = db.Column(db.Integer, primary_key = True) #primary_keys skapar sig själva
-    #messageID =
+    user = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
     summary =  db.Column(db.String(), nullable = False, unique=False)
     writer = db.Column(db.String(), nullable = False, unique=False)
+
+    Message = db.relationship('Message', backref = 'Branch', lazy = True)
 
     def get_summary(self):
         return self.summary
@@ -73,10 +76,9 @@ class Branch(db.Model):
 
 
 class User(db.Model):
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key = True)
-    #banchID = 
-
-
+    branch = db.relationship('Branch', backref = 'User', lazy = True) #lazy är hur databasen hämtar data
 
     def get_id(self):
         return self.id
