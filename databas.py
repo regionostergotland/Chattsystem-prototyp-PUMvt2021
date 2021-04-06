@@ -113,6 +113,6 @@ def add_question(question, answer):
     db.session.commit()
 
 def add_phrase(situation, answer):
-    new_phrase = Phrases(situation, answer)
+    new_phrase = Bot_Phrases(situation, answer)
     db.session.add(new_phrase)
     db.session.commit()
