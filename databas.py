@@ -38,3 +38,45 @@ class Bot_Phrases(db.Model):
 
     def set_answer(self, new_answer):
         self.answer = new_answer
+
+
+class Message(db.Model):
+    __tablename__ = 'Message'
+    id = db.Column(db.Integer, primary_key = True) #primary_keys skapar sig själva
+    message = db.Column(db.String(), nullable = False, unique=False)
+    index =  db.Column(db.Integer, nullable = False, unique=False)
+    user = db.Column(db.String(), nullable = False, unique=False)
+
+    def get_message(self):
+        return self.message
+    def get_index(self):
+        return self.index
+    def get_user(self):
+        return self.user
+
+class Branch(db.Model):
+    __tablename__ = 'Branch'
+    id = db.Column(db.Integer, primary_key = True) #primary_keys skapar sig själva
+    #messageID =
+    summary =  db.Column(db.String(), nullable = False, unique=False)
+    writer = db.Column(db.String(), nullable = False, unique=False)
+
+    def get_summary(self):
+        return self.summary
+    def get_writer(self):
+        return self.writer
+
+    def set_summary(self, new_summary):
+        self.summary = new_summary
+    def set_writer(self, new_writer):
+        self.writer = new_writer
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    #banchID = 
+
+
+
+    def get_id(self):
+        return self.id
