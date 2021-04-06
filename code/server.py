@@ -56,6 +56,7 @@ userIconSources = ["/images/user.png", "/images/bot.png"]
 # The event for when clients connect
 @socketio.on('connect')
 def connect_event(methods=['GET', 'POST']):
+  print("\nUser connected: " + request.sid)
   currentSocketId = request.sid
   name = names[len(clients)%len(names)]
   backgroundColor = backgroundColors[len(clients)%len(backgroundColors)]
@@ -69,6 +70,7 @@ def connect_event(methods=['GET', 'POST']):
 # The event for when a message is recieved from a client
 @socketio.on('message')
 def message_event(json, methods=['GET', 'POST']):
+  print("\nMessage: " + json['message'])
   currentSocketId = request.sid
   sender = {}
   for client in clients:
