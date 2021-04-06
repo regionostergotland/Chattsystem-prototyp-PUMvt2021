@@ -20,8 +20,8 @@ from tensorflow.keras.optimizers import SGD
 lemmatizer = WordNetLemmatizer()
 
 intents = json.loads(open('intents.json').read())
-print(intents)
-"""
+#print(intents)
+
 words = []
 classes = []
 documents = []
@@ -76,4 +76,4 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=1)
 model.save('chatbot_model.model')
 print("Done")
-"""
+
