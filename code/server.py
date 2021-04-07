@@ -1,6 +1,7 @@
 from typing import Collection
 from flask import Flask, render_template, send_from_directory, request
 from flask_socketio import SocketIO
+import authentication
 
 # The Client class
 class Client:
@@ -9,6 +10,7 @@ class Client:
     self.name = name
     self.backgroundColor = backgroundColor
     self.userIconSource = userIconSource
+    self.authenticated = False
 
 # The Message class
 class Message:
@@ -48,6 +50,15 @@ clients = []
 # The whole chat history
 chatHistory = []
 
+# The event for authenticating clients
+@socketio.on('authenticate')
+def connect_event(methods=['GET', 'POST']):
+  client = get_client(request.sid)
+  if(not client.authenticated):
+    client.authenticated = authentication.authenticate(client)
+  json = {'status': 200, 'message':'Du är nu autentiserad.'} if client.authenticated else {'status': 400, 'message':'Det uppstod ett fel vid autentisering!'}
+  socketio.emit('info', json, room=request.sid)
+
 # Temporary data
 names = ["Ludwig", "Sven", "Anna", "Emma", "Peter", "Kalle"]
 backgroundColors = ["Green", "Blue", "Red", "#123", "#FFF", "Cyan"]
@@ -69,12 +80,7 @@ def connect_event(methods=['GET', 'POST']):
 @socketio.on('message')
 def message_event(json, methods=['GET', 'POST']):
   print("\nMessage: " + json['message'])
-  currentSocketId = request.sid
-  sender = {}
-  for client in clients:
-    if(client.sid == currentSocketId):
-      sender = client
-      break
+  sender = get_client(request.sid)
   message = Message(sender, json['message'])
   chatHistory.append(message)
   broadcast_message(message)
@@ -97,6 +103,13 @@ def send_message(message, reciever):
   sender = message.sender
   json = {'sender': sender.name, 'icon-source': sender.userIconSource, 'background': sender.backgroundColor, 'message':message.text}
   socketio.emit('message', json, room=reciever.sid)
+
+# Returns the client with a session id
+def get_client(sid):
+  for client in clients:
+    if(client.sid == sid):
+      return client
+  return {}
 
 # Starts the server
 if __name__ == '__main__':
