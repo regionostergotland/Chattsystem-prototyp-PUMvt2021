@@ -5,11 +5,13 @@ with patients through at chatt.
 """
 from flask import json
 from server import app
-from flask_sqlalcemy import SQLAlcemy
+from flask_sqlalchemy import SQLAlchemy
 
-
+# Defalt removed warnings
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///example.sqlite"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #db is the database where all information is stored.
-db = SQLAlcemy(app)
+db = SQLAlchemy(app)
 
 """
 The database class that saves keywords.
@@ -19,6 +21,9 @@ It contains a getter that returns String objects.
 class Keyword(db.Model):
     __tablename__ = 'Keyword'
     keyword = db.Column(db.String(), primary_key=True)
+
+    def __init__(self, keyword_in):
+        self.keyword = keyword_in
 
     def get_Keyword(self):
         return self.keyword
@@ -148,8 +153,8 @@ def init():
 """
 This function adds a new keyword to the database.
 """
-def add_keyword(keyword):
-    new_keyword = Keyword(keyword)
+def add_keyword(keyword_in):
+    new_keyword = Keyword(keyword_in)
     db.session.add(new_keyword)
     db.session.commit()
 
