@@ -18,7 +18,7 @@ import numpy as np
 #warnings.filterwarnings('ignore')
 
 #download the punkt package
-nltk.download('punkt',quiet=True)
+#nltk.download('punkt',quiet=True)
 
 #get the article
 article = Article('https://www.1177.se/Ostergotland/sjukdomar--besvar/diabetes/diabetes-typ-1/')
