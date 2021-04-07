@@ -2,7 +2,7 @@
 // Declares io so not to recieve error when compiling
 var io;
 // Sets up a socket connection to the server
-var socket = io(); //.connect('http://' + document.domain + ':' + location.port);
+var socket = io();
 const messages = document.getElementById("messages");
 const writingInput = document.getElementById("writing-input");
 /**
@@ -31,7 +31,7 @@ writingInput.addEventListener("keyup", function (event) {
             event.preventDefault();
             // Sends the message to the server
             socket.emit('message', {
-                message: writingInput.value
+                message: writingInput.value, chatName: "huvudchatt"
             });
             // Creates the message locally
             addMessage(writingInput.value);
@@ -45,5 +45,19 @@ writingInput.addEventListener("keyup", function (event) {
  */
 socket.on('message', function (data) {
     // Creates the message locally
-    addMessage(data['message'], data['sender'], data['background'], data['icon-source']);
+    addMessage(data['message'], data['sender'], data['background'], data['userIconSource']);
+});
+socket.on('connect', function () {
+    socket.emit('details_assignment', {
+        name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"
+    });
+    socket.emit("chat_join", { chatName: "huvudchatt" });
+});
+socket.on('info', function (data) {
+    var code = data["status"];
+    var message = data["message"];
+    if (Math.floor(code / 100) == 4)
+        console.error("Statuskod : " + code + " meddelande : " + message);
+    else
+        console.log("Statuskod : " + code + " meddelande : " + message);
 });

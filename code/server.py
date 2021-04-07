@@ -30,9 +30,9 @@ class Message:
 
 #Enum for roles
 class Roles (Enum): 
-  odefinierad = 1
-  patient = 2 
-  personal = 3
+  odefinierad = 0
+  patient = 1
+  personal = 2
 
 # Initializes the server
 app = Flask(__name__)
@@ -102,7 +102,7 @@ def details_assignment_event(json, methods=['GET', 'POST']):
   client.name = json["name"]
   client.backgroundColor = json["backgroundColor"]
   client.userIconSource = json["userIconSource"]
-  client.role = json["role"]
+  client.role = Roles[json["role"]]
   send_info_message(200, "Användarinformation satt", request.sid)
 
 
@@ -128,34 +128,49 @@ def message_event(json, methods=['GET', 'POST']):
 @socketio.on('chat_create')
 def chat_create_event(json, methods=['GET', 'POST']):
   client = get_client(request.sid)
-  chatName = json["chatName"]
-  if chatName in chats : 
-    send_info_message(400, "Chattnamnet är redan taget", request.sid)
-  else : 
-    chats[chatName] = Chat([client])
-    send_info_message(200, "Chatten är skapad", request.sid)
+  if not client.role == Roles["personal"] :
+    send_info_message(401, "Du har inte rätt roll för att skapa en chatt")
+  elif not client.authenticated :
+    send_info_message(401, "Du är inte autentiserad och kan därför inte skapa chattar")
+  else:
+    chatName = json["chatName"]
+    if chatName in chats : 
+      send_info_message(400, "Chattnamnet är redan taget", request.sid)
+    else : 
+      chats[chatName] = Chat([client])
+      send_info_message(200, "Chatten är skapad", request.sid)
 
 # The event for removing a chat
 @socketio.on('chat_delete')
 def chat_delete_event(json, methods=['GET', 'POST']):
   client = get_client(request.sid)
-  chatName = json["chatName"]
-  if chatName in chats : 
-    del chats[chatName]
-    send_info_message(200, "Chatten är borttagen", request.sid)
-  else : 
-    send_info_message(404, "Chatten finns inte", request.sid)
-
+  if not client.role == Roles["personal"] :
+    send_info_message(401, "Du har inte rätt roll för att ta bort en chatt")
+  elif not client.authenticated :
+    send_info_message(401, "Du är inte autentiserad och kan därför inte ta bort chattar")
+  else:
+    chatName = json["chatName"]
+    if chatName in chats : 
+      del chats[chatName]
+      send_info_message(200, "Chatten är borttagen", request.sid)
+    else : 
+      send_info_message(404, "Chatten finns inte", request.sid)
+  
 # The event for ending a chat
 @socketio.on('chat_end')
 def chat_end_event(json, methods=['GET', 'POST']):
   client = get_client(request.sid)
-  chatName = json["chatName"]
-  if chatName in chats : 
-    chats[chatName].active = False
-    send_info_message(200, "Chatten är avslutad", request.sid)
-  else : 
-    send_info_message(404, "Chatten finns inte", request.sid)
+  if not client.role == Roles["personal"] :
+    send_info_message(401, "Du har inte rätt roll för att avsluta en chatt")
+  elif not client.authenticated :
+    send_info_message(401, "Du är inte autentiserad och kan därför inte avsluta chattar")
+  else:
+    chatName = json["chatName"]
+    if chatName in chats : 
+      chats[chatName].active = False
+      send_info_message(200, "Chatten är avslutad", request.sid)
+    else : 
+      send_info_message(404, "Chatten finns inte", request.sid)
 
 # The event for creating a new chat
 @socketio.on('chat_join')
@@ -165,6 +180,7 @@ def chat_join_event(json, methods=['GET', 'POST']):
   if chatName in chats : 
     chats[chatName].clients.append(client)
     send_info_message(200, "Klienten har anslutit till chatten", request.sid)
+    send_chat_history(client,chatName)
   else : 
     send_info_message(404, "Chatten finns inte", request.sid)
 
