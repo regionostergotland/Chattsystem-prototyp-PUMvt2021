@@ -94,7 +94,7 @@ class UserIconComponent extends HTMLElement {
         src="[path to image]
         message="[the message]">
         [content]
-    </drawer-component>
+    </message-component>
   
  * Generated example:
     <message-component class="left" message="hej">
