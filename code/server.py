@@ -12,6 +12,13 @@ class Client:
     self.userIconSource = userIconSource
     self.authenticated = False
 
+# The Chat class
+class Chat:
+  def __init__(self, clients = []):
+    self.history = []
+    self.clients = clients
+
+
 # The Message class
 class Message:
   def __init__(self, sender, text):
@@ -47,12 +54,13 @@ def send_images(path):
 # All the connected clients
 clients = []
 
-# The whole chat history
-chatHistory = []
+# All the chats
+chats = [Chat()]
+
 
 # The event for authenticating clients
 @socketio.on('authenticate')
-def connect_event(methods=['GET', 'POST']):
+def authenticate_event(methods=['GET', 'POST']):
   client = get_client(request.sid)
   if(not client.authenticated):
     client.authenticated = authentication.authenticate(client)
@@ -74,7 +82,8 @@ def connect_event(methods=['GET', 'POST']):
   userIconSource = userIconSources[0]
   client = Client(currentSocketId, name, backgroundColor, userIconSource)
   clients.append(client)
-  send_chat_history(client)
+  chats[0].clients.append(client)
+  send_chat_history(client,chats[0])
 
 # The event for when a message is recieved from a client
 @socketio.on('message')
@@ -82,12 +91,12 @@ def message_event(json, methods=['GET', 'POST']):
   print("\nMessage: " + json['message'])
   sender = get_client(request.sid)
   message = Message(sender, json['message'])
-  chatHistory.append(message)
+  chats[0].history.append(message)
   broadcast_message(message)
 
-# Sends the whole chat history to a client
-def send_chat_history(reciever):
-  for message in chatHistory:
+# Sends the whole chat history of the given chat to a client
+def send_chat_history(reciever,chat):
+  for message in chat.history:
     send_message(message, reciever) 
 
 # Broadcasts the message to all clients
