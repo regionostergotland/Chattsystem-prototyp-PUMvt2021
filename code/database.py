@@ -37,6 +37,10 @@ class Questions(db.Model):
     question = db.Column(db.String(), primary_key=True)
     answer = db.Column(db.String(), nullable=False, unique=False)
 
+    def __init__(self, question_in, answer_in):
+        self.question = question_in
+        self.answer = answer_in
+
     def get_queston(self):
         return self.question
 
@@ -55,6 +59,10 @@ class Bot_Phrases(db.Model):
     __tablename__ = 'Bot Phrases'
     situation = db.Column(db.String(), primary_key=True)
     answer = db.Column(db.String(), nullable=False, unique=False)
+
+    def __init__(self, situation_in, answer_in):
+        self.situation = situation_in
+        self.answer = answer_in
 
     def get_situation(self):
         return self.situation
@@ -154,9 +162,13 @@ def init():
 This function adds a new keyword to the database.
 """
 def add_keyword(keyword_in):
-    new_keyword = Keyword(keyword_in)
-    db.session.add(new_keyword)
-    db.session.commit()
+    if not is_keyword(keyword_in):
+        new_keyword = Keyword(keyword_in)
+        db.session.add(new_keyword)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 """
 This function return true if the keyword is in the database, False if not.
@@ -170,17 +182,27 @@ def is_keyword(keyword_in):
 This function deletes the keyword form the database.
 """
 def delete_keyword(keyword_in):
+
     keyword_objekt = Keyword.query.filter_by(keyword=keyword_in).first()
-    db.session.delete(keyword_objekt)
-    db.session.commit()
+    if keyword_objekt is not None:
+        db.session.delete(keyword_objekt)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 """
 This function adds a user question and the bot answer to the database.
 """
-def add_question(question, answer):
-    new_question = Questions(question, answer)
-    db.session.add(new_question)
-    db.session.commit()
+def add_question(question_in, answer):
+    question_exists = Questions.query.filter_by(question=question_in).first()
+    if question_exists is None:
+        new_question = Questions(question_in, answer)
+        db.session.add(new_question)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 """
 This function gets the bot answer to a user question from the database.
@@ -210,16 +232,25 @@ This function removes a user question and the bot answer from the database.
 """
 def delete_question(question_in):
     question_objekt = Questions.query.filter_by(question=question_in).first()
-    db.session.delete(question_objekt)
-    db.session.commit()
+    if question_objekt is not None:
+        db.session.delete(question_objekt)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 """
 This function adds a bot phrase for a situation to the database.
 """
-def add_phrase(situation, answer):
-    new_phrase = Bot_Phrases(situation, answer)
-    db.session.add(new_phrase)
-    db.session.commit()
+def add_phrase(situation_in, answer):
+    phrase_exists = Bot_Phrases.query.filter_by(situation=situation_in).first()
+    if phrase_exists is None:
+        new_phrase = Bot_Phrases(situation_in, answer)
+        db.session.add(new_phrase)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 """
 This function gets the answer for a phrase from the database.
@@ -251,15 +282,22 @@ The phrases belong to class Bot_phrases.
 """
 def delete_phrase(situation_in):
     phrase_objekt = Bot_Phrases.query.filter_by(situation=situation_in).first()
-    db.session.delete(phrase_objekt)
-    db.session.commit()
-
+    if phrase_objekt is not None:
+        db.session.delete(phrase_objekt)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 """
 This function creates a new chatt and adds the chatt to the database,
 The chatt will belong to class User.
 """
 def init_chatt(user):
-    new_chatt = User(user)
-    db.session.add(new_chatt)
-    db.session.commit()
+    if User.query.filter_by(user_id=user).first() is None:
+        new_chatt = User(user)
+        db.session.add(new_chatt)
+        db.session.commit()
+        return True
+    else:
+        return False
