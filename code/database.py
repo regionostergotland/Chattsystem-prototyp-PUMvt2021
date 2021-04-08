@@ -144,6 +144,9 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key = True)
     branch = db.relationship('Branch', backref = 'User', lazy = True) #lazy är hur databasen hämtar data
 
+    def __init__(self, user_in):
+        self.user_id = user_in
+
     def get_id(self):
         return self.user_id
 
@@ -296,7 +299,22 @@ The chatt will belong to class User.
 def init_chatt(user):
     if User.query.filter_by(user_id=user).first() is None:
         new_chatt = User(user)
+        new_branch = Branch(user) #Create a new branch when creating new user
         db.session.add(new_chatt)
+        db.session.add(new_branch)
+        new_chatt.branch.append(new_branch)
+        db.session.commit()
+        return True
+    else:
+        return False
+
+
+def add_brach(user):
+    user_object = User.query.filter_by(user_id=user).first()
+    if user_object is not None:
+        new_branch = Branch(user)
+        db.session.add(new_branch)
+        user_object.branch.append(new_branch)
         db.session.commit()
         return True
     else:

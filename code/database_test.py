@@ -92,3 +92,13 @@ def test_double_phrases():
     assert not DB.add_phrase('question', 'answer')
     assert DB.delete_phrase('question')
     assert not DB.delete_phrase('question')
+
+
+"""
+Test for creating a new chatt, new branch and adding a
+ new branch for a non existing person.
+"""
+def test_new_chatt():
+    assert DB.init_chatt(5)
+    assert DB.add_brach(5)
+    assert not DB.add_brach(34)
