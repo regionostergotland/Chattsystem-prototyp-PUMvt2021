@@ -74,6 +74,30 @@ class Bot_Phrases(db.Model):
         self.answer = new_answer
 
 """
+The database class that saves Users.
+Contains string objects "name" and intger "role".
+Contains getters and setters for both objects.
+"""
+class User(db.Model):
+    __tablename__ = 'User'
+    name = db.Column(db.String(), primary_key=True)
+    role = db.Column(db.Integer, nullable=False, unique=False)
+
+    def __init__(self, name_in, role_in):
+        self.name = name_in
+        self.role = role_in
+
+    def get_role(self):
+        return self.role
+
+    def get_role(self):
+        return self.name
+
+    def set_role(self, new_role):
+        self.role = new_role
+
+
+"""
 A database class that contains the messages of a chatt.
 The class contains the message string, a position index and the user.
 The aspect branch_id is a ForeignKey of it's branch.
@@ -84,7 +108,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key = True) #primary_keys skapar sig själva
     message = db.Column(db.String(), nullable = False, unique=False)
     index =  db.Column(db.Integer, nullable = False, unique=False)
-    user = db.Column(db.String(), nullable = False, unique=False)
+    user = db.Column(db.String(), db.ForeignKey('User.name'), nullable = False)
     branch_id = db.Column(db.Integer, db.ForeignKey('Branch.id'), nullable = False)
 
     def __init__(self,index, message, user):
@@ -113,14 +137,15 @@ The class contains getters and setters for its objects.
 class Branch(db.Model):
     __tablename__ = 'Branch'
     id = db.Column(db.Integer, primary_key = True) #primary_keys skapar sig själva
-    user = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable = False)
+    chatt = db.Column(db.Integer, db.ForeignKey('Chatt.id'), nullable = False)
     summary =  db.Column(db.String(), nullable = True, unique=False)
     writer = db.Column(db.String(), nullable = True, unique=False)
+    active = db.Column(db.Boolean, nullable=False, default=True, unique=False)
 
     Message = db.relationship('Message', backref = 'Branch', lazy = True)
 
-    def __init__(self, user):
-        self.user = user
+    def __init__(self, chatt):
+        self.chatt = chatt
 
     def get_summary(self):
         return self.summary
@@ -134,20 +159,27 @@ class Branch(db.Model):
     def set_writer(self, new_writer):
         self.writer = new_writer
 
+    def set_active(self, active_status):
+        self.active = active_status
+
+    def get_active(self):
+        return self.active
+
 """
 The database class User is the user chatt session.
 The session contains an user and one or more branches.
 Contains getter for the user id.
 """
-class User(db.Model):
-    __tablename__ = 'User'
-    user_id = db.Column(db.Integer, primary_key = True)
-    branch = db.relationship('Branch', backref = 'User', lazy = True) #lazy är hur databasen hämtar data
+class Chatt(db.Model):
+    __tablename__ = 'Chatt'
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.String(), db.ForeignKey('User.name'), nullable = False, unique=True)
+    branch = db.relationship('Branch', backref = 'Chatt', lazy = True) #lazy är hur databasen hämtar data
 
     def __init__(self, user_in):
         self.user_id = user_in
 
-    def get_id(self):
+    def get_patient_id(self):
         return self.user_id
 
 
@@ -297,8 +329,8 @@ This function creates a new chatt and adds the chatt to the database,
 The chatt will belong to class User.
 """
 def init_chatt(user):
-    if User.query.filter_by(user_id=user).first() is None:
-        new_chatt = User(user)
+    if Chatt.query.filter_by(user_id=user).first() is None:
+        new_chatt = Chatt(user)
         new_branch = Branch(user) #Create a new branch when creating new user
         db.session.add(new_chatt)
         db.session.add(new_branch)
@@ -310,11 +342,49 @@ def init_chatt(user):
 
 
 def add_brach(user):
-    user_object = User.query.filter_by(user_id=user).first()
+    user_object = Chatt.query.filter_by(user_id=user).first()
     if user_object is not None:
         new_branch = Branch(user)
         db.session.add(new_branch)
         user_object.branch.append(new_branch)
+        db.session.commit()
+        return True
+    else:
+        return False
+
+
+def add_brach_summary(branch_id, summary_in, user_in):
+    branch_object = Branch.query.filter_by(id=branch_id).first()
+    if branch_object is not None:
+        branch_object.set_summary(summary_in, user_in)
+        return True
+    else:
+        return False
+
+def add_user(name_in, role_in=None):
+    user_object = User.query.filter_by(name=name_in).first()
+    if user_object is None:
+        new_user = User(name_in, role_in)
+        db.session.add(new_user)
+        db.session.commit()
+        return True
+    else:
+        return False
+
+
+def set_user_role(name_in, role_in):
+    user_object = User.query.filter_by(name=name_in).first()
+    if user_object is not None:
+        user_object.set_role(role_in)
+        return True
+    else:
+        return False
+
+
+def delete_user(user_id):
+    user_object = User.query.filter_by(name = user_in).first()
+    if user_object is not None:
+        db.session.delete(user_object)
         db.session.commit()
         return True
     else:
