@@ -382,7 +382,7 @@ def set_user_role(name_in, role_in):
 
 
 def delete_user(user_id):
-    user_object = User.query.filter_by(name = user_in).first()
+    user_object = User.query.filter_by(name = user_id).first()
     if user_object is not None:
         db.session.delete(user_object)
         db.session.commit()
