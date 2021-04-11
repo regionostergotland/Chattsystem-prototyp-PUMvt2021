@@ -99,20 +99,45 @@ def bot_response(user_input):
 
 
 
-#start the chat
+def main_ish(message):
+    exit_list = ['exit', 'hejdå', 'adjö', 'farväl', 'dra åt helvete']
+    
+    if message.lower() in exit_list:
+        return("Botten Anna: Vi hörs!")
+                    
+    else:
+        if greeting_response(message) != None:
+            return("Botten Anna: " + greeting_response(message))
+        else:
+            return("Botten Anna: "+bot_response(message))
 
-print("Botten Anna: Jag är Anna och kan svara på frågor om Diabetes, om du vill gå ur så skriv 'Hejdå' ")
 
-exit_list = ['exit', 'hejdå', 'adjö', 'farväl', 'dra åt helvete']
+#start the bot
+if __name__ == '__main__':
+    
+    #start the chat
+    print("Botten Anna: Jag är Anna och kan svara på frågor om Diabetes, om du vill gå ur så skriv 'Hejdå' ")
 
-while True:
-    user_input = input()
+    exit_list = ['exit', 'hejdå', 'adjö', 'farväl', 'dra åt helvete']
+    
     if user_input.lower() in exit_list:
         print("Botten Anna: Vi hörs!")
-        break
+                    
     else:
         if greeting_response(user_input) != None:
             print("Botten Anna: " + greeting_response(user_input))
         else:
             print("Botten Anna: "+bot_response(user_input))
 
+"""
+    while True:
+        user_input = input()
+        if user_input.lower() in exit_list:
+            print("Botten Anna: Vi hörs!")
+            break
+        else:
+            if greeting_response(user_input) != None:
+                print("Botten Anna: " + greeting_response(user_input))
+            else:
+                print("Botten Anna: "+bot_response(user_input))
+"""    
