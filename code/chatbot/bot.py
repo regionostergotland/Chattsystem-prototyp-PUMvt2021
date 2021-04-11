@@ -96,15 +96,7 @@ def bot_response(user_input):
     sentence_list.remove(user_input)
 
     return bot_answer
-"""
-user_input = " hello world "
-sentence_list.append(user_input)
-bot_answer = ''
-cm = CountVectorizer().fit_transform(sentence_list) #count matrix
-similarity_scores = cosine_similarity(cm[-1], cm) #last sentence of user input
-similarity_scores_list = similarity_scores.flatten() 
-index = index_sort(similarity_scores_list) #highest to lowest value in similarity score
-"""
+
 
 
 #start the chat
