@@ -1,5 +1,5 @@
 #description: this is a smart chat bot program
-import database_lucy as dbl
+#import database_lucy as dbl
 from newspaper import Article
 import random
 import string
@@ -12,6 +12,13 @@ warnings.filterwarnings('ignore')
 #Download the punkt package
 nltk.download('punkt', quiet =True)
 
+#from code import switchboard
+
+import os,sys,inspect
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir) 
+import switchboard as switchboard
 
 #Get the article
 article = Article('https://sv.wikipedia.org/wiki/Diabetes')
@@ -93,20 +100,20 @@ def bot_response(user_input, list_of_matches):
 
 def bot_answer(user_input):
     prepare_db()
-    if dbl.get_question_answer(user_input):
-        return dbl.get_question_answer(user_input)
+    if switchboard.DB_getQanswer(user_input):
+        return switchboard.DB_getQanswer(user_input)
 
     else:
         return search(user_input)
         
  #Förbereder databasen för användning      
 def prepare_db():
-    dbl.add_question('vad är diabetes', 'dålig')
-    dbl.add_question('hur är diabetes', 'inte bra')
-    dbl.add_question('varför är diabetes farligt', 'kan dö')
-    dbl.add_question('kan diabetes vara farligt', 'ja')
-    dbl.add_question('vad betyder hola', 'det betyder hej')
-    dbl.add_question('hus', 'kåk')
+    switchboard.DB_addQ('vad är diabetes', 'dålig')
+    switchboard.DB_addQ('hur är diabetes', 'inte bra')
+    switchboard.DB_addQ('varför är diabetes farligt', 'kan dö')
+    switchboard.DB_addQ('kan diabetes vara farligt', 'ja')
+    switchboard.DB_addQ('vad betyder hola', 'det betyder hej')
+    switchboard.DB_addQ('hus', 'kåk')
 
 
     
@@ -114,7 +121,7 @@ def search(input):
     all_matches = []    #Lista där alla matchningar läggs till
     for word in input.split():  #för varje ord i användarens fråga
         #print(word)
-        match = dbl.word_match_db(word) #Tittar om ordet matchar frågor i databasen
+        match = switchboard.DB_word_match(word) #Tittar om ordet matchar frågor i databasen
         if match != []:     #om listan inte är tom har vi hittat minst en matchning
            
             for question in match:
@@ -138,8 +145,7 @@ def search(input):
 
 print('Bot: Mitt namn är botten Anna. Jag kommer att besvara dina frågor')
 exit_list = ['hej då']
-dbl.add_question('vad är diabetes', 'dåligt')
-dbl.add_question('vad betyder hola', 'det betyder hej')
+
 while(True):
     user_input = input()
     if user_input.lower() in exit_list:

@@ -40,5 +40,17 @@ def DBsearch(tag, data):
     #something
     return
 
-print("Skriv något: ")
-botcom(input())
+def DB_getQanswer(question):
+    return DB.get_question_answer(question)
+
+def DB_word_match(word):
+    return DB.word_match_db(word)
+
+def DB_addQ(question, answer):
+    return DB.add_question(question, answer)
+
+
+
+
+#print("Skriv något: ")
+#botcom(input())
