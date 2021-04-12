@@ -71,27 +71,31 @@ def index_sort(list_var):
 
 #Create the bots response
 def bot_response(user_input, list_of_matches):
+    print("LIST OF MATCHES: "+str(list_of_matches))
     user_input = user_input.lower()
     bot_response = ''
     cm = CountVectorizer().fit_transform(list_of_matches)
     similarity_scores = cosine_similarity(cm[-1], cm)
     similarity_scores_list = similarity_scores.flatten()
+    print("SIMILARITY LIST: "+str(similarity_scores_list))
     index = index_sort(similarity_scores_list)
     index = index[1:]
     response_flag = 0
     j = 0
-    similarity_scores_list.sort()
+    #similarity_scores_list.sort()
+    #print("SIMILARITY LIST 2: "+str(similarity_scores_list))
     for i in range(len(index)):
-        if similarity_scores_list[index[i]] > 0.0:
+        if similarity_scores_list[index[i]] > 0.3:
             bot_response = bot_response+',' +list_of_matches[index[i]]
            
             response_flag = 1
             j = j + 1
         if j > 2:
             break
-
     
-    bot_response = dbl.get_question_answer(bot_response.split(',')[-1])
+    print("BEFORE FINAL: "+bot_response)
+    print("BOT RESPONSE: "+bot_response.split(',')[-1])
+    bot_response = switchboard.DB_getQanswer(bot_response.split(',')[-1])
     if response_flag == 0 or bot_response == False:
         bot_response = "Ursäkta, jag förstår inte."
 
@@ -99,13 +103,14 @@ def bot_response(user_input, list_of_matches):
 
 
 def bot_answer(user_input):
-    prepare_db()
+    #prepare_db()
     if switchboard.DB_getQanswer(user_input):
         return switchboard.DB_getQanswer(user_input)
 
     else:
         return search(user_input)
-        
+
+"""      
  #Förbereder databasen för användning      
 def prepare_db():
     switchboard.DB_addQ('vad är diabetes', 'dålig')
@@ -114,7 +119,7 @@ def prepare_db():
     switchboard.DB_addQ('kan diabetes vara farligt', 'ja')
     switchboard.DB_addQ('vad betyder hola', 'det betyder hej')
     switchboard.DB_addQ('hus', 'kåk')
-
+"""
 
     
 def search(input):
@@ -126,7 +131,8 @@ def search(input):
            
             for question in match:
                 #print(word1.question)
-                all_matches = all_matches + [question.question] #Vi tar ut enbart frågorna och inget annat skräp och lägger in i en lista
+                if not question.question in all_matches: 
+                    all_matches = all_matches + [question.question] #Vi tar ut enbart frågorna och inget annat skräp och lägger in i en lista
                
     
     if all_matches != []:   #Om listan inte är tom kan vi titta på vilken fråga i databasen som matchar användarens fråga

@@ -36,6 +36,9 @@ in the DB.
 
 maybe do a try and catch, so if the db is not initialized then catch that and init before continuing. 
 """
+def DB_init():
+    DB.init()
+
 def DBsearch(tag, data):
     #something
     return
@@ -47,9 +50,8 @@ def DB_word_match(word):
     return DB.word_match_db(word)
 
 def DB_addQ(question, answer):
+    
     return DB.add_question(question, answer)
-
-
 
 
 #print("Skriv något: ")
