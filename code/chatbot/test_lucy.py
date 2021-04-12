@@ -114,7 +114,7 @@ def search(input):
     all_matches = []    #Lista där alla matchningar läggs till
     for word in input.split():  #för varje ord i användarens fråga
         #print(word)
-        match = dbl.db.session.query(dbl.Questions).filter(dbl.Questions.question.like('%'+word+'%')).all() #Tittar om ordet matchar frågor i databasen
+        match = dbl.word_match_db(word) #Tittar om ordet matchar frågor i databasen
         if match != []:     #om listan inte är tom har vi hittat minst en matchning
            
             for question in match:

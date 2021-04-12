@@ -323,17 +323,7 @@ def add_brach(user):
         return False
 
 
-"""
-def search(input):
-    all_matches = []
-    for word in input.split():
-        match = db.session.query(Questions).filter(Questions.question.like('%'+word+'%')).all()
-        all_matches = all_matches + match
-    
-    if all_matches != []:
-        return bot_response(input, all_matches)
+def word_match_db(word):
+    return db.session.query(Questions).filter(Questions.question.like('%'+word+'%')).all()
 
-    else:
-        return "sad"
-        #print(result)
-        #return result[0].get_answer()"""
+    
