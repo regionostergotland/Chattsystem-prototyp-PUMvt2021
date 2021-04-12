@@ -432,7 +432,7 @@ def add_brach_summary(branch_id, summary_in, user_in):
         return False
 
 
-def add_user_to_brach(user, brach_id):
+def add_user_to_brach(user, branch_id):
     branch_object = Branch.query.filter_by(id=branch_id).first()
     user_object = User.query.filter_by(name=user).first()
     if branch_object is not None and user_object is not None:
@@ -483,7 +483,7 @@ def delete_user(user_id):
         return False
 
 
-def new_message(message, user, brach_id, index):
+def new_message(message, user, branch_id, index):
     """
     Creates a new message in a branch.
     The index is its posistion in the chat window.
@@ -493,7 +493,7 @@ def new_message(message, user, brach_id, index):
 
     chatt_object = Chatt.query.filter_by(user_id=user).first()
     branch_object = Branch.query.filter_by(id=branch_id).first()
-    if user_object is not None and branch_object is not None:
+    if chatt_object is not None and branch_object is not None:
         message_object = Message(index, message, user, branch_id)
         db.session.add(message_object)
         branch_object.message.append(message_object)
