@@ -107,6 +107,7 @@ def test_new_chatt():
     new branch for a non existing person.
     """
 
-    assert DB.init_chatt(5)
-    assert DB.add_brach(5)
-    assert not DB.add_brach(34)
+    assert DB.add_user("Ludwig")
+    assert DB.init_chatt("Ludwig")
+    assert DB.add_brach("Ludwig")
+    #assert DB.

@@ -122,10 +122,11 @@ class Message(db.Model):
     branch_id = db.Column(db.Integer,
                           db.ForeignKey('Branch.id'), nullable=False)
 
-    def __init__(self, index, message, user):
+    def __init__(self, index, message, user, branch):
         self.index = index
         self.message = message
         self.user = user
+        self.branch_id = branch
 
     def get_message(self):
         return self.message
@@ -135,6 +136,12 @@ class Message(db.Model):
 
     def get_user(self):
         return self.user
+
+
+branch_user = db.Table('branch_user',
+    db.Column('id', db.Integer, db.ForeignKey('branch.id'), primary_key=True),
+    db.Column('name', db.String(), db.ForeignKey('user.id'), primary_key=True)
+)
 
 
 class Branch(db.Model):
@@ -159,7 +166,9 @@ class Branch(db.Model):
     writer = db.Column(db.String(), nullable=True, unique=False)
     active = db.Column(db.Boolean, nullable=False, default=True, unique=False)
 
-    Message = db.relationship('Message', backref='Branch', lazy=True)
+    users = db.relationship('User', secondary=branch_user, lazy='subquery',
+        backref=db.backref('Branch', lazy=True))
+    message = db.relationship('Message', backref='Branch', lazy=True)
 
     def __init__(self, chatt):
         self.chatt = chatt
@@ -376,12 +385,14 @@ def init_chatt(user):
     The chatt will belong to class User.
     """
 
-    if Chatt.query.filter_by(user_id=user).first() is None:
+    user_object = User.query.filter_by(name=user).first()
+    if Chatt.query.filter_by(user_id=user).first() is None and user_object is not None:
         new_chatt = Chatt(user)
         new_branch = Branch(user)  # Create a new branch when creating new user
         db.session.add(new_chatt)
         db.session.add(new_branch)
         new_chatt.branch.append(new_branch)
+        new_branch.users.append(user_object)
         db.session.commit()
         return True
     else:
@@ -389,11 +400,18 @@ def init_chatt(user):
 
 
 def add_brach(user):
-    user_object = Chatt.query.filter_by(user_id=user).first()
-    if user_object is not None:
+    """
+    This function creates a new branch and adds the branch to the database,
+    The branch will belong to class Branch.
+    """
+
+    chatt_object = Chatt.query.filter_by(user_id=user).first()
+    if chatt_object is not None:
         new_branch = Branch(user)
         db.session.add(new_branch)
-        user_object.branch.append(new_branch)
+        chatt_object.branch.append(new_branch)
+        user_object = User.query.filter_by(name=user).first()
+        new_branch.users.append(user_object)
         db.session.commit()
         return True
     else:
@@ -401,6 +419,11 @@ def add_brach(user):
 
 
 def add_brach_summary(branch_id, summary_in, user_in):
+    """
+    This function creates a branch summary,
+    if there is an existning summary it will be overwritten.
+    """
+
     branch_object = Branch.query.filter_by(id=branch_id).first()
     if branch_object is not None:
         branch_object.set_summary(summary_in, user_in)
@@ -409,7 +432,20 @@ def add_brach_summary(branch_id, summary_in, user_in):
         return False
 
 
+def add_user_to_brach(user, brach_id):
+    branch_object = Branch.query.filter_by(id=branch_id).first()
+    user_object = User.query.filter_by(name=user).first()
+    if branch_object is not None and user_object is not None:
+        branch_object.users.append(user_object)
+        return True
+    else:
+        return False
+
+
 def add_user(name_in, role_in=None):
+    """
+    This function creates a new user and adds the user to the database,
+    """
     user_object = User.query.filter_by(name=name_in).first()
     if user_object is None:
         new_user = User(name_in, role_in)
@@ -421,6 +457,9 @@ def add_user(name_in, role_in=None):
 
 
 def set_user_role(name_in, role_in):
+    """
+    This function creates a new user role and adds the new role to the database.
+    """
     user_object = User.query.filter_by(name=name_in).first()
     if user_object is not None:
         user_object.set_role(role_in)
@@ -430,9 +469,34 @@ def set_user_role(name_in, role_in):
 
 
 def delete_user(user_id):
+    """
+    Delete a user form the database
+    Returns true if sucsesfull false if not
+    """
+
     user_object = User.query.filter_by(name=user_id).first()
     if user_object is not None:
         db.session.delete(user_object)
+        db.session.commit()
+        return True
+    else:
+        return False
+
+
+def new_message(message, user, brach_id, index):
+    """
+    Creates a new message in a branch.
+    The index is its posistion in the chat window.
+    The user is the owner of this message
+    Returns True if the message was created sucsesfully fals if not.
+    """
+
+    chatt_object = Chatt.query.filter_by(user_id=user).first()
+    branch_object = Branch.query.filter_by(id=branch_id).first()
+    if user_object is not None and branch_object is not None:
+        message_object = Message(index, message, user, branch_id)
+        db.session.add(message_object)
+        branch_object.message.append(message_object)
         db.session.commit()
         return True
     else:
