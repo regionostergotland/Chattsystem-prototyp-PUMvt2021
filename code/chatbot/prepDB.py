@@ -15,6 +15,15 @@ def prepare_db():
     switchboard.DB_addQ('vad kan man göra om man har diabetes', 'börja använda insulin')
     switchboard.DB_addQ('vad är insulin', 'insulin sänker/höjer blodsockervärde')
     switchboard.DB_addQ('vad är blodsocker', 'blodsocker är mängden fruktos/socker i blodet')
+    switchboard.DB_addQ('vad är fetma', 'det är när en person är kraftig överviktig')
+    switchboard.DB_addQ('vad orsakar fetma', 'levandsvanor, stress, sömnbrist, psykisk ohälsa')
+    switchboard.DB_addQ('vad är corona', 'det är ett virus')
+    switchboard.DB_addQ('hur smittar corona', 'genom att inte vara i karantän')
+    switchboard.DB_addQ('hur testar jag mig för corona', 'kontakta din vårdcentral')
+    switchboard.DB_addQ('vad är hiv', 'det är en könssjukdom')
+    switchboard.DB_addQ('kan man dö av hiv', 'ja men risken är mindre om det behandlas i tid')
+    switchboard.DB_addQ('hur får man hiv', 'via blod och samlag')
+    #switchboard.DB_addQ('', '')
 
 if __name__ == '__main__':
     switchboard.DB_init()

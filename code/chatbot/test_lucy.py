@@ -12,6 +12,8 @@ warnings.filterwarnings('ignore')
 #Download the punkt package
 nltk.download('punkt', quiet =True)
 
+import time
+
 #from code import switchboard
 
 import os,sys,inspect
@@ -20,22 +22,6 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir) 
 import switchboard as switchboard
 
-#Get the article
-article = Article('https://sv.wikipedia.org/wiki/Diabetes')
-article.download()
-article.parse()
-article.nlp()
-corpus = article.text
-
-#print articles text
-#print(corpus)
-
-#Tokenization
-text = corpus
-sentence_list = nltk.sent_tokenize(text) #A list of sentences
-
-#print the list of sentences
-#print(sentence_list)
 
 
 #A function to return a random greeting response to a usrs greeting
@@ -71,14 +57,23 @@ def index_sort(list_var):
 
 #Create the bots response
 def bot_response(user_input, list_of_matches):
-    print("LIST OF MATCHES: "+str(list_of_matches))
+    
     user_input = user_input.lower()
+    list_of_matches.append(user_input)
+    #print("LIST OF MATCHES: "+str(list_of_matches))
     bot_response = ''
     cm = CountVectorizer().fit_transform(list_of_matches)
+
     similarity_scores = cosine_similarity(cm[-1], cm)
+    #print('similarity_score: '+ str(similarity_scores))
     similarity_scores_list = similarity_scores.flatten()
-    print("SIMILARITY LIST: "+str(similarity_scores_list))
+
+    #print("SIMILARITY LIST: "+str(similarity_scores_list))
     index = index_sort(similarity_scores_list)
+   
+
+    #print('index'+ str(index))
+
     index = index[1:]
     response_flag = 0
     j = 0
@@ -87,15 +82,16 @@ def bot_response(user_input, list_of_matches):
     for i in range(len(index)):
         if similarity_scores_list[index[i]] > 0.3:
             bot_response = bot_response+',' +list_of_matches[index[i]]
+        
            
             response_flag = 1
             j = j + 1
         if j > 2:
             break
     
-    print("BEFORE FINAL: "+bot_response)
-    print("BOT RESPONSE: "+bot_response.split(',')[-1])
-    bot_response = switchboard.DB_getQanswer(bot_response.split(',')[-1])
+    #print("BEFORE FINAL: "+bot_response)
+    #print("BOT RESPONSE: "+bot_response.split(',')[1])
+    bot_response = switchboard.DB_getQanswer(bot_response.split(',')[1])
     if response_flag == 0 or bot_response == False:
         bot_response = "Ursäkta, jag förstår inte."
 
@@ -157,7 +153,10 @@ while(True):
     if user_input.lower() in exit_list:
         print('Bot: chat later bitch')
         break
+
+    
     else:
+        time.sleep(2)
         if greeting_response(user_input) != None:
             print('Bot: '+greeting_response(user_input))
         else:
