@@ -89,7 +89,7 @@ class User(db.Model):
 
     __tablename__ = 'User'
     name = db.Column(db.String(), primary_key=True)
-    role = db.Column(db.Integer, nullable=False, unique=False)
+    role = db.Column(db.Integer, nullable=True, unique=False)
 
     def __init__(self, name_in, role_in):
         self.name = name_in
@@ -139,8 +139,8 @@ class Message(db.Model):
 
 
 branch_user = db.Table('branch_user',
-    db.Column('id', db.Integer, db.ForeignKey('branch.id'), primary_key=True),
-    db.Column('name', db.String(), db.ForeignKey('user.id'), primary_key=True)
+    db.Column('id', db.Integer, db.ForeignKey('Branch.id'), primary_key=True),
+    db.Column('name', db.String(), db.ForeignKey('User.name'), primary_key=True)
 )
 
 
@@ -179,8 +179,9 @@ class Branch(db.Model):
     def get_writer(self):
         return self.writer
 
-    def set_summary(self, new_summary):
+    def set_summary(self, new_summary, user_in):
         self.summary = new_summary
+        self.writer = user_in
 
     def set_writer(self, new_writer):
         self.writer = new_writer
@@ -292,6 +293,15 @@ def get_question_answer(question_in):
         return False
 
 
+def get_matching_questions(word):
+
+    question_objets = Questions.query.filter(question.like('%'+word+'%')).all()
+    if question_objekts is not None:
+        return [x.get_queston() for x in question_objets]
+    else:
+        return False
+
+
 def set_question_answer(question_in, answer_in):
     """
     This function changes the bot answer to a user question in the database.
@@ -303,6 +313,7 @@ def set_question_answer(question_in, answer_in):
         return False
     else:
         question_objekt.set_answer(answer_in)
+        db.session.commit()
         return True
 
 
@@ -361,6 +372,7 @@ def set_phrase_answer(situation_in, answer_in):
         return False
     else:
         phrase_objekt.set_answer(answer_in)
+        db.session.commit()
         return True
 
 
@@ -394,7 +406,7 @@ def init_chatt(user):
         new_chatt.branch.append(new_branch)
         new_branch.users.append(user_object)
         db.session.commit()
-        return True
+        return new_branch.id
     else:
         return False
 
@@ -413,7 +425,7 @@ def add_brach(user):
         user_object = User.query.filter_by(name=user).first()
         new_branch.users.append(user_object)
         db.session.commit()
-        return True
+        return new_branch.id
     else:
         return False
 
@@ -427,16 +439,22 @@ def add_brach_summary(branch_id, summary_in, user_in):
     branch_object = Branch.query.filter_by(id=branch_id).first()
     if branch_object is not None:
         branch_object.set_summary(summary_in, user_in)
+        db.session.commit()
         return True
     else:
         return False
 
 
-def add_user_to_brach(user, brach_id):
+def add_user_to_brach(user, branch_id):
+    """
+    This function adds a user to an existing branch.
+    If user has been sucssesfully added then True is returned, otherwise False.
+    """
     branch_object = Branch.query.filter_by(id=branch_id).first()
     user_object = User.query.filter_by(name=user).first()
     if branch_object is not None and user_object is not None:
         branch_object.users.append(user_object)
+        db.session.commit()
         return True
     else:
         return False
@@ -445,6 +463,7 @@ def add_user_to_brach(user, brach_id):
 def add_user(name_in, role_in=None):
     """
     This function creates a new user and adds the user to the database,
+    If user has been sucssesfully added then True is returned, otherwise False.
     """
     user_object = User.query.filter_by(name=name_in).first()
     if user_object is None:
@@ -463,6 +482,7 @@ def set_user_role(name_in, role_in):
     user_object = User.query.filter_by(name=name_in).first()
     if user_object is not None:
         user_object.set_role(role_in)
+        db.session.commit()
         return True
     else:
         return False
@@ -483,7 +503,7 @@ def delete_user(user_id):
         return False
 
 
-def new_message(message, user, brach_id, index):
+def new_message(message, user, branch_id, index):
     """
     Creates a new message in a branch.
     The index is its posistion in the chat window.
@@ -491,9 +511,8 @@ def new_message(message, user, brach_id, index):
     Returns True if the message was created sucsesfully fals if not.
     """
 
-    chatt_object = Chatt.query.filter_by(user_id=user).first()
     branch_object = Branch.query.filter_by(id=branch_id).first()
-    if user_object is not None and branch_object is not None:
+    if branch_object is not None:
         message_object = Message(index, message, user, branch_id)
         db.session.add(message_object)
         branch_object.message.append(message_object)
