@@ -40,20 +40,6 @@ writingInput.addEventListener("keyup", function (event) {
         }
     }
 });
-
-document.getElementById("sendbutton").addEventListener("click", function() {
-  if (writingInput.value != "") {
-      event.preventDefault();
-      // Sends the message to the server
-      socket.emit('message', {
-          message: writingInput.value
-      });
-      // Creates the message locally
-      addMessage(writingInput.value);
-      // Clears the writing input
-      writingInput.value = "";
-  }
-});
 /**
  * The event that invokes when a message is recieved from the server
  */
