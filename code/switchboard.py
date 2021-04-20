@@ -4,7 +4,7 @@ Name switchboard seems fitting for this task.
 """
 
 import chatbot.bot as bott
-import chatbot.database_lucy as DB
+import database as DB
 
 
 ########################################################################
@@ -38,12 +38,12 @@ maybe do a try and catch, so if the db is not initialized then catch that and in
 """
 def DB_init():
     DB.init()
-    
+
 def DB_getQanswer(question):
     return DB.get_question_answer(question)
 
 def DB_word_match(word):
-    return DB.word_match_db(word)
+    return DB.get_matching_questions(word)
 
 def DB_addQ(question, answer):
     

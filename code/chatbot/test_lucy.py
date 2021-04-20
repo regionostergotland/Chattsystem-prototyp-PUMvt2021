@@ -128,8 +128,8 @@ def search(input):
            
             for question in match:
                 #print(word1.question)
-                if not question.question in all_matches: 
-                    all_matches = all_matches + [question.question] #Vi tar ut enbart frågorna och inget annat skräp och lägger in i en lista
+                if not question in all_matches: 
+                    all_matches = all_matches + [question] #Vi tar ut enbart frågorna och inget annat skräp och lägger in i en lista
                
     
     if all_matches != []:   #Om listan inte är tom kan vi titta på vilken fråga i databasen som matchar användarens fråga
