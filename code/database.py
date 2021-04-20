@@ -512,11 +512,7 @@ def new_message(message, user, branch_id, index):
     """
 
     branch_object = Branch.query.filter_by(id=branch_id).first()
-<<<<<<< HEAD
     if branch_object is not None:
-=======
-    if chatt_object is not None and branch_object is not None:
->>>>>>> 44d3843a57bc959599bd9456fb6a0bed145c9e79
         message_object = Message(index, message, user, branch_id)
         db.session.add(message_object)
         branch_object.message.append(message_object)
