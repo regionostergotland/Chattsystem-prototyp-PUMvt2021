@@ -19,7 +19,7 @@ Function for sending a message from a patient to the bot that returns the respon
 def botcom(message):
     #something
     #print(bott.main_ish(message))
-
+    return
 
 
 ########################################################################

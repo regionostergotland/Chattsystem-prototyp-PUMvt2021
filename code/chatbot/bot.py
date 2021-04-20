@@ -171,6 +171,8 @@ def bot_main(input):
         else:
             return(bot_answer(user_input))
 
+
+"""
 #start the chat
 print('Bot: Mitt namn är botten Anna. Jag kommer att besvara dina frågor')
 exit_list = ['hej då']
@@ -188,3 +190,4 @@ while(True):
             print('Bot: '+greeting_response(user_input))
         else:
             print("Bot: "+ bot_answer(user_input))
+"""
