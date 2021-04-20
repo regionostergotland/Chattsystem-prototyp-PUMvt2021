@@ -295,8 +295,8 @@ def get_question_answer(question_in):
 
 def get_matching_questions(word):
 
-    question_objets = Questions.query.filter(question.like('%'+word+'%')).all()
-    if question_objekts is not None:
+    question_objets = Questions.query.filter(Questions.question.like('%'+word+'%')).all()
+    if question_objets is not None:
         return [x.get_queston() for x in question_objets]
     else:
         return False
