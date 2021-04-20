@@ -26,8 +26,12 @@ import switchboard as switchboard
 
 
 
-#A function to return a random greeting response to a usrs greeting
+
 def greeting_response(text):
+
+    """
+    This function returns a random greeting response to a users greeting.
+    """
     text = text.lower()
 
     #bots greeting response
@@ -39,7 +43,14 @@ def greeting_response(text):
         if word in user_greetings:
             return random.choice(bot_greetings)
 
+
+
+
 def index_sort(list_var):
+
+"""
+This function sorts index based on a given lists element value
+"""
     length = len(list_var)
     list_index = list(range(0, length))
     
@@ -57,30 +68,33 @@ def index_sort(list_var):
 
 
 
-#Create the bots response
 def bot_response(user_input, list_of_matches):
+    """
+    This function uses a cosine similarity algorithm to find the best
+    matching answer to the users input then returns it. If no answer
+    is found the bots excuses itself for not understanding.
+    """
     
     user_input = user_input.lower()
     list_of_matches.append(user_input)
-    #print("LIST OF MATCHES: "+str(list_of_matches))
+
     bot_response = ''
     cm = CountVectorizer().fit_transform(list_of_matches)
 
     similarity_scores = cosine_similarity(cm[-1], cm)
-    #print('similarity_score: '+ str(similarity_scores))
+
     similarity_scores_list = similarity_scores.flatten()
 
-    #print("SIMILARITY LIST: "+str(similarity_scores_list))
+  
     index = index_sort(similarity_scores_list)
    
 
-    #print('index'+ str(index))
+ 
 
     index = index[1:]
     response_flag = 0
     j = 0
-    #similarity_scores_list.sort()
-    #print("SIMILARITY LIST 2: "+str(similarity_scores_list))
+
     for i in range(len(index)):
         if similarity_scores_list[index[i]] > 0.3:
             bot_response = bot_response+',' +list_of_matches[index[i]]
@@ -91,8 +105,7 @@ def bot_response(user_input, list_of_matches):
         if j > 2:
             break
     
-    #print("BEFORE FINAL: "+bot_response)
-    #print("BOT RESPONSE: "+bot_response.split(',')[1])
+
     if not bot_response == "":
         bot_response = switchboard.DB_getQanswer(bot_response.split(',')[1])
     if response_flag == 0 or bot_response == False:
@@ -102,23 +115,17 @@ def bot_response(user_input, list_of_matches):
 
 
 def bot_answer(user_input):
-    #prepare_db()
+    """
+    This function checks if the user input exists
+    in the database and returns an answer. If the
+    user input does not exists, it searches for
+    for something similar and returns an answer.
+    """
     if switchboard.DB_getQanswer(user_input):
         return switchboard.DB_getQanswer(user_input)
 
     else:
         return search(user_input)
-
-"""      
- #Förbereder databasen för användning      
-def prepare_db():
-    switchboard.DB_addQ('vad är diabetes', 'dålig')
-    switchboard.DB_addQ('hur är diabetes', 'inte bra')
-    switchboard.DB_addQ('varför är diabetes farligt', 'kan dö')
-    switchboard.DB_addQ('kan diabetes vara farligt', 'ja')
-    switchboard.DB_addQ('vad betyder hola', 'det betyder hej')
-    switchboard.DB_addQ('hus', 'kåk')
-"""
 
     
 def search(input):
