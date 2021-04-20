@@ -15,6 +15,7 @@
   		<img src="/images/logo.png"/>
   	</header-component>
  */
+
 class HeaderComponent extends HTMLElement {
 	/**
 	 * The constructor initializing the HTMLElement

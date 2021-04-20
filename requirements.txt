@@ -1,0 +1,6 @@
+Flask
+gunicorn
+flask-socketio
+eventlet
+gevent-websocket
+enum34
