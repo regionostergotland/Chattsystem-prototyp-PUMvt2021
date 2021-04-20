@@ -40,20 +40,6 @@ writingInput.addEventListener("keyup", function (event) {
         }
     }
 });
-
-document.getElementById("sendbutton").addEventListener("click", function() {
-  if (writingInput.value != "") {
-      event.preventDefault();
-      // Sends the message to the server
-      socket.emit('message', {
-          message: writingInput.value
-      });
-      // Creates the message locally
-      addMessage(writingInput.value);
-      // Clears the writing input
-      writingInput.value = "";
-  }
-});
 /**
  * The event that invokes when a message is recieved from the server
  */
@@ -66,6 +52,8 @@ socket.on('connect', function () {
         name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"
     });
     socket.emit("chat_join", { chatName: "huvudchatt" });
+    socket.emit("get_users");
+    socket.emit("get_chats");
 });
 socket.on('info', function (data) {
     var code = data["status"];
@@ -74,4 +62,10 @@ socket.on('info', function (data) {
         console.error("Statuskod : " + code + " meddelande : " + message);
     else
         console.log("Statuskod : " + code + " meddelande : " + message);
+});
+socket.on('return_users', function (data) {
+    console.log(data);
+});
+socket.on('return_chats', function (data) {
+    console.log(data);
 });

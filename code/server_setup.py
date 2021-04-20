@@ -115,6 +115,44 @@ backgroundColors = ["Green", "Blue", "Red", "#123", "#FFF", "Cyan"]
 userIconSources = ["/images/user.png", "/images/bot.png"]
 
 
+
+
+@socketio.on('get_users')
+def get_users_event(methods=['GET', 'POST']):
+    """
+    The event for when clients connect
+    """
+    print("\nUser connected: " + request.sid)
+    currentSocketId = request.sid
+    json = {"users": []}
+    for client in clients:
+
+        json["users"].append(
+            {"name": client.name, "role": str(client.role.name) }
+        )
+
+    socketio.emit('return_users', json, room=currentSocketId)
+
+
+@socketio.on('get_chats')
+def get_chats_event(methods=['GET', 'POST']):
+    """
+    The event for when clients connect
+    """
+    print("\nUser connected: " + request.sid)
+    currentSocketId = request.sid
+    json = {"chats": []}
+    for chat in chats:
+
+        json["chats"].append(
+            chat
+        )
+
+    socketio.emit('return_chats', json, room=currentSocketId)
+    
+
+
+
 @socketio.on('connect')
 def connect_event(methods=['GET', 'POST']):
     """
