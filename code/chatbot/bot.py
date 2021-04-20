@@ -1,22 +1,23 @@
 #https://www.youtube.com/watch?v=9KZwRBg4-P0
+"""
+This file is the chatbot that can send simple responses to user input. 
+The chatbot uses a database which contains a number of responses to different user inputs, this
+includes questions, phrases and informative answers. 
 
-#description: this is a smart chat bot program
-#import database_lucy as dbl
-from newspaper import Article
+The bot uses an algorithm that matches the user input against the database and tries to get the
+most similar response possible from the given inputs in the database. 
+"""
 import random
 import string
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy
+import time
 import warnings
 warnings.filterwarnings('ignore')
 #Download the punkt package
 nltk.download('punkt', quiet =True)
-
-import time
-
-#from code import switchboard
 
 import os,sys,inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -62,25 +63,20 @@ def bot_response(user_input, list_of_matches):
     
     user_input = user_input.lower()
     list_of_matches.append(user_input)
-    #print("LIST OF MATCHES: "+str(list_of_matches))
+    
     bot_response = ''
     cm = CountVectorizer().fit_transform(list_of_matches)
 
     similarity_scores = cosine_similarity(cm[-1], cm)
-    #print('similarity_score: '+ str(similarity_scores))
+
     similarity_scores_list = similarity_scores.flatten()
 
-    #print("SIMILARITY LIST: "+str(similarity_scores_list))
     index = index_sort(similarity_scores_list)
-   
-
-    #print('index'+ str(index))
 
     index = index[1:]
     response_flag = 0
     j = 0
-    #similarity_scores_list.sort()
-    #print("SIMILARITY LIST 2: "+str(similarity_scores_list))
+    
     for i in range(len(index)):
         if similarity_scores_list[index[i]] > 0.3:
             bot_response = bot_response+',' +list_of_matches[index[i]]
@@ -91,8 +87,6 @@ def bot_response(user_input, list_of_matches):
         if j > 2:
             break
     
-    #print("BEFORE FINAL: "+bot_response)
-    #print("BOT RESPONSE: "+bot_response.split(',')[1])
     if not bot_response == "":
         bot_response = switchboard.DB_getQanswer(bot_response.split(',')[1])
     if response_flag == 0 or bot_response == False:
@@ -109,45 +103,53 @@ def bot_answer(user_input):
     else:
         return search(user_input)
 
-"""      
- #Förbereder databasen för användning      
-def prepare_db():
-    switchboard.DB_addQ('vad är diabetes', 'dålig')
-    switchboard.DB_addQ('hur är diabetes', 'inte bra')
-    switchboard.DB_addQ('varför är diabetes farligt', 'kan dö')
-    switchboard.DB_addQ('kan diabetes vara farligt', 'ja')
-    switchboard.DB_addQ('vad betyder hola', 'det betyder hej')
-    switchboard.DB_addQ('hus', 'kåk')
-"""
-
     
 def search(input):
-    all_matches = []    #Lista där alla matchningar läggs till
-    for word in input.split():  #för varje ord i användarens fråga
-        #print(word)
-        match = switchboard.DB_word_match(word) #Tittar om ordet matchar frågor i databasen
-        if match != []:     #om listan inte är tom har vi hittat minst en matchning
-           
+    """
+    This function searched in the database for user inputs that match the current
+    user input. It sends a list of matching responses from the database to the
+    bot_response -function and returns the answer from that function. 
+    """
+
+    all_matches = []   
+    for word in input.split():  
+        
+        #Checks if this word have a match in the database
+        match = switchboard.DB_word_match(word) 
+        if match != []:     
             for question in match:
-                #print(word1.question)
                 if not question in all_matches: 
-                    all_matches = all_matches + [question] #Vi tar ut enbart frågorna och inget annat skräp och lägger in i en lista
+                    #Only the questions are relevant and they are put in the list
+                    all_matches = all_matches + [question] 
                
-    
-    if all_matches != []:   #Om listan inte är tom kan vi titta på vilken fråga i databasen som matchar användarens fråga
+    #If there are matches then they are sent to the bot_response function. 
+    if all_matches != []:   
         return bot_response(input, all_matches)
 
     else:
         return "sad"
-        #print(result)
-        #return result[0].get_answer()
 
+#A list of exit phrases.        
+exit_list = ['hej då', 'hejdå','farväl','adjö','exit','bye']
 
+def bot_main(input):
+    """
+    This is the function that is used by switchboard.py to contact the bot. If there is an 
+    exit message in the input, then the bot sends a exit message back. If there is a greeting 
+    (for example 'hej') or another kind of message then it sends back a response from the 
+    database. 
+    """
+    user_input = input()
+    if user_input.lower() in exit_list:
+        return('Bot: chat later bitch')
+    else:
+        time.sleep(2)
+        if greeting_response(user_input) != None:
+            return(greeting_response(user_input))
+        else:
+            return(bot_answer(user_input))
 
-
-
-    #start the chat
-
+#start the chat
 print('Bot: Mitt namn är botten Anna. Jag kommer att besvara dina frågor')
 exit_list = ['hej då']
 
