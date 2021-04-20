@@ -38,11 +38,7 @@ maybe do a try and catch, so if the db is not initialized then catch that and in
 """
 def DB_init():
     DB.init()
-
-def DBsearch(tag, data):
-    #something
-    return
-
+    
 def DB_getQanswer(question):
     return DB.get_question_answer(question)
 

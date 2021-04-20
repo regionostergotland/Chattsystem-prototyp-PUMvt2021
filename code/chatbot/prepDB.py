@@ -23,8 +23,10 @@ def prepare_db():
     switchboard.DB_addQ('vad är hiv', 'det är en könssjukdom')
     switchboard.DB_addQ('kan man dö av hiv', 'ja men risken är mindre om det behandlas i tid')
     switchboard.DB_addQ('hur får man hiv', 'via blod och samlag')
+    switchboard.DB_addQ('jag har haft huvudvärk', 'var har du ont och hur länge har du haft ont?')
+    switchboard.DB_addQ('ja', 'en sjuksköterska kommer att gå med i konversationen.')
     #switchboard.DB_addQ('', '')
-
+    
 if __name__ == '__main__':
     switchboard.DB_init()
     prepare_db()

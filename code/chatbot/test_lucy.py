@@ -91,7 +91,8 @@ def bot_response(user_input, list_of_matches):
     
     #print("BEFORE FINAL: "+bot_response)
     #print("BOT RESPONSE: "+bot_response.split(',')[1])
-    bot_response = switchboard.DB_getQanswer(bot_response.split(',')[1])
+    if not bot_response == "":
+        bot_response = switchboard.DB_getQanswer(bot_response.split(',')[1])
     if response_flag == 0 or bot_response == False:
         bot_response = "Ursäkta, jag förstår inte."
 
