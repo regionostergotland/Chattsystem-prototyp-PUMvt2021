@@ -45,11 +45,3 @@ def test_bot_question():
     prep
     assert bot.bot_main('jag har haft huvudvärk') == 'har det varat i två veckor?'
     assert bot.bot_main('jag har huvudvärk') == 'har det varat i två veckor?'
-
-"""
-if __name__ == '__main__':
-    test_greetings()
-    test_departure()
-    test_bot_answer()
-    print('Passed tests')
-"""
