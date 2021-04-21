@@ -35,10 +35,11 @@ function selectChat(chatName) {
     chatMessages[chatName]["selector"].setAttribute("active", "");
     selectedChatName = chatName;
 }
-function addChat(chatName) {
+function addChat(chatName, color) {
     var messageContainer = document.createElement('div');
     chatMessageContainer.appendChild(messageContainer);
     let chatSelectorComponent = new ChatSelectorComponent();
+    chatSelectorComponent.setAttribute("color", color);
     chatSelectorComponent.addEventListener("click", (e) => {
         selectChat(chatName);
     });
@@ -91,9 +92,17 @@ socket.on('return_users', function (data) {
 });
 socket.on('return_chats', function (data) {
     data['chats'].forEach(chatName => {
-        addChat(chatName);
+        //addChat(chatName);
         socket.emit("chat_join", { chatName: chatName });
     });
-    selectChat("huvudchatt");
+    //selectChat("huvudchatt");
     console.log(data);
+});
+socket.on('chat_info', function (data) {
+    console.log(data);
+    var name = data['chatName'];
+    var color = data['color'];
+    addChat(name, color);
+    selectChat(name);
+    socket.emit("get_chat_history", { chatName: name });
 });

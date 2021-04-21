@@ -23,10 +23,11 @@ class Chat:
     The Chat class
     """
 
-    def __init__(self, clients):
+    def __init__(self, clients, color = "white"):
         self.history = []
         self.clients = clients
         self.active = True
+        self.color = color
 
 
 class Message:
@@ -91,7 +92,7 @@ def send_images(path):
 clients = []
 
 # All the chats
-chats = {"huvudchatt": Chat([]), "chatt2": Chat([])}
+chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue")}
 
 
 @socketio.on('authenticate')
@@ -276,9 +277,20 @@ def chat_join_event(json, methods=['GET', 'POST']):
         chats[chatName].clients.append(client)
         send_info_message(
             200, "Klienten har anslutit till chatten", request.sid)
-        send_chat_history(client, chatName)
+        send_chat_info(client, chatName)
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
+
+@socketio.on('get_chat_history')
+def get_chat_history_event(json, methods=['GET', 'POST']):
+    """
+    Sends the whole chat history of the given chat to a client
+    """
+    chatName = json["chatName"]
+    chat = chats[chatName]
+    client = get_client(request.sid)
+    for message in chat.history:
+        send_message(message, client, chatName)
 
 
 def send_info_message(statusCode, message, sid):
@@ -289,13 +301,15 @@ def send_info_message(statusCode, message, sid):
     socketio.emit('info', json, room=sid)
 
 
-def send_chat_history(reciever, chatName):
+def send_chat_info(reciever, chatName):
     """
     Sends the whole chat history of the given chat to a client
     """
     chat = chats[chatName]
-    for message in chat.history:
-        send_message(message, reciever, chatName)
+    socketio.emit('chat_info', {'chatName': chatName, 'color': chat.color}, room=reciever.sid)
+
+
+    
 
 
 def broadcast_message(message, chatName, ignoreSender=True):

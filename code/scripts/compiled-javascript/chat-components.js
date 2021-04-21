@@ -178,12 +178,6 @@ class ChatSelectorComponent extends HTMLElement {
      */
     constructor() {
         super();
-        //sender: string;
-        //backgroundColor: string;
-        //src: string;
-        //message: string = "";
-        //
-        //userIconComponent: UserIconComponent;
         //chatBubbleDiv: HTMLElement;
         //textElement: HTMLElement;
         this.active = false;
@@ -197,6 +191,7 @@ class ChatSelectorComponent extends HTMLElement {
         //TODO: lägg till färg och bakgrund
         this.classList.add("chat-image");
         this.active = ("active" in this.attributes ? true : false);
+        this.color = ("color" in this.attributes ? this.attributes["color"].value : "white");
         if (this.active)
             this.classList.add("active");
         //this.backgroundColor = ("background-color" in this.attributes? (<HTMLElement>this).attributes["background-color"].value: "#FFF")
@@ -208,16 +203,16 @@ class ChatSelectorComponent extends HTMLElement {
         //	</div>
         //`;
         this.innerHTML = `
-			<user-icon-component src="/images/bot.png"></user-icon-component>
+			<user-icon-component background-color="` + this.color + `" src="/images/bot.png"></user-icon-component>
 			<div class="chat-indicator"></div>
 		`;
-        //this.userIconComponent = <UserIconComponent>this.children[0];
+        this.userIconComponent = this.children[0];
         //this.chatBubbleDiv = <HTMLElement>this.children[1];
         //this.textElement = <HTMLElement>this.chatBubbleDiv.children[0];
         this.loaded = true;
     }
     static get observedAttributes() {
-        return ['active'];
+        return ['active', 'color'];
     }
     attributeChangedCallback(attrName, oldVal, newVal) {
         if (this.loaded && oldVal !== newVal) {
@@ -228,6 +223,10 @@ class ChatSelectorComponent extends HTMLElement {
                         this.classList.add("active");
                     else if (this.classList.contains("active"))
                         this.classList.remove("active");
+                    break;
+                case 'color':
+                    this.color = ("color" in this.attributes ? this.attributes["color"].value : "white");
+                    this.userIconComponent.setAttribute("background-color", this.color);
                     break;
             }
         }
