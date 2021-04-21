@@ -46,8 +46,6 @@ def test_bot_question():
     assert bot.bot_main('jag har haft huvudvärk') == 'har det varat i två veckor?'
     assert bot.bot_main('jag har huvudvärk') == 'har det varat i två veckor?'
 
-
-
 """
 if __name__ == '__main__':
     test_greetings()
