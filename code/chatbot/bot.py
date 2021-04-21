@@ -38,6 +38,7 @@ def greeting_response(text):
     #bots greeting response
     bot_greetings = ['hallå', 'hej', 'Hej där']
     #user greetings
+
     user_greetings = ['hej', 'hejsan', 'hallå']
 
     for word in text.split():
@@ -49,9 +50,9 @@ def greeting_response(text):
 
 def index_sort(list_var):
 
-"""
-This function sorts index based on a given lists element value.
-"""
+    """
+    This function sorts index based on a given lists element value.
+    """
     length = len(list_var)
     list_index = list(range(0, length))
     
@@ -95,7 +96,7 @@ def bot_response(user_input, list_of_matches):
 
     for i in range(len(index)):
         if similarity_scores_list[index[i]] > 0.3:
-            bot_response = bot_response+',' +list_of_matches[index[i]]
+            bot_response = bot_response +list_of_matches[index[i]]+','
         
            
             response_flag = 1
@@ -105,8 +106,8 @@ def bot_response(user_input, list_of_matches):
     
 
     if not bot_response == "":
-        bot_response = switchboard.DB_getQanswer(bot_response.split(',')[1])
-    if response_flag == 0 or bot_response == False:
+        bot_response = switchboard.DB_getQanswer(bot_response.split(',')[0])
+    elif response_flag == 0 or bot_response == False:
         bot_response = "Ursäkta, jag förstår inte."
 
     return bot_response
@@ -161,15 +162,20 @@ def bot_main(input):
     (for example 'hej') or another kind of message then it sends back a response from the 
     database. 
     """
-    user_input = input()
-    if user_input.lower() in exit_list:
-        return('Bot: chat later bitch')
+    #user_input = input()
+    if input.lower() in exit_list:
+        return (random.choice(exit_list))
     else:
         time.sleep(2)
-        if greeting_response(user_input) != None:
-            return(greeting_response(user_input))
+        if greeting_response(input) != None:
+            return(greeting_response(input))
         else:
-            return(bot_answer(user_input))
+            return(bot_answer(input))
+
+if __name__ == '__main__':
+    print('Bot: Mitt namn är botten Anna. Jag kommer att besvara dina frågor')
+    while True:
+        print(bot_main(input()))
 
 
 """
