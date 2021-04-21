@@ -5,6 +5,7 @@ sys.path.insert(0, parent_dir)
 import switchboard as switchboard
 
 def prepare_db():
+    switchboard.DB_init()
     switchboard.DB_addQ('vad är diabetes', 'dålig')
     switchboard.DB_addQ('hur är diabetes', 'inte bra')
     switchboard.DB_addQ('varför är diabetes farligt', 'kan dö')
@@ -27,7 +28,8 @@ def prepare_db():
     switchboard.DB_addQ('ja', 'en sjuksköterska kommer att gå med i konversationen.')
     switchboard.DB_addQ('nej', 'en sjuksköterska kommer att gå med i konversationen.')
     #switchboard.DB_addQ('', '')
-    
+"""  
 if __name__ == '__main__':
     switchboard.DB_init()
     prepare_db()
+"""
