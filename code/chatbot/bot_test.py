@@ -15,6 +15,7 @@ def test_greetings():
     bot_greetings = ['hallå', 'hej', 'Hej där']
 
     assert bot.bot_main('hej') in bot_greetings
+    assert bot.bot_main('hallå') in bot_greetings
 
 def test_departure():
     """
