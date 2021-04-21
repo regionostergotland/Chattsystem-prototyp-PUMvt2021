@@ -23,11 +23,12 @@ class Chat:
     The Chat class
     """
 
-    def __init__(self, clients, color = "white"):
+    def __init__(self, clients, color = "white", imageSource ="/images/user.png" ):
         self.history = []
         self.clients = clients
         self.active = True
         self.color = color
+        self.imageSource = imageSource
 
 
 class Message:
@@ -92,7 +93,7 @@ def send_images(path):
 clients = []
 
 # All the chats
-chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue")}
+chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/bot.png")}
 
 
 @socketio.on('authenticate')
@@ -306,7 +307,7 @@ def send_chat_info(reciever, chatName):
     Sends the whole chat history of the given chat to a client
     """
     chat = chats[chatName]
-    socketio.emit('chat_info', {'chatName': chatName, 'color': chat.color}, room=reciever.sid)
+    socketio.emit('chat_info', {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource}, room=reciever.sid)
 
 
     

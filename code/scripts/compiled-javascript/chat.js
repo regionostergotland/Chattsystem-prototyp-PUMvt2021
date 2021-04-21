@@ -35,11 +35,12 @@ function selectChat(chatName) {
     chatMessages[chatName]["selector"].setAttribute("active", "");
     selectedChatName = chatName;
 }
-function addChat(chatName, color) {
+function addChat(chatName, color, imageSource) {
     var messageContainer = document.createElement('div');
     chatMessageContainer.appendChild(messageContainer);
     let chatSelectorComponent = new ChatSelectorComponent();
     chatSelectorComponent.setAttribute("color", color);
+    chatSelectorComponent.setAttribute("src", imageSource);
     chatSelectorComponent.addEventListener("click", (e) => {
         selectChat(chatName);
     });
@@ -102,7 +103,8 @@ socket.on('chat_info', function (data) {
     console.log(data);
     var name = data['chatName'];
     var color = data['color'];
-    addChat(name, color);
+    var imageSource = data['imageSource'];
+    addChat(name, color, imageSource);
     selectChat(name);
     socket.emit("get_chat_history", { chatName: name });
 });

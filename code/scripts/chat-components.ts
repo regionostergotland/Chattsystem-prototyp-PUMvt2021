@@ -204,7 +204,7 @@ class ChatSelectorComponent extends HTMLElement {
 
 	//sender: string;
 	color: string;
-	//src: string;
+	src: string;
 	//message: string = "";
 
 	userIconComponent: UserIconComponent;
@@ -228,11 +228,12 @@ class ChatSelectorComponent extends HTMLElement {
 		this.classList.add("chat-image");
 		this.active = ("active" in this.attributes? true: false);
 		this.color = ("color" in this.attributes? (<HTMLElement>this).attributes["color"].value: "white");
+	
 
 		if(this.active)
 			this.classList.add("active");
 		//this.backgroundColor = ("background-color" in this.attributes? (<HTMLElement>this).attributes["background-color"].value: "#FFF")
-		//this.src = ("src" in this.attributes? (<HTMLElement>this).attributes["src"].value: "/images/user.png");
+		this.src = ("src" in this.attributes? (<HTMLElement>this).attributes["src"].value: "/images/user.png");
 		//this.innerHTML = `
 		//	<user-icon-component background-color="` + this.backgroundColor + `" src="`+ this.src +`" hover-text="`+this.sender+`"></user-icon-component>
 		//	<div class="chat-bubble">
@@ -241,7 +242,7 @@ class ChatSelectorComponent extends HTMLElement {
 		//`;
 		
 		this.innerHTML = `
-			<user-icon-component background-color="`+ this.color + `" src="/images/bot.png"></user-icon-component>
+			<user-icon-component background-color="`+ this.color + `" src="`+ this.src + `"></user-icon-component>
 			<div class="chat-indicator"></div>
 		`;
 		this.userIconComponent = <UserIconComponent>this.children[0];
@@ -252,7 +253,7 @@ class ChatSelectorComponent extends HTMLElement {
 
 
 	static get observedAttributes() {
-		return ['active', 'color'];
+		return ['active', 'color', 'src'];
 	}
 
 	attributeChangedCallback(attrName, oldVal, newVal) {  
@@ -269,6 +270,11 @@ class ChatSelectorComponent extends HTMLElement {
 					this.color = ("color" in this.attributes? (<HTMLElement>this).attributes["color"].value: "white");
 					this.userIconComponent.setAttribute("background-color", this.color)
 					break;
+				case 'src':
+					this.src = ("src" in this.attributes? (<HTMLElement>this).attributes["src"].value: "/images/user.png");
+					this.userIconComponent.setAttribute("src", this.src)
+					break;
+					
 			}
 		}
 	}
