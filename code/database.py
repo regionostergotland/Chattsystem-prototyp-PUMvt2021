@@ -3,12 +3,18 @@ This file is the creation of a database for group 2 in the course TDDD96.
 The database is used to save information needed
 when healthcare workers communicate with patients through at chatt.
 """
-from flask import json
 from server import app
+import os
 from flask_sqlalchemy import SQLAlchemy
 
 # Defalt removed warnings
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///example.sqlite"
+if 'NAMESPACE' in os.environ and os.environ['NAMESPACE'] == 'heroku':
+    db_uri = os.environ['DATABASE_URL']
+else: # when running locally with sqlite
+    db_path = os.path.join(os.path.dirname(__file__), 'app.db')
+    db_uri = 'sqlite:///{}'.format(db_path)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db is the database where all information is stored.
 db = SQLAlchemy(app)
@@ -98,7 +104,7 @@ class User(db.Model):
     def get_role(self):
         return self.role
 
-    def get_role(self):
+    def get_name(self):
         return self.name
 
     def set_role(self, new_role):
@@ -229,10 +235,11 @@ def init():
 
 def add_keyword(keyword_in):
     """
-    This function adds a new keyword to the database.
+    This function adds a new marked keyword to the database.
     """
 
-    if not is_keyword(keyword_in):
+    keyword_objekt = Keyword.query.filter_by(keyword=keyword_in).first()
+    if keyword_objekt is None:
         new_keyword = Keyword(keyword_in)
         db.session.add(new_keyword)
         db.session.commit()
@@ -241,15 +248,16 @@ def add_keyword(keyword_in):
         return False
 
 
-# TODO: Add the posibility to look at a list of words
-def is_keyword(keyword_in):
+def get_keywords():
     """
     This function return true if the keyword is in the database, False if not.
     """
 
-    return Keyword.query.filter_by(keyword=keyword_in).first() is not None
-    # db.session.query(User.id).filter_by(name='davidism').first() is not None
-
+    keywords = Keyword.query.all()
+    if keywords is not None:
+        return [x.get_Keyword() for x in keywords]
+    else:
+        return []
 
 def delete_keyword(keyword_in):
     """
@@ -411,6 +419,18 @@ def init_chatt(user):
         return False
 
 
+def get_chatt(user):
+    """
+    This function returns all the branches ID's for a user,
+    If the user does not exist then False is returned.
+    """
+
+    chatt_object = Chatt.query.filter_by(user_id=user).first()
+    if chatt_object  is not None:
+        return [x.id for x in chatt_object.branch]
+    else:
+        return False
+
 def add_brach(user):
     """
     This function creates a new branch and adds the branch to the database,
@@ -475,6 +495,17 @@ def add_user(name_in, role_in=None):
         return False
 
 
+def get_user(name_in):
+    """
+    This function gets the requested user and the respective role if user exists.
+    Otherwise False.
+    """
+    user_object = User.query.filter_by(name=name_in).first()
+    if user_object is not None:
+        return (user_object.get_name(), user_object.get_role())
+    else:
+        return False
+
 def set_user_role(name_in, role_in):
     """
     This function creates a new user role and adds the new role to the database.
@@ -518,5 +549,16 @@ def new_message(message, user, branch_id, index):
         branch_object.message.append(message_object)
         db.session.commit()
         return True
+    else:
+        return False
+
+
+def get_messages(branch_id):
+    """
+    Returns the messages in a branch, if the branch does not exist then false is returned.
+    """
+    branch_object = Branch.query.filter_by(id=branch_id).first()
+    if branch_object is not None:
+        return [[x.get_user(), x.get_message(), x.get_index()] for x in branch_object.message]
     else:
         return False
