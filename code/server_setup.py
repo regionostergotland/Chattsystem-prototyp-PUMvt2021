@@ -23,7 +23,7 @@ class Chat:
     The Chat class
     """
 
-    def __init__(self, clients=[]):
+    def __init__(self, clients):
         self.history = []
         self.clients = clients
         self.active = True
@@ -91,7 +91,7 @@ def send_images(path):
 clients = []
 
 # All the chats
-chats = {"huvudchatt": Chat()}
+chats = {"huvudchatt": Chat([]), "chatt2": Chat([])}
 
 
 @socketio.on('authenticate')
@@ -122,7 +122,6 @@ def get_users_event(methods=['GET', 'POST']):
     """
     The event for when clients connect
     """
-    print("\nUser connected: " + request.sid)
     currentSocketId = request.sid
     json = {"users": []}
     for client in clients:
@@ -139,7 +138,6 @@ def get_chats_event(methods=['GET', 'POST']):
     """
     The event for when clients connect
     """
-    print("\nUser connected: " + request.sid)
     currentSocketId = request.sid
     json = {"chats": []}
     for chat in chats:
@@ -269,6 +267,11 @@ def chat_join_event(json, methods=['GET', 'POST']):
     """
     client = get_client(request.sid)
     chatName = json["chatName"]
+    print(request.sid + " has joined " + chatName)
+    print(chats["huvudchatt"].clients)
+    print(chats["chatt2"].clients)
+    print(len(chats[chatName].clients))
+
     if chatName in chats:
         chats[chatName].clients.append(client)
         send_info_message(
@@ -307,6 +310,7 @@ def broadcast_message(message, chatName, ignoreSender=True):
             'message': message.text,
             'chatName': chatName
         }
+    
     for client in chats[chatName].clients:
         if(not ignoreSender or not client.sid == sender.sid):
             socketio.emit('message', json, room=client.sid)

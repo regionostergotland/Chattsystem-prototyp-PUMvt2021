@@ -7,7 +7,7 @@ var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("authButton");
-var nameInput = document.getElementById("nameInput");
+var nameInput = <HTMLInputElement>document.getElementById("nameInput");
 
 btn.addEventListener("click", (e:Event) => {
   if (nameInput.value != "") {

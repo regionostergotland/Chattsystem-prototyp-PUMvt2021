@@ -172,9 +172,71 @@ class MessageComponent extends HTMLElement {
         }
     }
 }
+class ChatSelectorComponent extends HTMLElement {
+    /**
+     * The constructor initializing the HTMLElement
+     */
+    constructor() {
+        super();
+        //sender: string;
+        //backgroundColor: string;
+        //src: string;
+        //message: string = "";
+        //
+        //userIconComponent: UserIconComponent;
+        //chatBubbleDiv: HTMLElement;
+        //textElement: HTMLElement;
+        this.active = false;
+        this.loaded = false;
+    }
+    /**
+     * This function is called when the component is created.
+     * It generates the necessary components and structure for the component.
+     */
+    connectedCallback() {
+        //TODO: lägg till färg och bakgrund
+        this.classList.add("chat-image");
+        this.active = ("active" in this.attributes ? true : false);
+        if (this.active)
+            this.classList.add("active");
+        //this.backgroundColor = ("background-color" in this.attributes? (<HTMLElement>this).attributes["background-color"].value: "#FFF")
+        //this.src = ("src" in this.attributes? (<HTMLElement>this).attributes["src"].value: "/images/user.png");
+        //this.innerHTML = `
+        //	<user-icon-component background-color="` + this.backgroundColor + `" src="`+ this.src +`" hover-text="`+this.sender+`"></user-icon-component>
+        //	<div class="chat-bubble">
+        //		<p>` + this.message + `</p>
+        //	</div>
+        //`;
+        this.innerHTML = `
+			<user-icon-component src="/images/bot.png"></user-icon-component>
+			<div class="chat-indicator"></div>
+		`;
+        //this.userIconComponent = <UserIconComponent>this.children[0];
+        //this.chatBubbleDiv = <HTMLElement>this.children[1];
+        //this.textElement = <HTMLElement>this.chatBubbleDiv.children[0];
+        this.loaded = true;
+    }
+    static get observedAttributes() {
+        return ['active'];
+    }
+    attributeChangedCallback(attrName, oldVal, newVal) {
+        if (this.loaded && oldVal !== newVal) {
+            switch (attrName) {
+                case "active":
+                    this.active = ("active" in this.attributes ? true : false);
+                    if (this.active)
+                        this.classList.add("active");
+                    else if (this.classList.contains("active"))
+                        this.classList.remove("active");
+                    break;
+            }
+        }
+    }
+}
 // Adds an event that invokes when the pages has finished loading
 window.addEventListener('load', (event) => {
     // Defines the different components
     customElements.define('user-icon-component', UserIconComponent);
     customElements.define('message-component', MessageComponent);
+    customElements.define('chat-selector-component', ChatSelectorComponent);
 });
