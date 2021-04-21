@@ -11,44 +11,45 @@ import database as DB
 """
 Botfunctions, these functions sends information to and from the bot. 
 """
-########################################################################
 
-"""
-Function for sending a message from a patient to the bot that returns the response. 
-"""
-def botcom(message):
-    #something
-    #print(bott.main_ish(message))
-    return
+
+
+def get_bot_message(message):
+    """
+    Function for sending a message from a patient to the bot that returns 
+    the response. 
+    """
+    return bott.bot_main(message)
 
 
 ########################################################################
 """
 Database functions, these functions sends information to and from the database
 """
-########################################################################
 
-"""
-something...
-idea: take in two arguments: tag, data. tag is what function in the DB that is gonna be called, data is what 
-should be put into the function. Data is a list since there could be 0, 1 or 2 arguments to the functions
-in the DB.
 
-maybe do a try and catch, so if the db is not initialized then catch that and init before continuing. 
-"""
 def DB_init():
+    """
+    Calls the function in the database that initialize the database.
+    """
     DB.init()
 
 def DB_getQanswer(question):
+    """
+    Calls the function in the database that gets the question answer to the 
+    input question. 
+    """
     return DB.get_question_answer(question)
 
 def DB_word_match(word):
+    """
+    Calls the function that get the matching questions from a word in the 
+    database. 
+    """
     return DB.get_matching_questions(word)
 
 def DB_addQ(question, answer):
-    
+    """
+    Calls the function that adds questions to the database in the database. 
+    """
     return DB.add_question(question, answer)
-
-
-#print("Skriv något: ")
-#botcom(input())
