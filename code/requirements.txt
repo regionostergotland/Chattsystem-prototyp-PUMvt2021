@@ -3,3 +3,4 @@ gunicorn
 flask-socketio
 eventlet
 gevent-websocket
+nltk
