@@ -35,7 +35,7 @@ function selectChat(chatName) {
     chatMessages[chatName]["selector"].setAttribute("active", "");
     selectedChatName = chatName;
 }
-function addChat(chatName, color, imageSource) {
+function addChat(chatName, color, imageSource, parent) {
     var messageContainer = document.createElement('div');
     var clientContainer = document.createElement('div');
     clientContainer.classList.add("user-image-container");
@@ -48,6 +48,14 @@ function addChat(chatName, color, imageSource) {
         selectChat(chatName);
     });
     chatSelectorContainer.appendChild(chatSelectorComponent);
+    if (parent != undefined) {
+        var parentButton = document.createElement('button');
+        parentButton.innerHTML = parent;
+        parentButton.addEventListener("click", (e) => {
+            selectChat(parent);
+        });
+        messageContainer.appendChild(parentButton);
+    }
     chatMessages[chatName] = { "messages": messageContainer, "selector": chatSelectorComponent, "clients": clientContainer };
 }
 /**
@@ -124,7 +132,8 @@ socket.on('chat_info', function (data) {
     var color = data['color'];
     var imageSource = data['imageSource'];
     var clients = data['clients'];
-    addChat(name, color, imageSource);
+    var parent = data['parent'];
+    addChat(name, color, imageSource, parent);
     selectChat(name);
     clients.forEach(client => {
         addChatUserIcon(name, client["name"], client["background"], client["userIconSource"]);

@@ -23,13 +23,14 @@ class Chat:
     The Chat class
     """
 
-    def __init__(self, clients, color = "white", imageSource ="/images/user.png" ):
+    def __init__(self, clients, color = "white", imageSource ="/images/user.png", parent= None ):
         self.history = []
         self.clients = clients
         self.active = True
         self.color = color
         self.imageSource = imageSource
-
+        self.parent = parent
+ 
 
 class Message:
     """
@@ -93,7 +94,7 @@ def send_images(path):
 clients = []
 
 # All the chats
-chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/bot.png")}
+chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/bot.png", "huvudchatt")}
 
 
 @socketio.on('authenticate')
@@ -311,6 +312,8 @@ def send_chat_info(reciever, chatName):
     for client in chat.clients:
         clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource})
     json = {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource, 'clients': clients}
+    if not chat.parent == None:
+        json["parent"] = chat.parent
     socketio.emit('chat_info', json, room=reciever.sid)
 
 
