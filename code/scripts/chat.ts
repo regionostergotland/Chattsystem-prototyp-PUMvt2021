@@ -47,7 +47,10 @@ function selectChat(chatName: string){
 
 function addChat(chatName: string, color: string, imageSource: string){
 	var messageContainer = document.createElement('div');
+	var clientContainer = document.createElement('div');
+	clientContainer.classList.add("user-image-container")
 	chatMessageContainer.appendChild(messageContainer);
+	messageContainer.appendChild(clientContainer);
 	let chatSelectorComponent = new ChatSelectorComponent();
 	chatSelectorComponent.setAttribute("color",color)
 	chatSelectorComponent.setAttribute("src",imageSource)
@@ -55,7 +58,25 @@ function addChat(chatName: string, color: string, imageSource: string){
 		selectChat(chatName);
 	});
 	chatSelectorContainer.appendChild(chatSelectorComponent);
-	chatMessages[chatName] = {"messages": messageContainer, "selector": chatSelectorComponent};
+	chatMessages[chatName] = {"messages": messageContainer, "selector": chatSelectorComponent, "clients": clientContainer};
+}
+
+/**
+ * Adds an usericon to represent an user who is active in the chat. 
+ * 
+ * @param chatName  The name of the chat
+ * @param clientName  The name of the user
+ * @param clientColor The color of the user
+ * @param clientIconSource The user iconSource
+ */
+
+function addChatUserIcon(chatName: string, clientName: string, clientColor: string, clientIconSource: string){
+	var clientContainer = chatMessages[chatName]["clients"]
+	var userIconComponent = new UserIconComponent()
+	userIconComponent.setAttribute("background-color", clientColor)
+	userIconComponent.setAttribute("src", clientIconSource)
+	userIconComponent.setAttribute("hover-text", clientName)
+	clientContainer.appendChild(userIconComponent)
 }
 
 /**
@@ -130,7 +151,12 @@ socket.on('chat_info',function(data){
 	var name = data['chatName']
 	var color = data['color']
 	var imageSource = data['imageSource']
+	var clients = data['clients']
 	addChat(name,color,imageSource)
 	selectChat(name)
+	clients.forEach(client => {
+		addChatUserIcon(name, client["name"],client["background"], client["userIconSource"])
+	});
 	socket.emit("get_chat_history", {chatName: name})
 })
+

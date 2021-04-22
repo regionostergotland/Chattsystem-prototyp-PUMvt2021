@@ -96,3 +96,8 @@
 	outline: none;
 	border: 1px solid #293134;
 }
+
+.user-image-container{
+	display: inline-flex;   
+	margin: 0.5vh;
+}

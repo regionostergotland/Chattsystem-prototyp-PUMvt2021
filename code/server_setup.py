@@ -307,7 +307,11 @@ def send_chat_info(reciever, chatName):
     Sends the whole chat history of the given chat to a client
     """
     chat = chats[chatName]
-    socketio.emit('chat_info', {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource}, room=reciever.sid)
+    clients = []
+    for client in chat.clients:
+        clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource})
+    json = {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource, 'clients': clients}
+    socketio.emit('chat_info', json, room=reciever.sid)
 
 
     
