@@ -1,12 +1,7 @@
-<<<<<<< HEAD
 Flask
 gunicorn
 flask-socketio
 eventlet
 gevent-websocket
 enum34
-=======
-Flask==1.1.2
-flask_socketio==5.0.1
-Flask-SQLAlchemy==2.5.1
->>>>>>> lagringsmodul
+Flask-SQLAlchemy
