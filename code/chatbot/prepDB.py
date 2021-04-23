@@ -28,8 +28,7 @@ def prepare_db():
     switchboard.DB_addQ('ja', 'en sjuksköterska kommer att gå med i konversationen.')
     switchboard.DB_addQ('nej', 'en sjuksköterska kommer att gå med i konversationen.')
     #switchboard.DB_addQ('', '')
-"""  
+  
 if __name__ == '__main__':
-    switchboard.DB_init()
     prepare_db()
-"""
+

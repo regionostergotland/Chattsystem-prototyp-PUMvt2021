@@ -4,7 +4,7 @@ The database is used to save information needed
 when healthcare workers communicate with patients through at chatt.
 """
 from flask import json
-from server import app
+from server_setup import app
 from flask_sqlalchemy import SQLAlchemy
 
 # Defalt removed warnings
