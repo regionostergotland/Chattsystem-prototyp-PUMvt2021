@@ -135,7 +135,7 @@ def test_new_branch():
     Branch_id = DB.add_brach("Ludwig")
     assert Branch_id is not None
     assert DB.new_message("HEJ", "Ludwig", Branch_id, 0)
-    assert DB.add_user_to_brach("Kevin",Branch_id)
+    assert DB.add_user_to_brach("Kevin", Branch_id)
     assert DB.new_message("Nej!", "Kevin", Branch_id, 1)
     assert DB.add_brach_summary(Branch_id, "Noob", "Kevin")
 
@@ -150,7 +150,7 @@ def test_user():
     assert DB.delete_user("Kevin")
     assert not DB.delete_user("Kevin")
 
-    assert DB.add_user("Felicia",2)
+    assert DB.add_user("Felicia", 2)
     assert DB.set_user_role("Felicia", 0)
     assert DB.get_user("Felicia") == ("Felicia", 0)
     assert not DB.set_user_role("Kevin",7)
