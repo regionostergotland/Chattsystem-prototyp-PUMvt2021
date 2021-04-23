@@ -3,7 +3,7 @@ This file is the creation of a database for group 2 in the course TDDD96.
 The database is used to save information needed
 when healthcare workers communicate with patients through at chatt.
 """
-from server import app
+from server_setup import app
 import os
 from flask_sqlalchemy import SQLAlchemy
 
