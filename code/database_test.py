@@ -1,4 +1,4 @@
-import database as DB
+import database_functions as DB
 
 
 def test_keyword():
