@@ -7,32 +7,32 @@
 	<link rel="stylesheet" href="/static/components.css">
 	<link rel="stylesheet" href="/static/chat.css">
 	<link rel="stylesheet" href="/static/chat-components.css">
-
+	<link rel="stylesheet" href="/static/modal.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js" crossorigin="anonymous"></script>
 	<script src="/scripts/components.js"></script>
 	<script src="/scripts/chat-components.js"></script>
+
 </head>
 <body>
 	<div class="flex-container">
 		<header-component small></header-component>
 		<div class="chat-container">
 			<div class="chat-header">
-				<div class="chat-image-container" id="chat-selector-container">
-					<!--<div class="chat-image">
+				<div class="chat-image-container">
+					<div class="chat-image">
 						<user-icon-component background-color="#38D19D"></user-icon-component>
 						<div class="chat-indicator"></div>
 					</div>
 					<div class="chat-image active">
 						<user-icon-component src="/images/bot.png"></user-icon-component>
 						<div class="chat-indicator"></div>
-					</div>-->
+					</div>
 				</div>
 				<div class="chat-header-border"></div>
 			</div>
-			
+
 			<div class="chat">
-				<div id="chat-message-container">
-					
+				<div id="messages">
 				</div>
 				<div class="chat-footer">
 					<div class="writing-box">
@@ -47,8 +47,19 @@
 		</div>
 	</div>
 
-
+	<div id="myModal" class="modal">
+	<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Logga in som</h2>
+			<div class="modalButtonContainer">
+				<input type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
+				<button type="button" name="button" id="authButton">Klar</button>
+			</div>
+		</div>
+	</div>
 
 </body>
+<script src="/scripts/chattpersonal.js"></script>
 <script src="/scripts/chat.js"></script>
 </html>

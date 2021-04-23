@@ -21,7 +21,7 @@
 .chat-image-container{
 	display: table;
 	margin: 0 1vh 0 auto;
-	
+
 }
 
 .chat-image{
@@ -52,7 +52,18 @@
 	visibility: visible;
 }
 
+.chat-send-button-container > button {
+	padding: 1vh;
+}
 
+.chat-footer {
+	width: 90%;
+	left: 5%;
+	position: fixed;
+	bottom: 0;
+	display: grid;
+  grid-template-columns: 15fr 1fr;
+}
 
 .chat{
 	background-color: #FFF;
@@ -65,8 +76,7 @@
 }
 
 .writing-box{
-	position: fixed;
-	bottom: 0;
+
 	width: 100%;
 	background-color: #FFF;
 	display: inline-block;
@@ -85,4 +95,9 @@
 .writing-box input:focus{
 	outline: none;
 	border: 1px solid #293134;
+}
+
+.user-image-container{
+	display: inline-flex;   
+	margin: 0.5vh;
 }

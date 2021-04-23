@@ -1,6 +1,6 @@
 
 header-component{
-	position: sticky;
+	/*position: sticky;*/
 	top: 0;
 	background:#C21B41;
 	z-index: 2;
@@ -59,6 +59,8 @@ drawer-component .content button{
 }
 
 drawer-component .content{
+	display: grid;
+  grid-template-columns: 1fr;
 	overflow: hidden;
 	padding: 0px;
 	margin: 0px;
@@ -86,11 +88,11 @@ drawer-component .drawer-trigger::after{
 	border-right: 1vh solid transparent;
 	border-bottom: 0vh solid #222;
 	border-top: 1vh solid #222;
-	
+
 
 	margin: 1vh auto 0 auto;
 	animation: trigger-close .2s linear;
-	
+
 }
 
 drawer-component.open .drawer-trigger::after{
@@ -109,7 +111,7 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: 1vh solid #222;
 		border-top: 0vh solid #222;
   }
-	
+
 	50% {
 		width: 2vh;
 		border-left: 0vh solid transparent;
@@ -117,7 +119,7 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: .25vh solid #222;
 		border-top: 0vh solid #222;
 	}
-	
+
 	51% {
 		width: 2vh;
 		border-left: 0vh solid transparent;
@@ -125,7 +127,7 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: 0vh solid #222;
 		border-top: .25vh solid #222;
   }
-	
+
   100% {
 		width: 0vh;
     border-left: 1vh solid transparent;
@@ -143,16 +145,16 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: 0vh solid #222;
 		border-top: 1vh solid #222;
   }
-	
+
 	50% {
 		width: 2vh;
-		
+
 		border-left: 0vh solid transparent;
 		border-right: 0vh solid transparent;
 		border-bottom: 0vh solid #222;
 		border-top: .25vh solid #222;
 	}
-	
+
 	51% {
 		width: 2vh;
 		border-left: 0vh solid transparent;
@@ -160,7 +162,7 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: .25vh solid #222;
 		border-top: 0vh solid #222;
   }
-	
+
   100% {
 		width: 0vh;
     border-left: 1vh solid transparent;
@@ -169,6 +171,3 @@ drawer-component.open .drawer-trigger::after{
 		border-top: 0vh solid #222;
   }
 }
-
-
-

@@ -5,13 +5,59 @@
 	<link rel="icon" type="image/png" href="/images/favicon.png"/>
 	<link rel="stylesheet" href="/static/styles.css">
 	<link rel="stylesheet" href="/static/components.css">
+	<link rel="stylesheet" href="/static/modal.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js" crossorigin="anonymous"></script>
 	<script src="/scripts/components.js"></script>
 </head>
 <body>
 	<header-component></header-component>
-	<h1>Välkommen till vården</h1>
-	<button href="/categories">Logga in</a>
+
+	<div id="myModal" class="modal">
+	<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Logga in som</h2>
+			<div class="modalButtonContainer">
+				<button href="/categories">Patient</button>
+				<button href="/chatpersonal">Personal</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="header_text">
+		<h1>Välkommen till vården</h1>
+	</div>
+	<button id="loggain">Logga in</button>
 	<button href="/categories">Fortsätt som gäst</button>
+
+
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("loggain");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+
 </body>
 </html>
