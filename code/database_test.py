@@ -142,7 +142,8 @@ def test_new_branch():
 
 def test_user():
     """
-    Test the creation and deletion of users, as well as changing att geting their roles.
+    Test the creation and deletion of users, as well as changing att
+    getting their roles.
     """
     DB.init()
     assert DB.add_user("Kevin")
@@ -153,7 +154,7 @@ def test_user():
     assert DB.add_user("Felicia", 2)
     assert DB.set_user_role("Felicia", 0)
     assert DB.get_user("Felicia") == ("Felicia", 0)
-    assert not DB.set_user_role("Kevin",7)
+    assert not DB.set_user_role("Kevin", 7)
 
 
 def test_brach_errors():
@@ -166,15 +167,17 @@ def test_brach_errors():
     branch_id = DB.init_chatt("Ludwig")
     assert not DB.init_chatt("Ludwig")
     assert not DB.init_chatt("Kevin")
-    assert not DB.add_brach_summary(branch_id+1,"text","Ludwig")
+    assert not DB.add_brach_summary(branch_id+1, "text", "Ludwig")
     assert not DB.add_user_to_brach("Kevin", branch_id)
     assert not DB.add_brach("Kevin")
+
 
 def test_messages():
     """
     Test adding diffrent types of messages
     Krav som testas: 6.2.1, 6.2.2
     """
+
     DB.init()
     assert DB.add_user("Ludwig")
     branch_id = DB.init_chatt("Ludwig")

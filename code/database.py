@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 # Defalt removed warnings
 if 'NAMESPACE' in os.environ and os.environ['NAMESPACE'] == 'heroku':
     db_uri = os.environ['DATABASE_URL']
-else: # when running locally with sqlite
+else:  # when running locally with sqlite
     db_path = os.path.join(os.path.dirname(__file__), 'app.db')
     db_uri = 'sqlite:///{}'.format(db_path)
 
@@ -145,9 +145,11 @@ class Message(db.Model):
 
 
 branch_user = db.Table('branch_user',
-    db.Column('id', db.Integer, db.ForeignKey('Branch.id'), primary_key=True),
-    db.Column('name', db.String(), db.ForeignKey('User.name'), primary_key=True)
-)
+                       db.Column('id', db.Integer,
+                                 db.ForeignKey('Branch.id'), primary_key=True),
+                       db.Column('name', db.String(),
+                                 db.ForeignKey('User.name'), primary_key=True)
+                       )
 
 
 class Branch(db.Model):
@@ -173,7 +175,7 @@ class Branch(db.Model):
     active = db.Column(db.Boolean, nullable=False, default=True, unique=False)
 
     users = db.relationship('User', secondary=branch_user, lazy='subquery',
-        backref=db.backref('Branch', lazy=True))
+                            backref=db.backref('Branch', lazy=True))
     message = db.relationship('Message', backref='Branch', lazy=True)
 
     def __init__(self, chatt):

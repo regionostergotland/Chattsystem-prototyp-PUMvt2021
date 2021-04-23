@@ -1,4 +1,5 @@
-from database import *
+from database import db, Keyword, Questions, Bot_Phrases, User, Message, \
+                     Branch, Chatt
 
 
 def init():
@@ -36,6 +37,7 @@ def get_keywords():
         return [x.get_Keyword() for x in keywords]
     else:
         return []
+
 
 def delete_keyword(keyword_in):
     """
@@ -80,8 +82,13 @@ def get_question_answer(question_in):
 
 
 def get_matching_questions(word):
+    """
+    This function finds questions that contain the input word.
+    Returns the answer if it exist, False if not.
+    """
+    question_objets = Questions.query.\
+        filter(Questions.question.like('%'+word+'%')).all()
 
-    question_objets = Questions.query.filter(Questions.question.like('%'+word+'%')).all()
     if question_objets is not None:
         return [x.get_queston() for x in question_objets]
     else:
@@ -184,7 +191,8 @@ def init_chatt(user):
     """
 
     user_object = User.query.filter_by(name=user).first()
-    if Chatt.query.filter_by(user_id=user).first() is None and user_object is not None:
+    chatt_obejt = Chatt.query.filter_by(user_id=user).first()
+    if chatt_obejt is None and user_object is not None:
         new_chatt = Chatt(user)
         new_branch = Branch(user)  # Create a new branch when creating new user
         db.session.add(new_chatt)
@@ -204,10 +212,11 @@ def get_chatt(user):
     """
 
     chatt_object = Chatt.query.filter_by(user_id=user).first()
-    if chatt_object  is not None:
+    if chatt_object is not None:
         return [x.id for x in chatt_object.branch]
     else:
         return False
+
 
 def add_brach(user):
     """
@@ -275,8 +284,8 @@ def add_user(name_in, role_in=None):
 
 def get_user(name_in):
     """
-    This function gets the requested user and the respective role if user exists.
-    Otherwise False.
+    This function gets the requested user and the respective role
+    if user exists, otherwise False.
     """
     user_object = User.query.filter_by(name=name_in).first()
     if user_object is not None:
@@ -284,9 +293,11 @@ def get_user(name_in):
     else:
         return False
 
+
 def set_user_role(name_in, role_in):
     """
-    This function creates a new user role and adds the new role to the database.
+    This function creates a new user role and adds
+    the new role to the database.
     """
     user_object = User.query.filter_by(name=name_in).first()
     if user_object is not None:
@@ -333,10 +344,12 @@ def new_message(message, user, branch_id, index):
 
 def get_messages(branch_id):
     """
-    Returns the messages in a branch, if the branch does not exist then false is returned.
+    Returns the messages in a branch, if the branch does not exist then
+    false is returned.
     """
     branch_object = Branch.query.filter_by(id=branch_id).first()
     if branch_object is not None:
-        return [[x.get_user(), x.get_message(), x.get_index()] for x in branch_object.message]
+        return [[x.get_user(), x.get_message(), x.get_index()]
+                for x in branch_object.message]
     else:
         return False
