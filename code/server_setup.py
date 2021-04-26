@@ -1,8 +1,11 @@
 from enum import Enum
 from flask import Flask, render_template, send_from_directory, request
+from werkzeug.wrappers import CommonResponseDescriptorsMixin
 from flask_socketio import SocketIO
 import authentication
 
+
+clientIdCounter = 0
 
 class Client:
     """
@@ -10,12 +13,15 @@ class Client:
     """
 
     def __init__(self, sid, name, backgroundColor, userIconSource, role):
+        global clientIdCounter
         self.sid = sid
         self.name = name
         self.backgroundColor = backgroundColor
         self.userIconSource = userIconSource
         self.authenticated = False
         self.role = role
+        clientIdCounter += 1
+        self.id = clientIdCounter
 
 
 class Chat:
@@ -179,8 +185,8 @@ def disconnect_event(methods=['GET', 'POST']):
         for client2 in chat.clients:
             if client1 == client2:
                 chat.clients.remove(client1)
-    socketio.emit("client_disconnect", {"client": client1.name})
-    print(client1.name + " has disconnected")
+    socketio.emit("client_disconnect", {"id": client1.id})
+    print("\n"+ client1.name + "(" + str(client1.id) + ") has disconnected")
 
 @socketio.on('details_assignment')
 def details_assignment_event(json, methods=['GET', 'POST']):
@@ -192,6 +198,10 @@ def details_assignment_event(json, methods=['GET', 'POST']):
     client.backgroundColor = json["backgroundColor"]
     client.userIconSource = json["userIconSource"]
     client.role = Roles[json["role"]]
+    json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+    for client2 in clients:
+        if client.id != client2.id:
+            socketio.emit("client_details_changed", json, room=client2.sid)
     send_info_message(200, "Användarinformation satt", request.sid)
 
 
@@ -295,7 +305,9 @@ def chat_join_event(json, methods=['GET', 'POST']):
                 "chatName": chatName,
                 "client": client.name,
                 "color": client.backgroundColor,
-                "iconSource": client.userIconSource}, room=otherClient.sid)
+                "iconSource": client.userIconSource,
+                "id": client.id
+                }, room=otherClient.sid)
         chats[chatName].clients.append(client)
         send_info_message(
             200, "Klienten har anslutit till chatten", request.sid)
@@ -330,7 +342,7 @@ def send_chat_info(reciever, chatName):
     chat = chats[chatName]
     clients = []
     for client in chat.clients:
-        clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource})
+        clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource, 'id': client.id})
     json = {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource, 'clients': clients}
     if not chat.parent == None:
         json["parent"] = chat.parent
