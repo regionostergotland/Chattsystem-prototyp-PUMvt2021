@@ -150,7 +150,6 @@ socket.on('connect', function () {
     socket.emit('details_assignment', {
         name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"
     });
-    //
     socket.emit("get_users");
     socket.emit("get_chats");
 });

@@ -36,6 +36,7 @@ class Chat:
         self.color = color
         self.imageSource = imageSource
         self.parent = parent
+        
  
 
 class Message:
@@ -100,7 +101,7 @@ def send_images(path):
 clients = []
 
 # All the chats
-chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/bot.png", "huvudchatt")}
+chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
 
 
 @socketio.on('authenticate')
@@ -116,13 +117,6 @@ def authenticate_event(methods=['GET', 'POST']):
     else:
         send_info_message(
             400, "Det uppstod ett fel vid autentisering", request.sid)
-
-
-# Temporary data
-names = ["Ludwig", "Sven", "Anna", "Emma", "Peter", "Kalle"]
-backgroundColors = ["Green", "Blue", "Red", "#123", "#FFF", "Cyan"]
-userIconSources = ["/images/user.png", "/images/bot.png"]
-
 
 
 
@@ -168,7 +162,7 @@ def connect_event(methods=['GET', 'POST']):
     print("\nUser connected: " + request.sid)
     currentSocketId = request.sid
     backgroundColor = "white"
-    userIconSource = userIconSources[0]
+    userIconSource = "/images/bot.png"
     name = "anonym"
     role = Roles["odefinierad"]
     add_client(currentSocketId, name, backgroundColor, userIconSource, role)
@@ -306,10 +300,12 @@ def chat_join_event(json, methods=['GET', 'POST']):
                 "iconSource": client.userIconSource,
                 "id": client.id
                 }, room=otherClient.sid)
+                
         chats[chatName].clients.append(client)
         send_info_message(
             200, "Klienten har anslutit till chatten", request.sid)
         send_chat_info(client, chatName)
+
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
@@ -339,6 +335,7 @@ def send_chat_info(reciever, chatName):
     """
     chat = chats[chatName]
     clients = []
+
     for client in chat.clients:
         clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource, 'id': client.id})
     json = {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource, 'clients': clients}
@@ -387,7 +384,9 @@ def add_client(sid, name, backgroundColor, userIconSource, role):
     """
     Adds a client to the list of all clients
     """
+
     client = Client(sid, name, backgroundColor, userIconSource, role)
+
     clients.append(client)
     return client
 

@@ -101,7 +101,7 @@
 .writing-box input{
 	display: block;
 	margin: 1vh auto;
-	width: 90%;
+	width: 95%;
 	font-size: 3vh;
 	padding: 1vh;
 	border-radius: 2vh;
@@ -116,4 +116,14 @@
 .user-image-container{
 	display: inline-flex;   
 	margin: 0.5vh;
+}
+
+#sendbutton{
+	display: grid;
+	margin: 1vh 0;
+}
+
+#sendbutton img{
+	
+	width: 3vh;
 }
