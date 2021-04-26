@@ -132,3 +132,25 @@ socket.on('chat_info', function (data) {
     });
     socket.emit("get_chat_history", { chatName: name });
 });
+socket.on("client_disconnect", function (data) {
+    var name1 = data['client'];
+    for (var key in chatMessages) {
+        var chat = chatMessages[key];
+        var clientContainer = chat["clients"];
+        var children = clientContainer.children;
+        for (var i = children.length - 1; i >= 0; i--) {
+            var child = children[i];
+            var name2 = child.attributes["hover-text"].value;
+            if (name1 == name2) {
+                clientContainer.removeChild(child);
+            }
+        }
+    }
+});
+socket.on("client_connect", function (data) {
+    var chatname = data["chatName"];
+    var name = data["client"];
+    var color = data["color"];
+    var iconSource = data["iconSource"];
+    addChatUserIcon(chatname, name, color, iconSource);
+});

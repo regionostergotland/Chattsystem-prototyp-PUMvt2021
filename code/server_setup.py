@@ -167,6 +167,20 @@ def connect_event(methods=['GET', 'POST']):
     role = Roles["odefinierad"]
     add_client(currentSocketId, name, backgroundColor, userIconSource, role)
 
+@socketio.on('disconnect')
+def disconnect_event(methods=['GET', 'POST']):
+    """
+    Removes client from the clients list when disconected.
+    """
+    client1 = get_client(request.sid)
+    clients.remove(client1)
+    for chatname in chats:
+        chat = chats[chatname]
+        for client2 in chat.clients:
+            if client1 == client2:
+                chat.clients.remove(client1)
+    socketio.emit("client_disconnect", {"client": client1.name})
+    print(client1.name + " has disconnected")
 
 @socketio.on('details_assignment')
 def details_assignment_event(json, methods=['GET', 'POST']):
@@ -276,6 +290,12 @@ def chat_join_event(json, methods=['GET', 'POST']):
     print(len(chats[chatName].clients))
 
     if chatName in chats:
+        for otherClient in chats[chatName].clients :
+            socketio.emit("client_connect", {
+                "chatName": chatName,
+                "client": client.name,
+                "color": client.backgroundColor,
+                "iconSource": client.userIconSource}, room=otherClient.sid)
         chats[chatName].clients.append(client)
         send_info_message(
             200, "Klienten har anslutit till chatten", request.sid)
