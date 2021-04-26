@@ -199,9 +199,7 @@ def details_assignment_event(json, methods=['GET', 'POST']):
     client.userIconSource = json["userIconSource"]
     client.role = Roles[json["role"]]
     json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
-    for client2 in clients:
-        if client.id != client2.id:
-            socketio.emit("client_details_changed", json, room=client2.sid)
+    socketio.emit("client_details_changed", json)
     send_info_message(200, "Användarinformation satt", request.sid)
 
 
