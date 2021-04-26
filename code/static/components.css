@@ -170,4 +170,27 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: 1vh solid #222;
 		border-top: 0vh solid #222;
   }
+
+
+
 }
+
+/* Admin view */
+
+
+.content-container {
+	display: grid;
+	grid-template-areas: 'menu chat chat chat';
+}
+
+.admin-view {
+	padding: 10px;
+	grid-area: menu;
+	background-color: grey;
+}
+
+
+
+
+
+
