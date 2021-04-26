@@ -38,8 +38,6 @@ socket.on('return_chats', function(data){
 // Defines the different components
 modal.style.display = "block";
 
-<<<<<<< Updated upstream
-=======
 
 /**
  *  Sends a message when you press sendbutton
@@ -48,4 +46,3 @@ modal.style.display = "block";
   alert("clickededede")
 
 }​;​
->>>>>>> Stashed changes

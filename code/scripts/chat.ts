@@ -120,7 +120,7 @@ document.getElementById('sendbutton').onclick = function() {
 				message: writingInput.value, chatName:"huvudchatt"
 		});
 		// Creates the message locally
-		addMessage(writingInput.value);
+		addMessage(selectedChatName, writingInput.value);
 		// Clears the writing input
 		writingInput.value = "";
 	}
