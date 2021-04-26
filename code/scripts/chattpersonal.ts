@@ -9,6 +9,8 @@ var modal = document.getElementById("myModal");
 var btn = document.getElementById("authButton");
 var nameInput = <HTMLInputElement>document.getElementById("nameInput");
 
+
+
 btn.addEventListener("click", (e:Event) => {
   if (nameInput.value != "") {
     console.log(nameInput.value)
@@ -21,5 +23,26 @@ btn.addEventListener("click", (e:Event) => {
     socket.emit('authenticate')
   }
 });
+
+socket.on('return_chats', function(data){
+
+	data['chats'].forEach(chatName => {
+		//addChat(chatName);
+		socket.emit("chat_join", { chatName: chatName})
+	});
+	//selectChat("huvudchatt");
+	console.log(data)
+})
+
+
 // Defines the different components
 modal.style.display = "block";
+
+
+/**
+ *  Sends a message when you press sendbutton
+ */
+ document.getElementById('adduserbutton').onclick = function() {
+  alert("clickededede")
+
+}​;​

@@ -11,9 +11,12 @@
 	flex-flow: column;
 }
 
+
+
+
 .chat-header{
 	position: sticky;
-	top: 8vh;
+	top: 0vh;
 	background:#C21B41;
 	z-index: 2;
 }
@@ -56,6 +59,18 @@
 	padding: 1vh;
 }
 
+.chat-add-button-container > button {
+	padding: 1vh;
+	top: 0vh;
+	/*position: sticky;*/
+}
+
+.admin {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+  }
+
+
 .chat-footer {
 	width: 90%;
 	left: 5%;
@@ -66,6 +81,7 @@
 }
 
 .chat{
+	grid-area: chat;
 	background-color: #FFF;
 	flex: 1 1 auto;
 }

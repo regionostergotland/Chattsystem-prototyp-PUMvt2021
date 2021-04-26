@@ -11,6 +11,7 @@ const chatSelectorContainer = document.getElementById("chat-selector-container")
 const chatMessageContainer = document.getElementById("chat-message-container");
 var chatMessages = {};
 const writingInput = <HTMLInputElement>document.getElementById("writing-input");
+const sendbutton = <HTMLInputElement>document.getElementById("sendbutton");
 
 /**
  * Adds a message locally to the chat history
@@ -106,10 +107,33 @@ writingInput.addEventListener("keyup", function(event) {
 			// Clears the writing input
 			writingInput.value = "";
 		}
-    
   }
-
 });
+
+/**
+ *  Sends a message when you press sendbutton
+ */
+document.getElementById('sendbutton').onclick = function() {
+	if(writingInput.value != ""){
+		// Sends the message to the server
+		socket.emit('message', {
+				message: writingInput.value, chatName:"huvudchatt"
+		});
+		// Creates the message locally
+		addMessage(selectedChatName, writingInput.value);
+		// Clears the writing input
+		writingInput.value = "";
+	}
+ }​;​
+
+/**
+ *  Sends a message when you press sendbutton
+ */
+ document.getElementById('adduserbutton').onclick = function() {
+	 alert("clickededede")
+
+ }​;​
+
 
 /**
  * The event that invokes when a message is recieved from the server
@@ -144,15 +168,6 @@ socket.on('return_users', function(data){
 })
 
 
-socket.on('return_chats', function(data){
-
-	data['chats'].forEach(chatName => {
-		//addChat(chatName);
-		socket.emit("chat_join", { chatName: chatName})
-	});
-	//selectChat("huvudchatt");
-	console.log(data)
-})
 
 socket.on('chat_info',function(data){
 	console.log(data)
