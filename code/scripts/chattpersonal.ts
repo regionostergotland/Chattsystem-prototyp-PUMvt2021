@@ -9,6 +9,8 @@ var modal = document.getElementById("myModal");
 var btn = document.getElementById("authButton");
 var nameInput = <HTMLInputElement>document.getElementById("nameInput");
 
+
+
 btn.addEventListener("click", (e:Event) => {
   if (nameInput.value != "") {
     console.log(nameInput.value)
@@ -36,3 +38,11 @@ socket.on('return_chats', function(data){
 // Defines the different components
 modal.style.display = "block";
 
+
+/**
+ *  Sends a message when you press sendbutton
+ */
+ document.getElementById('adduserbutton').onclick = function() {
+  alert("clickededede")
+
+}​;​

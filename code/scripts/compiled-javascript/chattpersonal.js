@@ -24,3 +24,9 @@ socket.on('return_chats', function (data) {
 });
 // Defines the different components
 modal.style.display = "block";
+/**
+ *  Sends a message when you press sendbutton
+ */
+document.getElementById('adduserbutton').onclick = function () {
+    alert("clickededede");
+};

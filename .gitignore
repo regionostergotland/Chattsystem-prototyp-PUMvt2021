@@ -130,3 +130,6 @@ dmypy.json
 
 # jest test lockal folder
 node_modules/
+
+# lockal database
+code/app.db
