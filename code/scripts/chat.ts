@@ -144,15 +144,6 @@ socket.on('return_users', function(data){
 })
 
 
-socket.on('return_chats', function(data){
-
-	data['chats'].forEach(chatName => {
-		//addChat(chatName);
-		socket.emit("chat_join", { chatName: chatName})
-	});
-	//selectChat("huvudchatt");
-	console.log(data)
-})
 
 socket.on('chat_info',function(data){
 	console.log(data)
