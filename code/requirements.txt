@@ -1,11 +1,11 @@
+
 Flask
+nltk
+sklearn
+numpy
 gunicorn
 flask-socketio
 eventlet
 gevent-websocket
-
-nltk
-numpy
-
 enum34
-
+Flask-SQLAlchemy

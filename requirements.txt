@@ -1,5 +1,4 @@
 Flask
-flask_socketio
 nltk
 sklearn
 numpy
