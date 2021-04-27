@@ -182,11 +182,11 @@ def connect_event(methods=['GET', 'POST']):
     #print("CLIENTS LENGTH AFTER: "+ str(len(clients)))
     if len(clients) == 2:
         bot_talking = True
-        bot_response = "Hej och välkommen, jag är botten Anna och kan hjälpa dig med enklare frågor. "
-        bot = get_client(-1)
-        bot_msg = Message(bot, bot_response)
-        chat.history.append(bot_msg)
-        broadcast_message(bot_msg, chatName)
+        #bot_response = "Hej och välkommen, jag är botten Anna och kan hjälpa dig med enklare frågor. "
+        #bot = get_client(-1)
+        #bot_msg = Message(bot, bot_response)
+        #chat.history.append(bot_msg)
+        #broadcast_message(bot_msg, chatName)
     else:
         bot_talking = False
     
