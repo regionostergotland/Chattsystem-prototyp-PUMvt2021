@@ -148,7 +148,7 @@ def search(input):
         return bot_response(input, all_matches)
 
     else:
-        return "sad"
+        return "Ursäkta, jag förstår inte."
 
 #A list of exit phrases.        
 exit_list = ['hej då', 'hejdå','farväl','adjö','exit','bye']
