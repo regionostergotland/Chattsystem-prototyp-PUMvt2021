@@ -57,6 +57,7 @@ class Roles (Enum):
     patient = 1
     personal = 2
 
+    bot = 3  #?
 
 # Initializes the server
 app = Flask(__name__)
@@ -96,9 +97,15 @@ def send_images(path):
     """
     return send_from_directory('images', path)
 
+#chatbot:
+import switchboard as SB
+bot_talking = False
 
 # All the connected clients
 clients = []
+
+
+
 
 # All the chats
 chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
@@ -159,6 +166,9 @@ def connect_event(methods=['GET', 'POST']):
     """
     The event for when clients connect
     """
+    global bot_talking
+    print("CLIENTS LENGTH BEFORE: "+ str(len(clients)))
+
     print("\nUser connected: " + request.sid)
     currentSocketId = request.sid
     backgroundColor = "white"
@@ -167,11 +177,24 @@ def connect_event(methods=['GET', 'POST']):
     role = Roles["odefinierad"]
     add_client(currentSocketId, name, backgroundColor, userIconSource, role)
 
+    #bot stuff:
+    #print("CLIENTS LENGTH AFTER: "+ str(len(clients)))
+    if len(clients) == 2:
+        bot_talking = True
+        #bot_response = "Hej och välkommen, jag är botten Anna och kan hjälpa dig med enklare frågor. "
+        #bot = get_client(-1)
+        #bot_msg = Message(bot, bot_response)
+        #chat.history.append(bot_msg)
+        #broadcast_message(bot_msg, chatName)
+    else:
+        bot_talking = False
+    
 @socketio.on('disconnect')
 def disconnect_event(methods=['GET', 'POST']):
     """
     Removes client from the clients list when disconected.
     """
+    global bot_talking
     client1 = get_client(request.sid)
     clients.remove(client1)
     for chatname in chats:
@@ -180,6 +203,10 @@ def disconnect_event(methods=['GET', 'POST']):
             if client1 == client2:
                 chat.clients.remove(client1)
     socketio.emit("client_disconnect", {"id": client1.id})
+    if len(clients) == 2:
+        bot_talking = True
+    else:
+        bot_talking = False
     print("\n"+ client1.name + "(" + str(client1.id) + ") has disconnected")
 
 @socketio.on('details_assignment')
@@ -202,6 +229,9 @@ def message_event(json, methods=['GET', 'POST']):
     """
     The event for when a message is recieved from a client
     """
+
+
+
     print("\nMessage: " + json['message'] + "(" + json['chatName'] + ")")
     sender = get_client(request.sid)
     chatName = json["chatName"]
@@ -211,6 +241,17 @@ def message_event(json, methods=['GET', 'POST']):
             message = Message(sender, json['message'])
             chat.history.append(message)
             broadcast_message(message, chatName)
+            
+            #bot stuff:
+            #print(bot_talking)
+            if bot_talking:
+                bot_response = SB.get_bot_message(message.text)
+                bot = get_client(-1)
+                bot_msg = Message(bot, bot_response)
+                chat.history.append(bot_msg)
+                broadcast_message(bot_msg, chatName)
+
+
         else:
             send_info_message(200, "Chatten är avslutad", request.sid)
     else:
@@ -406,3 +447,7 @@ def run():
     Runs the server
     """
     socketio.run(app, debug=True)
+
+
+#add bot-client
+add_client(-1, "Botten Anna", "Red", "/images/bot.png", Roles["bot"])
