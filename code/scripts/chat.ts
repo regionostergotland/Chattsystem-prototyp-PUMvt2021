@@ -15,9 +15,9 @@ const sendbutton = <HTMLInputElement>document.getElementById("sendbutton");
 
 /**
  * Adds a message locally to the chat history
- * 
+ *
  * @param message The message
- * @param left Whether the message is a "left" or "right" message 
+ * @param left Whether the message is a "left" or "right" message
  */
 function addMessage(chatName: string , message: string, sender: string = "", background="", iconSource=""){
 	let messageComponent = new MessageComponent();
@@ -28,8 +28,8 @@ function addMessage(chatName: string , message: string, sender: string = "", bac
 		messageComponent.setAttribute("background-color", background);
 	if(iconSource != "")
 		messageComponent.setAttribute("src", iconSource);
-		
-		
+
+
 	chatMessages[chatName]["messages"].appendChild(messageComponent);
 
 }
@@ -82,8 +82,8 @@ function addChat(chatName: string, color: string, imageSource: string, parent: s
 }
 
 /**
- * Adds an usericon to represent an user who is active in the chat. 
- * 
+ * Adds an usericon to represent an user who is active in the chat.
+ *
  * @param chatName  The name of the chat
  * @param clientName  The name of the user
  * @param clientColor The color of the user
@@ -112,8 +112,8 @@ function removeUserIcons(id: number){
 			if (id.toString() == child.attributes["client-id"].value){
 				clientContainer.removeChild(child)
 			}
-		} 
-		
+		}
+
 	}
 }
 
@@ -131,8 +131,8 @@ function updateUserIcons(id: number, name:string, backgroundColor:string, userIc
 				child.setAttribute("src", userIconSource)
 				child.setAttribute("hover-text", name)
 			}
-		} 
-		
+		}
+
 	}
 }
 
@@ -196,8 +196,8 @@ socket.on('info', function(data){
 	var code:number = data["status"]
 	var message = data["message"]
 	if ( Math.floor(code/100) == 4)
-		console.error("Statuskod : " + code + " meddelande : " + message)  
-	else 
+		console.error("Statuskod : " + code + " meddelande : " + message)
+	else
 		console.log("Statuskod : " + code + " meddelande : " + message)
 })
 
@@ -227,8 +227,6 @@ socket.on('chat_info',function(data){
 socket.on("client_disconnect", function(data){
 	var id: number = data['id']
 	removeUserIcons(id)
-	
-
 })
 
 socket.on("client_connect", function(data){

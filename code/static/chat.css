@@ -11,9 +11,6 @@
 	flex-flow: column;
 }
 
-
-
-
 .chat-header{
 	position: sticky;
 	top: 0vh;
@@ -136,9 +133,7 @@
     display: block;
 }
 
-
 /* Admin view */
-
 
 .content-container {
 	display: grid;
