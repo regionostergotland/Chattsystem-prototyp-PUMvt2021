@@ -38,6 +38,10 @@ function selectChat(chatName) {
 }
 function addChat(chatName, color, imageSource, parent) {
     var messageContainer = document.createElement('div');
+    var chatHeader = document.createElement('h2');
+    chatHeader.innerHTML = chatName;
+    chatHeader.classList.add("chat-header-text");
+    messageContainer.appendChild(chatHeader);
     var clientContainer = document.createElement('div');
     clientContainer.classList.add("user-image-container");
     chatMessageContainer.appendChild(messageContainer);
@@ -50,12 +54,16 @@ function addChat(chatName, color, imageSource, parent) {
     });
     chatSelectorContainer.appendChild(chatSelectorComponent);
     if (parent != undefined) {
-        var parentButton = document.createElement('button');
-        parentButton.innerHTML = parent;
-        parentButton.addEventListener("click", (e) => {
+        var parentSelectorContainer = document.createElement('p');
+        parentSelectorContainer.classList.add("chat-info-message");
+        parentSelectorContainer.innerHTML = `
+			Den här chatten är skapad från <a>` + parent + `</a>
+		`;
+        let parentSelector = parentSelectorContainer.children[0];
+        parentSelector.addEventListener("click", (e) => {
             selectChat(parent);
         });
-        messageContainer.appendChild(parentButton);
+        messageContainer.appendChild(parentSelectorContainer);
     }
     chatMessages[chatName] = { "messages": messageContainer, "selector": chatSelectorComponent, "clients": clientContainer };
 }

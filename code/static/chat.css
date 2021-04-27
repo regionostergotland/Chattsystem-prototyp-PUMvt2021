@@ -121,9 +121,28 @@
 #sendbutton{
 	display: grid;
 	margin: 1vh 0;
+	cursor: pointer;
 }
 
 #sendbutton img{
 	
 	width: 3vh;
+}
+
+.chat-header-text{
+	color: #000;
+
+}
+
+.chat-info-message{
+	text-align: center;
+}
+
+.chat-info-message a{
+	color: #0000EE;
+	cursor: pointer;
+}
+
+chat-selector-component user-icon-component{
+	cursor: pointer;
 }
