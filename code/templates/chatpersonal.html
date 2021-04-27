@@ -22,32 +22,37 @@
 			<div class="chat-header-border"></div>
 		</div>
 
-			<div class="content-container">
+		<div class="content-container">
+			<div class="chat">
+				<div id="chat-message-container">
 
-				<div class="chat">
-					<div id="chat-message-container"></div>
-					<div class="chat-footer">
-						<div class="writing-box">
-							<input id="writing-input" placeholder="Aa"></input>
-						</div>
-						<div >
-							<button class="chat-send-button-container" type="send-button" name="button" id="sendbutton">send</button>
-						</div>
+				</div>
+				<div class="chat-footer">
+					<div class="writing-box">
+						<input id="writing-input" placeholder="Aa"></input>
+					</div>
+					<div class="chat-send-button-container">
+						<button id="sendbutton">send</button>
 					</div>
 				</div>
+			</div>
+			<div class="admin-view">
+				<button  id="adduserbutton1">Add user</button>
+				<button id="createchat"> Add chat</button>
+				<button id="frågebatteri"> Frågebatteri</button>
+			</div>
 
-				<div class="admin-view">
-						<button class="chat-add-button-container" id="adduserbutton">add user</button>
-				</div>
+
 
 			</div>
 
 	</div>
 
+
+
 	<div id="myModal" class="modal">
-	<!-- Modal content -->
+
 		<div class="modal-content">
-			<span class="close">&times;</span>
 			<h2>Logga in som</h2>
 			<div class="modalButtonContainer">
 				<input type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
@@ -56,6 +61,109 @@
 		</div>
 	</div>
 
+
+
+	<div id="modalBattery" class="modal">
+
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Frågebatteri</h2>
+
+			<div class="modalButtonContainer">
+				<input> </input>
+				<button id="createquestion">Lägga till</button>
+				<label>fråga2</label>
+				<label>fråga2</label>
+				<label>fråga2</label>
+				<label>fråga2</label>
+				<label>fråga2</label>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div id="modalAdd" class="modal">
+		<!-- Modal content -->
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<h2>Lägg till användare</h2>
+				<div class="modalButtonContainer" id="userButtonList">
+					<!--temporär kod för att lägga till-->
+					<button>user1</button>
+					<button>user2</button>
+					<button>user3</button>
+				</div>
+			</div>
+	</div>
+
+
+	<div id="modalCreate" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Skapa ny chat</h2>
+			<div class="modalButtonContainer">
+				<input type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
+				<button id="authButton">Klar</button>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<script>
+		// Get the modal
+		var modalAdd = document.getElementById("modalAdd");
+		var modalCreate = document.getElementById("modalCreate");
+		var modalBattery = document.getElementById("modalBattery");
+
+		// Get the button that opens the modal
+		var btn1 = document.getElementById("adduserbutton1");
+
+		// Get the button that opens the modal
+		var btn2 = document.getElementById("createchat");
+
+
+		// Get the button that opens the modal
+		var btn3 = document.getElementById("frågebatteri");
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+
+		// When the user clicks the button, open the modal
+		btn1.onclick = function() {
+			modalAdd.style.display = "block";
+		}
+
+		// When the user clicks the button, open the modal
+		btn2.onclick = function() {
+			modalCreate.style.display = "block";
+		}
+
+		btn3.onclick = function() {
+			modalBattery.style.display = "block";
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			if(modalCreate.style.display == "block") modalCreate.style.display = "none";
+			if(modalAdd.style.display == "block") modalAdd.style.display = "none";
+			if(modalBattery.style.display == "block") modalBattery.style.display = "none";
+		}
+
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+		  if (event.target == modalCreate) {
+			modalCreate.style.display = "none";
+		  } if (event.target == modalAdd) {
+			modalAdd.style.display = "none";
+		  }if (event.target == modalBattery) {
+			modalBattery.style.display = "none";
+		  }
+		}
+		</script>
 </body>
 <script src="/scripts/chat.js"></script>
 <script src="/scripts/chattpersonal.js"></script>

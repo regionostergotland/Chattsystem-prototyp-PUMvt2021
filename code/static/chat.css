@@ -11,9 +11,6 @@
 	flex-flow: column;
 }
 
-
-
-
 .chat-header{
 	position: sticky;
 	top: 0vh;
@@ -121,6 +118,7 @@
 #sendbutton{
 	display: grid;
 	margin: 1vh 0;
+	cursor: pointer;
 }
 
 #sendbutton img{
@@ -132,7 +130,7 @@
 
 .content-container {
 	display: grid;
-	grid-template-areas: 'menu chat chat chat';
+	grid-template-areas: 'menu chat chat chat chat chat';
 	height: 100vh;
 }
 
@@ -140,4 +138,22 @@
 	padding: 10px;
 	grid-area: menu;
 	background-color: grey;
+}
+
+.chat-header-text{
+	color: #000;
+
+}
+
+.chat-info-message{
+	text-align: center;
+}
+
+.chat-info-message a{
+	color: #0000EE;
+	cursor: pointer;
+}
+
+chat-selector-component user-icon-component{
+	cursor: pointer;
 }
