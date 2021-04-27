@@ -180,7 +180,7 @@ drawer-component.open .drawer-trigger::after{
 
 .content-container {
 	display: grid;
-	grid-template-areas: 'menu chat chat chat';
+	grid-template-areas: 'menu chat chat chat chat chat';
 	height: 100vh;
 }
 
