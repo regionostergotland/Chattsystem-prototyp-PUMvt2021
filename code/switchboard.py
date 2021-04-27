@@ -4,7 +4,7 @@ Name switchboard seems fitting for this task.
 """
 
 import chatbot.bot as bott
-import database as DB
+import database_functions as DB
 
 
 ########################################################################

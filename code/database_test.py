@@ -1,17 +1,18 @@
-import database as DB
+import database_functions as DB
 
 
 def test_keyword():
     """
     Test adding and deleting keywords
+    Krav: 6.2.4 6.2.5
     """
 
     DB.init()
     DB.add_keyword("HEJ")
-    assert DB.is_keyword("HEJ")
+    assert "HEJ" in DB.get_keywords()
 
     DB.delete_keyword("HEJ")
-    assert not DB.is_keyword("HEJ")
+    assert not DB.get_keywords()
 
 
 def test_double_keyword():
@@ -59,6 +60,7 @@ def test_change_nophrase():
 def test_question():
     """
     Test adding, changing and deleting the same question.
+    Krav:6.2.3
     """
 
     DB.init()
@@ -108,19 +110,24 @@ def test_double_phrases():
 
 def test_new_chatt():
     """
+    Test the creation of users and a shared chatsystem.
     """
     DB.init()
     assert DB.add_user("Ludwig")
     assert not DB.add_user("Ludwig")
     assert DB.add_user("Kevin", 2)
-    Branch_id = DB.init_chatt("Ludwig")
-    assert Branch_id is not None
+    branch_id = DB.init_chatt("Ludwig")
+    assert branch_id is not None
     assert DB.set_user_role("Ludwig", 1)
     assert DB.delete_user("Ludwig")
+    assert DB.get_chatt("Ludwig") == [branch_id]
+    assert not DB.get_chatt("Kevin")
 
 
 def test_new_branch():
-
+    """
+    Test the creation of a new branch with messages.
+    """
     DB.init()
     assert DB.add_user("Ludwig")
     assert DB.add_user("Kevin")
@@ -128,31 +135,53 @@ def test_new_branch():
     Branch_id = DB.add_brach("Ludwig")
     assert Branch_id is not None
     assert DB.new_message("HEJ", "Ludwig", Branch_id, 0)
-    assert DB.add_user_to_brach("Kevin",Branch_id)
+    assert DB.add_user_to_brach("Kevin", Branch_id)
     assert DB.new_message("Nej!", "Kevin", Branch_id, 1)
     assert DB.add_brach_summary(Branch_id, "Noob", "Kevin")
 
 
 def test_user():
-
+    """
+    Test the creation and deletion of users, as well as changing att
+    getting their roles.
+    """
     DB.init()
     assert DB.add_user("Kevin")
     assert not DB.add_user("Kevin")
     assert DB.delete_user("Kevin")
     assert not DB.delete_user("Kevin")
 
-    assert DB.add_user("Felicia",2)
+    assert DB.add_user("Felicia", 2)
     assert DB.set_user_role("Felicia", 0)
-    assert not DB.set_user_role("Kevin",7)
+    assert DB.get_user("Felicia") == ("Felicia", 0)
+    assert not DB.set_user_role("Kevin", 7)
 
 
 def test_brach_errors():
+    """
+    Test using whrong imputs for branches
+    """
 
     DB.init()
     assert DB.add_user("Ludwig")
     branch_id = DB.init_chatt("Ludwig")
     assert not DB.init_chatt("Ludwig")
     assert not DB.init_chatt("Kevin")
-    assert not DB.add_brach_summary(branch_id+1,"text","Ludwig")
+    assert not DB.add_brach_summary(branch_id+1, "text", "Ludwig")
     assert not DB.add_user_to_brach("Kevin", branch_id)
     assert not DB.add_brach("Kevin")
+
+
+def test_messages():
+    """
+    Test adding diffrent types of messages
+    Krav som testas: 6.2.1, 6.2.2
+    """
+
+    DB.init()
+    assert DB.add_user("Ludwig")
+    branch_id = DB.init_chatt("Ludwig")
+    assert DB.new_message("HEJ", "Ludwig", branch_id, 0)
+    assert DB.new_message("HEJ", "Kevin", branch_id, 1)
+    assert not DB.new_message("HEJ", "Ludwig", branch_id + 1, 0)
+    assert ["Ludwig", "HEJ", 0] in DB.get_messages(branch_id)
