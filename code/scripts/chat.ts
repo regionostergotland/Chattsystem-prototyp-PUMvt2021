@@ -79,13 +79,50 @@ function addChat(chatName: string, color: string, imageSource: string, parent: s
  * @param clientIconSource The user iconSource
  */
 
-function addChatUserIcon(chatName: string, clientName: string, clientColor: string, clientIconSource: string){
+function addChatUserIcon(chatName: string, clientName: string, clientColor: string, clientIconSource: string, id: number){
 	var clientContainer = chatMessages[chatName]["clients"]
 	var userIconComponent = new UserIconComponent()
 	userIconComponent.setAttribute("background-color", clientColor)
 	userIconComponent.setAttribute("src", clientIconSource)
 	userIconComponent.setAttribute("hover-text", clientName)
+	userIconComponent.setAttribute("client-id", ""+id)
 	clientContainer.appendChild(userIconComponent)
+}
+
+function removeUserIcons(id: number){
+	for (var key in chatMessages){
+		var chat = chatMessages[key]
+		var clientContainer:HTMLElement = chat["clients"]
+		var children = clientContainer.children
+		for (var i = children.length - 1;i>= 0; i--){
+			var child = children[i]
+
+			console.log("ID: " + id + " - " + child.attributes["client-id"].value)
+			if (id.toString() == child.attributes["client-id"].value){
+				clientContainer.removeChild(child)
+			}
+		} 
+		
+	}
+}
+
+function updateUserIcons(id: number, name:string, backgroundColor:string, userIconSource: string){
+	for (var key in chatMessages){
+		var chat = chatMessages[key]
+		var clientContainer:HTMLElement = chat["clients"]
+		var children = clientContainer.children
+		for (var i = children.length - 1;i>= 0; i--){
+			var child = children[i]
+
+			console.log("CHANGED ID: " + id + " - " + child.attributes["client-id"].value)
+			if (id.toString() == child.attributes["client-id"].value){
+				child.setAttribute("background-color", backgroundColor)
+				child.setAttribute("src", userIconSource)
+				child.setAttribute("hover-text", name)
+			}
+		} 
+		
+	}
 }
 
 /**
@@ -126,13 +163,6 @@ document.getElementById('sendbutton').onclick = function() {
 	}
  }​;​
 
-/**
- *  Sends a message when you press sendbutton
- */
- document.getElementById('adduserbutton').onclick = function() {
-	 alert("clickededede")
-
- }​;​
 
 
 /**
@@ -146,7 +176,6 @@ socket.on('message', function(data){
 socket.on('connect', function(){
 	socket.emit('details_assignment', {
 		name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"});
-	//
 	socket.emit("get_users")
 	socket.emit("get_chats")
 
@@ -179,8 +208,32 @@ socket.on('chat_info',function(data){
 	addChat(name,color,imageSource,parent)
 	selectChat(name)
 	clients.forEach(client => {
-		addChatUserIcon(name, client["name"],client["background"], client["userIconSource"])
+		addChatUserIcon(name, client["name"],client["background"], client["userIconSource"], client["id"])
 	});
 	socket.emit("get_chat_history", {chatName: name})
 })
 
+socket.on("client_disconnect", function(data){
+	var id: number = data['id']
+	removeUserIcons(id)
+	
+
+})
+
+socket.on("client_connect", function(data){
+	var chatname = data["chatName"]
+	var name = data["client"]
+	var color = data["color"]
+	var iconSource = data["iconSource"]
+	var id = data["id"]
+	addChatUserIcon(chatname, name, color, iconSource, id)
+})
+
+socket.on("client_details_changed", function(data){
+	//json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+	var name = data["name"]
+	var backgroundColor = data["backgroundColor"]
+	var userIconSource = data["userIconSource"]
+	var id = data["id"]
+	updateUserIcons(id, name, backgroundColor, userIconSource)
+})

@@ -1,8 +1,11 @@
 from enum import Enum
 from flask import Flask, render_template, send_from_directory, request
+from werkzeug.wrappers import CommonResponseDescriptorsMixin
 from flask_socketio import SocketIO
 import authentication
 
+
+clientIdCounter = 0
 
 class Client:
     """
@@ -10,12 +13,15 @@ class Client:
     """
 
     def __init__(self, sid, name, backgroundColor, userIconSource, role):
+        global clientIdCounter
         self.sid = sid
         self.name = name
         self.backgroundColor = backgroundColor
         self.userIconSource = userIconSource
         self.authenticated = False
         self.role = role
+        clientIdCounter += 1
+        self.id = clientIdCounter
 
 
 class Chat:
@@ -30,6 +36,7 @@ class Chat:
         self.color = color
         self.imageSource = imageSource
         self.parent = parent
+        
  
 
 class Message:
@@ -94,7 +101,7 @@ def send_images(path):
 clients = []
 
 # All the chats
-chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/bot.png", "huvudchatt")}
+chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
 
 
 @socketio.on('authenticate')
@@ -110,13 +117,6 @@ def authenticate_event(methods=['GET', 'POST']):
     else:
         send_info_message(
             400, "Det uppstod ett fel vid autentisering", request.sid)
-
-
-# Temporary data
-names = ["Ludwig", "Sven", "Anna", "Emma", "Peter", "Kalle"]
-backgroundColors = ["Green", "Blue", "Red", "#123", "#FFF", "Cyan"]
-userIconSources = ["/images/user.png", "/images/bot.png"]
-
 
 
 
@@ -162,11 +162,25 @@ def connect_event(methods=['GET', 'POST']):
     print("\nUser connected: " + request.sid)
     currentSocketId = request.sid
     backgroundColor = "white"
-    userIconSource = userIconSources[0]
+    userIconSource = "/images/bot.png"
     name = "anonym"
     role = Roles["odefinierad"]
     add_client(currentSocketId, name, backgroundColor, userIconSource, role)
 
+@socketio.on('disconnect')
+def disconnect_event(methods=['GET', 'POST']):
+    """
+    Removes client from the clients list when disconected.
+    """
+    client1 = get_client(request.sid)
+    clients.remove(client1)
+    for chatname in chats:
+        chat = chats[chatname]
+        for client2 in chat.clients:
+            if client1 == client2:
+                chat.clients.remove(client1)
+    socketio.emit("client_disconnect", {"id": client1.id})
+    print("\n"+ client1.name + "(" + str(client1.id) + ") has disconnected")
 
 @socketio.on('details_assignment')
 def details_assignment_event(json, methods=['GET', 'POST']):
@@ -178,6 +192,8 @@ def details_assignment_event(json, methods=['GET', 'POST']):
     client.backgroundColor = json["backgroundColor"]
     client.userIconSource = json["userIconSource"]
     client.role = Roles[json["role"]]
+    json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+    socketio.emit("client_details_changed", json)
     send_info_message(200, "Användarinformation satt", request.sid)
 
 
@@ -276,10 +292,20 @@ def chat_join_event(json, methods=['GET', 'POST']):
     print(len(chats[chatName].clients))
 
     if chatName in chats:
+        for otherClient in chats[chatName].clients :
+            socketio.emit("client_connect", {
+                "chatName": chatName,
+                "client": client.name,
+                "color": client.backgroundColor,
+                "iconSource": client.userIconSource,
+                "id": client.id
+                }, room=otherClient.sid)
+                
         chats[chatName].clients.append(client)
         send_info_message(
             200, "Klienten har anslutit till chatten", request.sid)
         send_chat_info(client, chatName)
+
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
@@ -309,8 +335,9 @@ def send_chat_info(reciever, chatName):
     """
     chat = chats[chatName]
     clients = []
+
     for client in chat.clients:
-        clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource})
+        clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource, 'id': client.id})
     json = {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource, 'clients': clients}
     if not chat.parent == None:
         json["parent"] = chat.parent
@@ -357,7 +384,9 @@ def add_client(sid, name, backgroundColor, userIconSource, role):
     """
     Adds a client to the list of all clients
     """
+
     client = Client(sid, name, backgroundColor, userIconSource, role)
+
     clients.append(client)
     return client
 
