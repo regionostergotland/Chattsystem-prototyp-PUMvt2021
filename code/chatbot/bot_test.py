@@ -43,5 +43,5 @@ def test_bot_question():
     This function tests the bots question to the user.
     """  
     prep.prepare_db()
-    assert bot.bot_main('jag har haft huvudvärk') == 'har det varat i två veckor?'
-    assert bot.bot_main('jag har huvudvärk') == 'har det varat i två veckor?'
+    assert bot.bot_main('jag har haft huvudvärk') == 'Har det varat i två veckor?'
+    assert bot.bot_main('jag har huvudvärk') == 'Har det varat i två veckor?'

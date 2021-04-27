@@ -33,7 +33,6 @@ def greeting_response(text):
     """
     This function returns a random greeting response to a users greeting.
     """
-    #text = text.lower()
 
     #bots greeting response
     bot_greetings = ['hallå', 'hej', 'Hej där']
@@ -77,7 +76,6 @@ def bot_response(user_input, list_of_matches):
     is found the bots excuses itself for not understanding.
     """
     
-    #user_input = user_input.lower()
     list_of_matches.append(user_input)
 
     bot_response = ''
@@ -182,23 +180,3 @@ if __name__ == '__main__':
     while True:
         print(bot_main(input()))
 
-
-"""
-#start the chat
-print('Bot: Mitt namn är botten Anna. Jag kommer att besvara dina frågor')
-exit_list = ['hej då']
-
-while(True):
-    user_input = input()
-    if user_input.lower() in exit_list:
-        print('Bot: chat later bitch')
-        break
-
-    
-    else:
-        time.sleep(2)
-        if greeting_response(user_input) != None:
-            print('Bot: '+greeting_response(user_input))
-        else:
-            print("Bot: "+ bot_answer(user_input))
-"""
