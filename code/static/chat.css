@@ -19,6 +19,7 @@
 	top: 0vh;
 	background:#C21B41;
 	z-index: 2;
+	padding: 1vh 0 0 0;
 }
 
 .chat-image-container{
@@ -72,12 +73,12 @@
 
 
 .chat-footer {
-	width: 90%;
-	left: 5%;
-	position: fixed;
-	bottom: 0;
-	display: grid;
-  grid-template-columns: 15fr 1fr;
+	width: 100%;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    background-color: #FFF;
+    align-items: center;
 }
 
 .chat{
@@ -92,20 +93,19 @@
 }
 
 .writing-box{
-
-	width: 100%;
-	background-color: #FFF;
-	display: inline-block;
+    margin: 1vh;
+    flex: auto;
+    display: flex;
+    min-width: 0;
 }
 
 .writing-box input{
-	display: block;
-	margin: 1vh auto;
-	width: 95%;
-	font-size: 3vh;
-	padding: 1vh;
-	border-radius: 2vh;
-	border: 1px solid #A1C1CC;
+    font-size: 3vh;
+    padding: 1vh;
+    flex: auto;
+    border-radius: 2vh;
+    min-width: 0;
+    border: 1px solid #A1C1CC;
 }
 
 .writing-box input:focus{
@@ -114,19 +114,26 @@
 }
 
 .user-image-container{
-	display: inline-flex;   
-	margin: 0.5vh;
+	display: inline-flex;
+    position: sticky;
+    width: 100%;
+    background: white;
+    top: 11vh;
+    z-index: 1;
 }
 
 #sendbutton{
 	display: grid;
-	margin: 1vh 0;
-	cursor: pointer;
+    margin: 0 1vh 0 0;
+    cursor: pointer;
+    width: 5vh;
+    height: 5vh;
 }
 
 #sendbutton img{
-	
 	width: 3vh;
+    margin: auto;
+    display: block;
 }
 
 
@@ -146,8 +153,12 @@
 }
 
 .chat-header-text{
-	color: #000;
-
+	position: sticky;
+    color: #000;
+    z-index: 1;
+    top: 8vh;
+    background: white;
+    width: 100%;
 }
 
 .chat-info-message{
@@ -161,4 +172,8 @@
 
 chat-selector-component user-icon-component{
 	cursor: pointer;
+}
+
+#chat-message-container{
+	padding: 1vh 1vh 7vh 1vh;
 }
