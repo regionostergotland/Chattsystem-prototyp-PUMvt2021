@@ -114,7 +114,7 @@
 }
 
 .user-image-container{
-	display: inline-flex;   
+	display: inline-flex;
 	margin: 0.5vh;
 }
 
@@ -124,6 +124,20 @@
 }
 
 #sendbutton img{
-	
+
 	width: 3vh;
+}
+
+/* Admin view */
+
+.content-container {
+	display: grid;
+	grid-template-areas: 'menu chat chat chat';
+	height: 100vh;
+}
+
+.admin-view {
+	padding: 10px;
+	grid-area: menu;
+	background-color: grey;
 }

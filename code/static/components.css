@@ -32,8 +32,6 @@ header-component.big img:nth-child(2){
 	margin: 2vh auto;
 }
 
-
-
 drawer-component{
 	display: block;
 	margin: .5vh auto;
@@ -171,27 +169,4 @@ drawer-component.open .drawer-trigger::after{
 		border-top: 0vh solid #222;
   }
 
-
-
 }
-
-/* Admin view */
-
-
-.content-container {
-	display: grid;
-	grid-template-areas: 'menu chat chat chat';
-	height: 100vh;
-}
-
-.admin-view {
-	padding: 10px;
-	grid-area: menu;
-	background-color: grey;
-}
-
-
-
-
-
-
