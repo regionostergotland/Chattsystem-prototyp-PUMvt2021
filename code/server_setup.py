@@ -178,10 +178,15 @@ def connect_event(methods=['GET', 'POST']):
     role = Roles["odefinierad"]
     add_client(currentSocketId, name, backgroundColor, userIconSource, role)
 
-    #maybe do stuff here
-    print("CLIENTS LENGTH AFTER: "+ str(len(clients)))
+    #bot stuff:
+    #print("CLIENTS LENGTH AFTER: "+ str(len(clients)))
     if len(clients) == 2:
         bot_talking = True
+        bot_response = "Hej och välkommen, jag är botten Anna och kan hjälpa dig med enklare frågor. "
+        bot = get_client(-1)
+        bot_msg = Message(bot, bot_response)
+        chat.history.append(bot_msg)
+        broadcast_message(bot_msg, chatName)
     else:
         bot_talking = False
     
@@ -219,7 +224,7 @@ def message_event(json, methods=['GET', 'POST']):
     The event for when a message is recieved from a client
     """
 
-    #defenetly do stuff here
+
 
     print("\nMessage: " + json['message'] + "(" + json['chatName'] + ")")
     sender = get_client(request.sid)
@@ -231,7 +236,8 @@ def message_event(json, methods=['GET', 'POST']):
             chat.history.append(message)
             broadcast_message(message, chatName)
             
-            print(bot_talking)
+            #bot stuff:
+            #print(bot_talking)
             if bot_talking:
                 bot_response = SB.get_bot_message(message.text)
                 bot = get_client(-1)

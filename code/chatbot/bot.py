@@ -33,7 +33,7 @@ def greeting_response(text):
     """
     This function returns a random greeting response to a users greeting.
     """
-    text = text.lower()
+    #text = text.lower()
 
     #bots greeting response
     bot_greetings = ['hallå', 'hej', 'Hej där']
@@ -77,7 +77,7 @@ def bot_response(user_input, list_of_matches):
     is found the bots excuses itself for not understanding.
     """
     
-    user_input = user_input.lower()
+    #user_input = user_input.lower()
     list_of_matches.append(user_input)
 
     bot_response = ''
@@ -162,8 +162,13 @@ def bot_main(input):
     (for example 'hej') or another kind of message then it sends back a response from the 
     database. 
     """
-    #user_input = input()
-    if input.lower() in exit_list:
+    sign_list = ['?', ',', '.', '!', '(', ')', '"','-','_','*','+']
+    input = input.lower()
+    for char in input:
+        if char in sign_list:
+            input = input.replace(char, '')
+
+    if input in exit_list:
         return (random.choice(exit_list))
     else:
         time.sleep(2)
