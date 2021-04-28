@@ -13,6 +13,7 @@ var chatMessages = {};
 const writingInput = <HTMLInputElement>document.getElementById("writing-input");
 const sendbutton = <HTMLInputElement>document.getElementById("sendbutton");
 
+
 /**
  * Adds a message locally to the chat history
  *
@@ -29,48 +30,64 @@ function addMessage(chatName: string , message: string, sender: string = "", bac
 	if(iconSource != "")
 		messageComponent.setAttribute("src", iconSource);
 
-
 	chatMessages[chatName]["messages"].appendChild(messageComponent);
-
 }
 
+
+/**
+* Logic for selecting the chat whit the name: chatName
+* The global varibule: selectedChatName is the active chat window
+*/
 var selectedChatName: string = "";
 function selectChat(chatName: string){
+	// Deactivate all chat windows
 	for (const key in chatMessages) {
 		chatMessages[key]["messages"].style.display = "none";
 		chatMessages[key]["selector"].removeAttribute("active")
 	}
+	// Activate the chat window whit name: chatName
 	chatMessages[chatName]["messages"].style.display = "block";
 	chatMessages[chatName]["selector"].setAttribute("active", "")
 	selectedChatName = chatName;
-
 }
 
+/**
+* Logic
+*/
 function addChat(chatName: string, color: string, imageSource: string, parent: string){
+	// Create chat name card at the top of the chat
 	var messageContainer = document.createElement('div');
 	var chatHeader = document.createElement('h2');
 	chatHeader.innerHTML = chatName;
 	chatHeader.classList.add("chat-header-text");
 	messageContainer.appendChild(chatHeader);
 
-
+	// Create the div that will contan all users at the top of the chat
 	var clientContainer = document.createElement('div');
 	clientContainer.classList.add("user-image-container")
-	chatMessageContainer.appendChild(messageContainer);
 	messageContainer.appendChild(clientContainer);
+
+	// Append the created divs to the page
+	chatMessageContainer.appendChild(messageContainer);
+
+	// Create a chat componet for the header
 	let chatSelectorComponent = new ChatSelectorComponent();
 	chatSelectorComponent.setAttribute("color",color)
 	chatSelectorComponent.setAttribute("src",imageSource)
 	chatSelectorComponent.addEventListener("click", (e)=>{
 		selectChat(chatName);
 	});
+
+	// Append the chat componet the the page
 	chatSelectorContainer.appendChild(chatSelectorComponent);
+
+	// Append text to the page of the origen of the chat (for what chat was this chat created)
 	if (parent != undefined){
 		var parentSelectorContainer = document.createElement('p')
 		parentSelectorContainer.classList.add("chat-info-message");
 		parentSelectorContainer.innerHTML = `
 			Den här chatten är skapad från <a>`+ parent + `</a>
-		`;
+			`;
 
 		let parentSelector = parentSelectorContainer.children[0];
 		parentSelector.addEventListener("click", (e)=>{
