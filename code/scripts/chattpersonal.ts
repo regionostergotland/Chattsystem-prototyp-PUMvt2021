@@ -2,13 +2,13 @@
 var socket: any;
 
 
-
-var modal = document.getElementById("myModal");
-
 // Get the button that opens the modal
 var btn = document.getElementById("authButton");
 var nameInput = <HTMLInputElement>document.getElementById("nameInput");
+var modal = document.getElementById("myModal");
 
+// Set the pop up box to visubole when loding the page
+modal.style.display = "block";
 
 
 btn.addEventListener("click", (e:Event) => {
@@ -24,6 +24,7 @@ btn.addEventListener("click", (e:Event) => {
   }
 });
 
+
 socket.on('return_chats', function(data){
 
 	data['chats'].forEach(chatName => {
@@ -35,14 +36,26 @@ socket.on('return_chats', function(data){
 })
 
 
-// Defines the different components
-modal.style.display = "block";
-
+/**
+ *  Sends a message when you press sendbutton
+ */
+ document.getElementById('adduserbutton1').onclick = function() {
+  alert("clickededede")
+}​;​
 
 /**
  *  Sends a message when you press sendbutton
  */
- document.getElementById('adduserbutton').onclick = function() {
-  alert("clickededede")
+document.getElementById('createChatButton').onclick = function() {
 
+  var nameInput = <HTMLInputElement>document.getElementById("chatNameInput");
+
+  if (nameInput.value != "") {
+    socket.emit("chat_create", {chatName: nameInput.value,
+                                color: "blue",
+                                imageSource: "/images/user.png",
+                                parent: selectedChatName});
+    document.getElementById("modalCreate").style.display = "none";
+    addChat(nameInput.value, "blue", "/images/user.png", selectedChatName);
+  }
 }​;​

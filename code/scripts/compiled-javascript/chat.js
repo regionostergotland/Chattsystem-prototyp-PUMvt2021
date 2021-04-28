@@ -43,7 +43,7 @@ function selectChat(chatName) {
     selectedChatName = chatName;
 }
 /**
-* Logic
+* Logic for creating a new chat for a curent one
 */
 function addChat(chatName, color, imageSource, parent) {
     // Create chat name card at the top of the chat
@@ -67,20 +67,26 @@ function addChat(chatName, color, imageSource, parent) {
     });
     // Append the chat componet the the page
     chatSelectorContainer.appendChild(chatSelectorComponent);
-    // Append text to the page of the origen of the chat (for what chat was this chat created)
+    // Append text to the page of the origen of the chat
+    // (frome what chat was this chat created)
     if (parent != undefined) {
         var parentSelectorContainer = document.createElement('p');
         parentSelectorContainer.classList.add("chat-info-message");
         parentSelectorContainer.innerHTML = `
 			Den här chatten är skapad från <a>` + parent + `</a>
 			`;
+        // Set the lest word to clickebol
         let parentSelector = parentSelectorContainer.children[0];
         parentSelector.addEventListener("click", (e) => {
             selectChat(parent);
         });
+        // Append the text to the top of the chat
         messageContainer.appendChild(parentSelectorContainer);
     }
-    chatMessages[chatName] = { "messages": messageContainer, "selector": chatSelectorComponent, "clients": clientContainer };
+    // Save chat
+    chatMessages[chatName] = { "messages": messageContainer,
+        "selector": chatSelectorComponent,
+        "clients": clientContainer };
 }
 /**
  * Adds an usericon to represent an user who is active in the chat.
@@ -99,11 +105,15 @@ function addChatUserIcon(chatName, clientName, clientColor, clientIconSource, id
     userIconComponent.setAttribute("client-id", "" + id);
     clientContainer.appendChild(userIconComponent);
 }
+/**
+* Function for removing a user icon the top of the chat whit the client-id: id
+*/
 function removeUserIcons(id) {
     for (var key in chatMessages) {
         var chat = chatMessages[key];
         var clientContainer = chat["clients"];
         var children = clientContainer.children;
+        // Loop thro all users in the chat abd remove the one whit the client-id: id
         for (var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
             console.log("ID: " + id + " - " + child.attributes["client-id"].value);
@@ -113,6 +123,9 @@ function removeUserIcons(id) {
         }
     }
 }
+/**
+* Uppdate the information for the user whit the client-id: id
+*/
 function updateUserIcons(id, name, backgroundColor, userIconSource) {
     for (var key in chatMessages) {
         var chat = chatMessages[key];
