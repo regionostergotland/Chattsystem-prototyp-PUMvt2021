@@ -115,19 +115,25 @@ clients = []
 
 
 # All the chats
-chats = {"huvudchatt": Chat([])}
-#, "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
+chats = {"huvudchatt": Chat([])}#, "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
 
 
 @socketio.on('authenticate')
-def authenticate_event(methods=['GET', 'POST']):
+def authenticate_event(json, methods=['GET', 'POST']):
     """
     The event for authenticating clients
     """
+    pid = json["pid"]
+
     client = get_client(request.sid)
+
+
     if(not client.authenticated):
-        client.authenticated = authentication.authenticate(client)
+        client.authenticated = authentication.authenticate(pid)
     if client.authenticated:
+        client.name = authentication.getName(pid)
+        json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+        socketio.emit("client_details_changed", json)
         send_info_message(200, "Du är nu autentiserad", request.sid)
     else:
         send_info_message(
@@ -224,7 +230,6 @@ def details_assignment_event(json, methods=['GET', 'POST']):
     The event for asigning credentials
     """
     client = get_client(request.sid)
-    client.name = json["name"]
     client.backgroundColor = json["backgroundColor"]
     client.userIconSource = json["userIconSource"]
     client.role = Roles[json["role"]]
@@ -260,7 +265,7 @@ def message_event(json, methods=['GET', 'POST']):
 
 
         else:
-            send_info_message(200, "Chatten är avslutad", request.sid)
+            send_info_message(200, "Chatten är avslutad", request.sid, chatName)
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
@@ -282,7 +287,7 @@ def chat_create_event(json, methods=['GET', 'POST']):
             send_info_message(400, "Chattnamnet är redan taget", request.sid)
         else:
             chats[chatName] = Chat([client])
-            send_info_message(200, "Chatten är skapad", request.sid)
+            send_info_message(200, "Chatten är skapad", request.sid, chatName)
 
 
 @socketio.on('chat_delete')
@@ -322,7 +327,7 @@ def chat_end_event(json, methods=['GET', 'POST']):
         chatName = json["chatName"]
         if chatName in chats:
             chats[chatName].active = False
-            send_info_message(200, "Chatten är avslutad", request.sid)
+            send_info_message(200, "Chatten är avslutad", request.sid, chatName)
         else:
             send_info_message(404, "Chatten finns inte", request.sid)
 
@@ -350,8 +355,6 @@ def chat_join_event(json, methods=['GET', 'POST']):
                 }, room=otherClient.sid)
 
         chats[chatName].clients.append(client)
-        send_info_message(
-            200, "Klienten har anslutit till chatten", request.sid)
         send_chat_info(client, chatName)
 
     else:
@@ -369,11 +372,12 @@ def get_chat_history_event(json, methods=['GET', 'POST']):
         send_message(message, client, chatName)
 
 
-def send_info_message(statusCode, message, sid):
+def send_info_message(statusCode, message, sid, chatName = ""):
     """
     Sends the given info message
     """
-    json = {'status': statusCode, 'message': message}
+    json = {'status': statusCode, 'message': message, 'chatName': chatName}
+
     socketio.emit('info', json, room=sid)
 
 

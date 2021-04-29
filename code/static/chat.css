@@ -173,3 +173,14 @@ chat-selector-component user-icon-component{
 #chat-message-container{
 	padding: 1vh 1vh 7vh 1vh;
 }
+
+
+#login-button{
+	position: fixed;
+	left: 1vh;
+	top: 1vh;
+	z-index: 3;
+	width: auto;
+	font-size: 2vh;
+	padding: 1vh;
+}

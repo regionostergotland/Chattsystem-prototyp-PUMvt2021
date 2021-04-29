@@ -32,6 +32,10 @@ header-component.big img:nth-child(2){
 	margin: 2vh auto;
 }
 
+header-component img{
+	cursor: pointer;
+}
+
 drawer-component{
 	display: block;
 	margin: .5vh auto;

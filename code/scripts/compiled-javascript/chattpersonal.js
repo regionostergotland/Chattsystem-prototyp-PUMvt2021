@@ -2,7 +2,7 @@
 var socket;
 // Get the button that opens the modal
 var btn = document.getElementById("authButton");
-var nameInput = document.getElementById("nameInput");
+var pidInput = document.getElementById("pidInput");
 var modal = document.getElementById("myModal");
 var modalAdd = document.getElementById("modalAdd");
 // Get the modal
@@ -15,17 +15,17 @@ var span = document.getElementsByClassName("close")[0];
 modal.style.display = "block";
 // ---------------------- event listerners ----------------------
 btn.addEventListener("click", (e) => {
-    if (nameInput.value != "") {
+    if (pidInput.value != "") {
         //console.log(nameInput.value)
         modal.style.display = "none";
         //username = nameInput.value;
         socket.emit('details_assignment', {
-            name: nameInput.value,
+            name: pidInput.value,
             backgroundColor: "red",
             userIconSource: "/images/user.png",
             role: "personal"
         });
-        socket.emit('authenticate');
+        socket.emit('authenticate', { pid: pidInput.value });
     }
 });
 /*

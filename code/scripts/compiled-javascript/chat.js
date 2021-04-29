@@ -143,6 +143,18 @@ function updateUserIcons(id, name, backgroundColor, userIconSource) {
     }
 }
 /**
+ * Adds a info message to the chat
+ *
+ * @param chatName The name of the chat
+ * @param message The info message
+ */
+function addInfoMessage(chatName, message) {
+    var textElement = document.createElement('p');
+    textElement.classList.add("chat-info-message");
+    textElement.innerHTML = message;
+    chatMessages[chatName]["messages"].appendChild(textElement);
+}
+/**
  * Logic for removing all children of an element
  */
 function removeAllChildNodes(parent) {
@@ -206,10 +218,15 @@ socket.on('connect', function () {
 socket.on('info', function (data) {
     var code = data["status"];
     var message = data["message"];
+    var chatName = data["chatName"];
     if (Math.floor(code / 100) == 4)
         console.error("Statuskod : " + code + " meddelande : " + message);
     else
         console.log("Statuskod : " + code + " meddelande : " + message);
+    if (chatName != "" && chatName in chatMessages)
+        addInfoMessage(chatName, message);
+    else if (selectedChatName != "")
+        addInfoMessage(selectedChatName, message);
 });
 // Debug log all user in terminal
 socket.on('return_users', function (data) {

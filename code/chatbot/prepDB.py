@@ -10,7 +10,7 @@ def prepare_db():
     switchboard.DB_addQ('hur är diabetes', 'Diabetes kan innebära trötthet på grund av lågt blodsocker.')
     switchboard.DB_addQ('varför är diabetes farligt', 'Då diabetes påverkar din förmåga att reglera blodsockret så kan ej reglerat blodsocker innebära trötthet, näringsbrist och potentiellt död.')
     switchboard.DB_addQ('kan diabetes vara farligt', 'Ja det kan det. ')
-    switchboard.DB_addQ('vad betyder hola', 'Det betyder hej.')
+    switchboard.DB_addQ('vad betyder hola', 'Det betyder hej på spanska.')
     switchboard.DB_addQ('vilka är sympotmen av diabetes', 'Trötthet och man behöver kissa ofta och mycket.')
     switchboard.DB_addQ('vad kan man göra om man har diabetes', 'Kontakta sjukvården. ')
     switchboard.DB_addQ('vad är insulin', 'Insulin är ett ämne som produceras i bukspottskörteln och det reglerar blodsockervärdet.')
@@ -24,8 +24,8 @@ def prepare_db():
     switchboard.DB_addQ('kan man dö av hiv', 'Ja men risken är mindre om det behandlas i tid. Det finns mycket forskning och bromsmedecin finns tillgänglig. Misstänker du att du kan ha smittats av HIV kontakta 1177 omedelbart.')
     switchboard.DB_addQ('hur får man hiv', 'HIV sprids via blodtransfusion och samlag.')
     switchboard.DB_addQ('jag har haft huvudvärk', 'Har det varat i två veckor?')
-    switchboard.DB_addQ('ja', 'En sjuksköterska kommer att gå med i konversationen.')
-    switchboard.DB_addQ('nej', 'En sjuksköterska kommer att gå med i konversationen.')
+    switchboard.DB_addQ('ja', 'Jag kan tyvärr inte hjälpa dig med detta. Ifall du vill prata med en vårdare kan du logga in genom att trycka på knappen "Logga in" i övre vänstra hörn.')
+    switchboard.DB_addQ('nej', 'Jag kan tyvärr inte hjälpa dig med detta. Ifall du vill prata med en vårdare kan du logga in genom att trycka på knappen "Logga in" i övre vänstra hörn.')
     switchboard.DB_addQ('jag har ont i halsen', 'Har det varat i mer än 1 vecka?')
     switchboard.DB_addQ('jag har ont i ryggen', 'Har det varat i mer än 3 veckor?')
     switchboard.DB_addQ('jag har hög feber', 'Har det varat i mer än 5 dagar?')
@@ -33,6 +33,6 @@ def prepare_db():
     
     #switchboard.DB_addQ('', '')
   
-if __name__ == '__main__':
-    prepare_db()
+
+prepare_db()
 
