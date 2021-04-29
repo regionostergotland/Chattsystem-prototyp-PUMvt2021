@@ -210,6 +210,7 @@ def disconnect_event(methods=['GET', 'POST']):
         bot_talking = False
     print("\n"+ client1.name + "(" + str(client1.id) + ") has disconnected")
 
+
 @socketio.on('details_assignment')
 def details_assignment_event(json, methods=['GET', 'POST']):
     """
@@ -230,8 +231,6 @@ def message_event(json, methods=['GET', 'POST']):
     """
     The event for when a message is recieved from a client
     """
-
-
 
     print("\nMessage: " + json['message'] + "(" + json['chatName'] + ")")
     sender = get_client(request.sid)
