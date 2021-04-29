@@ -4,7 +4,7 @@ var socket: any;
 
 // Get the button that opens the modal
 var btn = document.getElementById("authButton");
-var nameInput = <HTMLInputElement>document.getElementById("nameInput");
+var pidInput = <HTMLInputElement>document.getElementById("pidInput");
 var modal = document.getElementById("myModal");
 //var username;
 
@@ -13,16 +13,16 @@ modal.style.display = "block";
 
 
 btn.addEventListener("click", (e:Event) => {
-  if (nameInput.value != "") {
+  if (pidInput.value != "") {
     //console.log(nameInput.value)
     modal.style.display = "none"
     //username = nameInput.value;
 
     socket.emit('details_assignment', {
-				name: nameInput.value, backgroundColor:"red", userIconSource: "/images/user.png", role: "personal"
+				backgroundColor:"red", userIconSource: "/images/user.png", role: "personal"
 		});
 
-    socket.emit('authenticate')
+    socket.emit('authenticate', {pid: pidInput.value})
   }
 });
 

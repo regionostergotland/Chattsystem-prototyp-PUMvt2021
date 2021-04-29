@@ -173,6 +173,19 @@ function updateUserIcons(id: number, name:string, backgroundColor:string, userIc
 	}
 }
 
+/**
+ * Adds a info message to the chat 
+ * 
+ * @param chatName The name of the chat
+ * @param message The info message
+ */
+function addInfoMessage(chatName: string, message: string){
+	var textElement = document.createElement('p');
+	textElement.classList.add("chat-info-message");
+	textElement.innerHTML = message;
+	chatMessages[chatName]["messages"].appendChild(textElement);
+}
+
 
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
@@ -234,10 +247,16 @@ socket.on('connect', function(){
 socket.on('info', function(data){
 	var code:number = data["status"]
 	var message = data["message"]
+	var chatName = data["chatName"]
+
 	if ( Math.floor(code/100) == 4)
 		console.error("Statuskod : " + code + " meddelande : " + message)
 	else
 		console.log("Statuskod : " + code + " meddelande : " + message)
+	if(chatName != "")
+		addInfoMessage(chatName, message);
+	else if(selectedChatName != "")
+		addInfoMessage(selectedChatName, message);
 })
 
 
