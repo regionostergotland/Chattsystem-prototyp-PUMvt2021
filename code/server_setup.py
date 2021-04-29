@@ -115,7 +115,7 @@ clients = []
 
 
 # All the chats
-chats = {"huvudchatt": Chat([])}#, "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
+chats = {"huvudchatt": Chat([])}
 
 
 @socketio.on('authenticate')
@@ -286,7 +286,7 @@ def chat_create_event(json, methods=['GET', 'POST']):
         if chatName in chats:
             send_info_message(400, "Chattnamnet är redan taget", request.sid)
         else:
-            chats[chatName] = Chat([client])
+            chats[chatName] = Chat([],json["color"],json["imageSource"],json["parent"])
             send_info_message(200, "Chatten är skapad", request.sid, chatName)
 
 
