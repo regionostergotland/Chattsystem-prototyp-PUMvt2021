@@ -97,9 +97,6 @@
 				<h2>Lägg till användare</h2>
 				<div class="modalButtonContainer" id="userButtonList">
 					<!--temporär kod för att lägga till-->
-					<button>user1</button>
-					<button>user2</button>
-					<button>user3</button>
 				</div>
 			</div>
 	</div>
@@ -124,18 +121,11 @@
 		var modalBattery = document.getElementById("modalBattery");
 
 		// Get the button that opens the diffrent modals
-		var btn1 = document.getElementById("adduserbutton");
 		var btn2 = document.getElementById("createchat");
 		var btn3 = document.getElementById("frågebatteri");
 
 		// Get the <span> element that closes the modal
 		var span = document.getElementsByClassName("close")[0];
-
-		// When the user clicks the button, open the modal
-		btn1.onclick = function() {
-			
-			modalAdd.style.display = "block";
-		}
 
 		// When the user clicks the button, open the modal
 		btn2.onclick = function() {

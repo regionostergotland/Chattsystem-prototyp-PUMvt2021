@@ -11,7 +11,6 @@ var modal = document.getElementById("myModal");
 // Set the pop up box to visubole when loding the page
 modal.style.display = "block";
 
-
 btn.addEventListener("click", (e:Event) => {
   if (nameInput.value != "") {
     //console.log(nameInput.value)
@@ -58,4 +57,36 @@ document.getElementById('createChatButton').onclick = function() {
 
     addChat(nameInput.value, "blue", "/images/user.png", selectedChatName);
   }
-}​;​
+}​;
+
+
+/**
+ * Get all users for the add user button
+ */
+document.getElementById("adduserbutton").onclick = function() {
+  socket.emit("get_users");
+  document.getElementById("modalAdd").style.display = "block";
+};​
+
+
+/**
+ * Append all users to the add users menu
+ */
+socket.on('return_users', function(data){
+
+  var container = document.getElementById("userButtonList");
+  removeAllChildNodes(container);
+
+  data['users'].forEach(user => {
+    if (user["role"] != "bot") {
+      var button = document.createElement('button');
+      if (user["name"] == "anonym") {
+        button.innerHTML = user["role"];
+      } else {
+        button.innerHTML = user["role"] + ": " + user["name"];
+      }
+      container.appendChild(button);
+    }
+	});
+	console.log(data)
+})

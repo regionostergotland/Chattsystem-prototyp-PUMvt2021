@@ -143,6 +143,14 @@ function updateUserIcons(id, name, backgroundColor, userIconSource) {
     }
 }
 /**
+ * Logic for removing all children of an element
+ */
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+/**
  * Sends a message when the writing input is focused and "enter" is pressed
  */
 writingInput.addEventListener("keyup", function (event) {
