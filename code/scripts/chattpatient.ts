@@ -1,31 +1,31 @@
 var socket:any
 
-socket.on('return_chats', function(data){
-
-	data['chats'].forEach(chatName => {
-		//addChat(chatName);
-		socket.emit("chat_join", { chatName: chatName})
-	});
-	//selectChat("huvudchatt");
-	console.log(data)
-})
-
-
 // Get the button that opens the modal
-var btn = document.getElementById("authButton");
 var pidInput = <HTMLInputElement>document.getElementById("pidInput");
 var modal = document.getElementById("myModal");
-//var username;
+
+// When the user clicks the button, open the modal
+const loginButton = document.getElementById("login-button");
 
 
-btn.addEventListener("click", (e:Event) => {
+// ---------------------------- event liseners ------------------
+
+
+loginButton.onclick = function() {
+	modal.style.display = "block";
+}
+
+
+document.getElementById("authButton").addEventListener("click", (e:Event) => {
   if (pidInput.value != "") {
     //console.log(nameInput.value)
     modal.style.display = "none"
     //username = nameInput.value;
 
     socket.emit('details_assignment', {
-				backgroundColor:"green", userIconSource: "/images/user.png", role: "patient"
+				backgroundColor:"green",
+				userIconSource: "/images/user.png",
+				role: "patient"
 		});
 
     socket.emit('authenticate', {pid: pidInput.value})
@@ -33,9 +33,3 @@ btn.addEventListener("click", (e:Event) => {
 	loginButton.style.display = "none";
   }
 });
-
-// When the user clicks the button, open the modal
-const loginButton = document.getElementById("login-button");
-loginButton.onclick = function() {
-	modal.style.display = "block";
-}

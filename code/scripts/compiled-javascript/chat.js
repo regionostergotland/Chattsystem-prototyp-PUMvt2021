@@ -208,10 +208,12 @@ socket.on('message', function (data) {
  * When a new user is connecting send user info and get info for server
  */
 socket.on('connect', function () {
-    socket.emit('details_assignment', {
-        name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"
-    });
+    socket.emit('details_assignment', { name: "anonym",
+        backgroundColor: "white",
+        userIconSource: "/images/user.png",
+        role: "patient" });
     socket.emit("chat_join", { chatName: "huvudchatt" });
+    // Debug, log info in terminal
     socket.emit("get_users");
     socket.emit("get_chats");
 });

@@ -28,16 +28,6 @@ btn.addEventListener("click", (e) => {
         socket.emit('authenticate', { pid: pidInput.value });
     }
 });
-/*
-// Måste fixas man ska inte gå med alla chatter
-socket.on('return_chats', function(data){
-    data['chats'].forEach(chatName => {
-        //addChat(chatName);
-        socket.emit("chat_join", { chatName: chatName})
-    });
-    //selectChat("huvudchatt");
-})
-*/
 /**
  *  Sends a message when you press sendbutton
  */
@@ -45,12 +35,13 @@ document.getElementById('createChatButton').onclick = function () {
     var nameInput = document.getElementById("chatNameInput");
     if (nameInput.value != "") {
         document.getElementById("modalCreate").style.display = "none";
+        // Request to create a chat
         socket.emit("chat_create", { chatName: nameInput.value,
             color: "blue",
             imageSource: "/images/user.png",
             parent: selectedChatName });
+        // Request to join the chat
         socket.emit("chat_join", { chatName: nameInput.value });
-        //addChat(nameInput.value, "blue", "/images/user.png", selectedChatName);
     }
 };
 /**
@@ -130,6 +121,10 @@ socket.on('return_users', function (data) {
             else {
                 button.innerHTML = user["role"] + ": " + user["name"];
             }
+            // This part is not implemeted in the server side
+            //button.onclick = function() {
+            //  socket.emit("chat_join", {chatName: selectedChatName, name: user["name"]});
+            //}
             container.appendChild(button);
         }
     });
