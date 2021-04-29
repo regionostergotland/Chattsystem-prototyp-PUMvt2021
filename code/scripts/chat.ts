@@ -236,7 +236,7 @@ document.getElementById('sendbutton').onclick = function() {
 	}
  }​;​
 
- 
+
 
 /**
  * The event that invokes when a message is recieved from the server
@@ -264,7 +264,7 @@ socket.on('info', function(data){
 		console.error("Statuskod : " + code + " meddelande : " + message)
 	else
 		console.log("Statuskod : " + code + " meddelande : " + message)
-	if(chatName != "")
+	if(chatName != "" && chatName in chatMessages)
 		addInfoMessage(chatName, message);
 	else if(selectedChatName != "")
 		addInfoMessage(selectedChatName, message);
