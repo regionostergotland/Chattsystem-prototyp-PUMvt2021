@@ -188,6 +188,16 @@ function addInfoMessage(chatName: string, message: string){
 
 
 /**
+ * Logic for removing all children of an element
+ */
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+
+/**
  * Sends a message when the writing input is focused and "enter" is pressed
  */
 writingInput.addEventListener("keyup", function(event) {
@@ -226,6 +236,7 @@ document.getElementById('sendbutton').onclick = function() {
 	}
  }​;​
 
+ 
 
 /**
  * The event that invokes when a message is recieved from the server
