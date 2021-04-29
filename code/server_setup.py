@@ -89,6 +89,13 @@ def send_js(path):
     """
     return send_from_directory('scripts/compiled-javascript', path)
 
+@app.route('/resources/<path:path>')
+def send_res(path):
+    """
+    Returns the resource from a path to the client
+    """
+    return send_from_directory('resources', path)
+
 
 @app.route('/images/<path:path>')
 def send_images(path):
