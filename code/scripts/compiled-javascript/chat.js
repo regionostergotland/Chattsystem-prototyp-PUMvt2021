@@ -152,7 +152,7 @@ document.getElementById('sendbutton').onclick = function () {
  */
 socket.on('message', function (data) {
     // Creates the message locally
-    addMessage(data['chatName'], data['message'], data['sender'], data['background'], data['userIconSource']);
+    addMessage(data['chatName'], data['message'], data['sender'], data['background'], data['icon-source']);
 });
 socket.on('connect', function () {
     socket.emit('details_assignment', {
