@@ -6,10 +6,23 @@ var socket: any;
 var btn = document.getElementById("authButton");
 var nameInput = <HTMLInputElement>document.getElementById("nameInput");
 var modal = document.getElementById("myModal");
-//var username;
+var modalAdd = document.getElementById("modalAdd");
+
+// Get the modal
+var modalCreate = document.getElementById("modalCreate");
+var modalBattery = document.getElementById("modalBattery");
+var questionContainer = document.getElementById("questionContainer");
+
+// Get the <span> element that closes the modal
+var span = <HTMLElement>document.getElementsByClassName("close")[0];
+
 
 // Set the pop up box to visubole when loding the page
 modal.style.display = "block";
+
+
+// ---------------------- event listerners ----------------------
+
 
 btn.addEventListener("click", (e:Event) => {
   if (nameInput.value != "") {
@@ -18,7 +31,10 @@ btn.addEventListener("click", (e:Event) => {
     //username = nameInput.value;
 
     socket.emit('details_assignment', {
-				name: nameInput.value, backgroundColor:"red", userIconSource: "/images/user.png", role: "personal"
+				name: nameInput.value,
+        backgroundColor:"red",
+        userIconSource: "/images/user.png",
+        role: "personal"
 		});
 
     socket.emit('authenticate')
@@ -26,16 +42,16 @@ btn.addEventListener("click", (e:Event) => {
 });
 
 
+/*
 // Måste fixas man ska inte gå med alla chatter
 socket.on('return_chats', function(data){
-
 	data['chats'].forEach(chatName => {
 		//addChat(chatName);
 		socket.emit("chat_join", { chatName: chatName})
 	});
 	//selectChat("huvudchatt");
-	console.log(data)
 })
+*/
 
 
 /**
@@ -55,7 +71,7 @@ document.getElementById('createChatButton').onclick = function() {
 
     socket.emit("chat_join", {chatName: nameInput.value});
 
-    addChat(nameInput.value, "blue", "/images/user.png", selectedChatName);
+    //addChat(nameInput.value, "blue", "/images/user.png", selectedChatName);
   }
 }​;
 
@@ -69,56 +85,13 @@ document.getElementById("adduserbutton").onclick = function() {
 };​
 
 
-/**
- * Append all users to the add users menu
- */
-socket.on('return_users', function(data){
-
-  var container = document.getElementById("userButtonList");
-  removeAllChildNodes(container);
-
-  data['users'].forEach(user => {
-    if (user["role"] != "bot") {
-      var button = document.createElement('button');
-      if (user["name"] == "anonym") {
-        button.innerHTML = user["role"];
-      } else {
-        button.innerHTML = user["role"] + ": " + user["name"];
-      }
-      container.appendChild(button);
-    }
-	});
-	console.log(data)
-})
-
-
-// Get the modal
-var modalAdd = document.getElementById("modalAdd");
-var modalCreate = document.getElementById("modalCreate");
-var modalBattery = document.getElementById("modalBattery");
-var questionContainer = document.getElementById("questionContainer");
-
-// Get the button that opens the diffrent modals
-var btn1 = document.getElementById("adduserbutton");
-var btn2 = document.getElementById("createchat");
-var btn3 = document.getElementById("answerbattery");
-
-// Get the <span> element that closes the modal
-var span = <HTMLElement>document.getElementsByClassName("close")[0];
-
 // When the user clicks the button, open the modal
-btn1.onclick = function() {
-
-  modalAdd.style.display = "block";
-}
-
-// When the user clicks the button, open the modal
-btn2.onclick = function() {
+document.getElementById("createchat").onclick = function() {
   modalCreate.style.display = "block";
 }
 
 // When the user clicks the button, open the modal
-btn3.onclick = function() {
+document.getElementById("answerbattery").onclick = function() {
   modalBattery.style.display = "block";
 }
 
@@ -169,3 +142,28 @@ xhttp.onreadystatechange = function() {
 };
 xhttp.open("GET", "resources/svarsbatteri.txt", true);
 xhttp.send();
+
+
+// ---------------------- Socet code -------------------------
+
+
+/**
+ * Append all users to the add users menu
+ */
+socket.on('return_users', function(data){
+
+  var container = document.getElementById("userButtonList");
+  removeAllChildNodes(container);
+
+  data['users'].forEach(user => {
+    if (user["role"] != "bot") {
+      var button = document.createElement('button');
+      if (user["name"] == "anonym") {
+        button.innerHTML = user["role"];
+      } else {
+        button.innerHTML = user["role"] + ": " + user["name"];
+      }
+      container.appendChild(button);
+    }
+	});
+});

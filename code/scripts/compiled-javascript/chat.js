@@ -150,6 +150,7 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
+// ----------------------------- event liseners -------------------------
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
  */
@@ -183,6 +184,7 @@ document.getElementById('sendbutton').onclick = function () {
         writingInput.value = "";
     }
 };
+// ----------------------------- Socket code ----------------------------
 /**
  * The event that invokes when a message is recieved from the server
  */
@@ -190,10 +192,14 @@ socket.on('message', function (data) {
     // Creates the message locally
     addMessage(data['chatName'], data['message'], data['sender'], data['background'], data['icon-source']);
 });
+/**
+ * When a new user is connecting send user info and get info for server
+ */
 socket.on('connect', function () {
     socket.emit('details_assignment', {
         name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"
     });
+    socket.emit("chat_join", { chatName: "huvudchatt" });
     socket.emit("get_users");
     socket.emit("get_chats");
 });
@@ -205,7 +211,12 @@ socket.on('info', function (data) {
     else
         console.log("Statuskod : " + code + " meddelande : " + message);
 });
+// Debug log all user in terminal
 socket.on('return_users', function (data) {
+    console.log(data);
+});
+// Debug log all chats in terminal
+socket.on('return_chats', function (data) {
     console.log(data);
 });
 socket.on('chat_info', function (data) {
@@ -234,6 +245,9 @@ socket.on("client_connect", function (data) {
     var id = data["id"];
     addChatUserIcon(chatname, name, color, iconSource, id);
 });
+/**
+ * Uppdate the user icon when details changs
+ */
 socket.on("client_details_changed", function (data) {
     //json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
     var name = data["name"];
