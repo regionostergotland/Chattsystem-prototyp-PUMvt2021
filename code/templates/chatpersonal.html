@@ -46,7 +46,7 @@
 
 			<!-- Admin contol panel -->
 			<div class="admin-view">
-				<button  id="adduserbutton1">Add user</button>
+				<button  id="adduserbutton">Add user</button>
 				<button id="createchat"> Add chat</button>
 				<button id="frågebatteri"> Frågebatteri</button>
 			</div>
@@ -110,8 +110,8 @@
 			<span class="close">&times;</span>
 			<h2>Skapa ny chat</h2>
 			<div class="modalButtonContainer">
-				<input type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
-				<button id="authButton">Klar</button>
+				<input type="text" name="" placeholder="Chatens namn här" value="" id="chatNameInput">
+				<button id="createChatButton">Klar</button>
 			</div>
 		</div>
 	</div>
@@ -124,7 +124,7 @@
 		var modalBattery = document.getElementById("modalBattery");
 
 		// Get the button that opens the diffrent modals
-		var btn1 = document.getElementById("adduserbutton1");
+		var btn1 = document.getElementById("adduserbutton");
 		var btn2 = document.getElementById("createchat");
 		var btn3 = document.getElementById("frågebatteri");
 
@@ -133,6 +133,7 @@
 
 		// When the user clicks the button, open the modal
 		btn1.onclick = function() {
+			
 			modalAdd.style.display = "block";
 		}
 

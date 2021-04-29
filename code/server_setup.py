@@ -36,8 +36,8 @@ class Chat:
         self.color = color
         self.imageSource = imageSource
         self.parent = parent
-        
- 
+
+
 
 class Message:
     """
@@ -108,7 +108,8 @@ clients = []
 
 
 # All the chats
-chats = {"huvudchatt": Chat([]), "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
+chats = {"huvudchatt": Chat([])}
+#, "chatt2": Chat([],"blue", "/images/user.png", "huvudchatt")}
 
 
 @socketio.on('authenticate')
@@ -157,7 +158,7 @@ def get_chats_event(methods=['GET', 'POST']):
         )
 
     socketio.emit('return_chats', json, room=currentSocketId)
-    
+
 
 
 
@@ -188,7 +189,7 @@ def connect_event(methods=['GET', 'POST']):
         #broadcast_message(bot_msg, chatName)
     else:
         bot_talking = False
-    
+
 @socketio.on('disconnect')
 def disconnect_event(methods=['GET', 'POST']):
     """
@@ -208,6 +209,7 @@ def disconnect_event(methods=['GET', 'POST']):
     else:
         bot_talking = False
     print("\n"+ client1.name + "(" + str(client1.id) + ") has disconnected")
+
 
 @socketio.on('details_assignment')
 def details_assignment_event(json, methods=['GET', 'POST']):
@@ -230,8 +232,6 @@ def message_event(json, methods=['GET', 'POST']):
     The event for when a message is recieved from a client
     """
 
-
-
     print("\nMessage: " + json['message'] + "(" + json['chatName'] + ")")
     sender = get_client(request.sid)
     chatName = json["chatName"]
@@ -241,7 +241,7 @@ def message_event(json, methods=['GET', 'POST']):
             message = Message(sender, json['message'])
             chat.history.append(message)
             broadcast_message(message, chatName)
-            
+
             #bot stuff:
             #print(bot_talking)
             if bot_talking:
@@ -329,7 +329,7 @@ def chat_join_event(json, methods=['GET', 'POST']):
     chatName = json["chatName"]
     print(request.sid + " has joined " + chatName)
     print(chats["huvudchatt"].clients)
-    print(chats["chatt2"].clients)
+    #print(chats["chatt2"].clients)
     print(len(chats[chatName].clients))
 
     if chatName in chats:
@@ -341,7 +341,7 @@ def chat_join_event(json, methods=['GET', 'POST']):
                 "iconSource": client.userIconSource,
                 "id": client.id
                 }, room=otherClient.sid)
-                
+
         chats[chatName].clients.append(client)
         send_info_message(
             200, "Klienten har anslutit till chatten", request.sid)
@@ -385,7 +385,7 @@ def send_chat_info(reciever, chatName):
     socketio.emit('chat_info', json, room=reciever.sid)
 
 
-    
+
 
 
 def broadcast_message(message, chatName, ignoreSender=True):
@@ -400,7 +400,7 @@ def broadcast_message(message, chatName, ignoreSender=True):
             'message': message.text,
             'chatName': chatName
         }
-    
+
     for client in chats[chatName].clients:
         if(not ignoreSender or not client.sid == sender.sid):
             socketio.emit('message', json, room=client.sid)

@@ -1,3 +1,7 @@
+/**
+* This css file contains the styles for the pop up boxes
+*/
+
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -22,7 +26,6 @@
   width: 80%;
 }
 
-
 .modal-content > h2 {
   color: #000;
 }
@@ -46,7 +49,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-
 
 @media only screen and (max-width:800px) {
   /* For tablets: */

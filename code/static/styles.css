@@ -1,3 +1,7 @@
+/**
+* This css file contains the defalt styles for the site
+*/
+
 *{
 	font-family: Arial;
 }
@@ -60,7 +64,6 @@ p{
 
 }
 
-
 .cH{
 	display: block;
 	margin: 0 auto;
@@ -69,7 +72,6 @@ p{
 .p1{
 	padding: 4%;
 }
-
 
 .w0{
 	width:0%;
