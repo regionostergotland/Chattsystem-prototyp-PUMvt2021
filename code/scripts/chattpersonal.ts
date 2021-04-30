@@ -14,8 +14,9 @@ var modalBattery = document.getElementById("modalBattery");
 var questionContainer = document.getElementById("questionContainer");
 
 // Get the <span> element that closes the modal
-var span = <HTMLElement>document.getElementsByClassName("close")[0];
-
+var spanBatery = document.getElementById("closeBattery");
+var spanUser = document.getElementById("closeAddUser");
+var spanChat = document.getElementById("closeCreatChat");
 
 // Set the pop up box to visubole when loding the page
 modal.style.display = "block";
@@ -92,12 +93,24 @@ document.getElementById("answerbattery").onclick = function() {
   modalBattery.style.display = "block";
 }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  if(modalCreate.style.display == "block") modalCreate.style.display = "none";
-  if(modalAdd.style.display == "block") modalAdd.style.display = "none";
-  if(modalBattery.style.display == "block") modalBattery.style.display = "none";
+
+// When the user clicks on <span> (x), close the add user modal
+spanUser.onclick = function() {
+  modalAdd.style.display = "none";
 }
+
+
+// When the user clicks on <span> (x), close the standard questions modal
+spanBatery.onclick = function() {
+  modalBattery.style.display = "none";
+}
+
+
+// When the user clicks on <span> (x), close the modal
+spanChat.onclick = function() {
+  modalCreate.style.display = "none";
+}
+
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
