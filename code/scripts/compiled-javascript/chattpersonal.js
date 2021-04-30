@@ -51,12 +51,19 @@ document.getElementById("adduserbutton").onclick = function () {
     socket.emit("get_users");
     document.getElementById("modalAdd").style.display = "block";
 };
+/**
+ * Get all users for the add user button
+ */
+document.getElementById("closechat").onclick = function () {
+    socket.emit("chat_end", { chatName: selectedChatName });
+};
 // When the user clicks the button, open the modal
 document.getElementById("createchat").onclick = function () {
     modalCreate.style.display = "block";
 };
 // When the user clicks the button, open the modal
 document.getElementById("answerbattery").onclick = function () {
+    socket.emit("get_chat_history");
     modalBattery.style.display = "block";
 };
 // When the user clicks on <span> (x), close the modal
@@ -80,32 +87,61 @@ window.onclick = function (event) {
         modalBattery.style.display = "none";
     }
 };
+// Not used any more
+/*
 var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        var str = xhttp.responseText;
-        str = str.split("\r").join("");
-        var questions = str.split("\n");
-        var writingInput = document.getElementById("writing-input");
-        questions.forEach(question => {
-            const text = question;
-            var questionButton = document.createElement('button');
-            questionButton.innerHTML = text;
-            questionButton.classList.add("question-button");
-            questionButton.onclick = () => {
-                modalBattery.style.display = "none";
-                writingInput.value = text;
-                writingInput.select();
-                writingInput.selectionStart = writingInput.selectionEnd = writingInput.value.length;
-                writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
-            };
-            questionContainer.appendChild(questionButton);
-        });
-    }
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    var str:string = xhttp.responseText;
+    str = str.split("\r").join("");
+    var questions = str.split("\n");
+    var writingInput = <HTMLInputElement>document.getElementById("writing-input");
+    questions.forEach(question => {
+      const text = question;
+      var questionButton = document.createElement('button');
+      questionButton.innerHTML = text;
+      questionButton.classList.add("question-button");
+      questionButton.onclick = ()=>{
+        modalBattery.style.display = "none";
+        writingInput.value = text;
+        writingInput.select();
+        writingInput.selectionStart = writingInput.selectionEnd = writingInput.value.length;
+
+
+        writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
+      };
+
+      questionContainer.appendChild(questionButton);
+    });
+  }
 };
 xhttp.open("GET", "resources/svarsbatteri.txt", true);
 xhttp.send();
+*/
 // ---------------------- Socet code -------------------------
+/**
+ * Appends all standard questions and anwers to buttons in the a pop up window
+ */
+socket.on('return_qa', function (data) {
+    var writingInput = document.getElementById("writing-input");
+    var container = document.getElementById("questionContainer");
+    removeAllChildNodes(container);
+    data["qa"].forEach(qa => {
+        var button = document.createElement('button');
+        var text = qa[0] + ":\n" + qa[1];
+        button.classList.add("question-button");
+        button.innerHTML = text;
+        button.onclick = () => {
+            modalBattery.style.display = "none";
+            writingInput.value = text.split("\n")[1];
+            writingInput.select();
+            writingInput.selectionStart = writingInput.selectionEnd = writingInput.value.length;
+            writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
+        };
+        container.appendChild(button);
+    });
+    console.log(data);
+});
 /**
  * Append all users to the add users menu
  */

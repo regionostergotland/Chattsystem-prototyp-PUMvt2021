@@ -174,7 +174,7 @@ writingInput.addEventListener("keyup", function (event) {
             socket.emit('message', {
                 message: writingInput.value, chatName: selectedChatName
             });
-            // Creates the message locally
+            // Creates the message locally (Do not do if chat is closed!)
             addMessage(selectedChatName, writingInput.value);
             // Clears the writing input
             writingInput.value = "";

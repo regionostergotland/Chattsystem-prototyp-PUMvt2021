@@ -62,6 +62,9 @@ class Roles (Enum):
 # Initializes the server
 app = Flask(__name__)
 
+
+import database_functions as DB
+
 # Adds socket support for the server
 socketio = SocketIO(app)
 
@@ -341,7 +344,6 @@ def chat_join_event(json, methods=['GET', 'POST']):
     chatName = json["chatName"]
     print(request.sid + " has joined " + chatName)
     print(chats["huvudchatt"].clients)
-    #print(chats["chatt2"].clients)
     print(len(chats[chatName].clients))
 
     if chatName in chats:
@@ -360,10 +362,26 @@ def chat_join_event(json, methods=['GET', 'POST']):
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
+
 @socketio.on('get_chat_history')
-def get_chat_history_event(json, methods=['GET', 'POST']):
+def get_chat_history_event(methods=['GET', 'POST']):
     """
     Sends the whole chat history of the given chat to a client
+    """
+    currentSocketId = request.sid
+    qa_list = DB.get_all_questions_and_answers()
+    if not qa_list:
+        json = {"qa": []}
+    else:
+        json = {"qa": qa_list}
+
+    socketio.emit("return_qa", json, room=currentSocketId)
+
+
+@socketio.on('get_standard_questons')
+def get_chat_history_event(json, methods=['GET', 'POST']):
+    """
+    Sends all the standard questions and anwers to a client
     """
     chatName = json["chatName"]
     chat = chats[chatName]
