@@ -162,6 +162,23 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
+/**
+ * Display all chats on the top of the page
+ */
+function showAllChats() {
+    var container = document.getElementById('masterChatselecter');
+    var chats = container.childNodes;
+    chats.forEach(chat => {
+        if (chat.tagName == "DIV") {
+            if (chat.style.display == "none") {
+                chat.style.display = "block";
+            }
+            else {
+                chat.style.display = "none";
+            }
+        }
+    });
+}
 // ----------------------------- event liseners -------------------------
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
@@ -234,8 +251,23 @@ socket.on('info', function (data) {
 socket.on('return_users', function (data) {
     console.log(data);
 });
-// Debug log all chats in terminal
+/**
+ * Adds all chats to the list on the top of the page
+ * // TODO: Needs to remove chats that you dont have premison to
+ */
 socket.on('return_chats', function (data) {
+    var container = document.getElementById('masterChatselecter');
+    removeAllChildNodes(container);
+    container.innerHTML = "Alla chater";
+    data["chats"].forEach(chat => {
+        var div = document.createElement('div');
+        div.innerHTML = chat;
+        div.style.display = "none";
+        div.onclick = function () {
+            selectChat(chat);
+        };
+        container.appendChild(div);
+    });
     console.log(data);
 });
 socket.on('chat_info', function (data) {

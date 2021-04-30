@@ -149,6 +149,7 @@ socket.on('return_qa', function (data) {
 });
 /**
  * Append all users to the add users menu
+ * // TODO: There needs to be an option to add a user for the server side
  */
 socket.on('return_users', function (data) {
     var container = document.getElementById("userButtonList");
