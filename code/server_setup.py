@@ -62,7 +62,7 @@ class Roles (Enum):
 # Initializes the server
 app = Flask(__name__)
 
-
+# Needs ti imprt databas after creating the app var
 import database_functions as DB
 
 # Adds socket support for the server
@@ -176,8 +176,6 @@ def get_chats_event(methods=['GET', 'POST']):
     socketio.emit('return_chats', json, room=currentSocketId)
 
 
-
-
 @socketio.on('connect')
 def connect_event(methods=['GET', 'POST']):
     """
@@ -205,6 +203,7 @@ def connect_event(methods=['GET', 'POST']):
         #broadcast_message(bot_msg, chatName)
     else:
         bot_talking = False
+
 
 @socketio.on('disconnect')
 def disconnect_event(methods=['GET', 'POST']):
@@ -412,9 +411,6 @@ def send_chat_info(reciever, chatName):
     if not chat.parent == None:
         json["parent"] = chat.parent
     socketio.emit('chat_info', json, room=reciever.sid)
-
-
-
 
 
 def broadcast_message(message, chatName, ignoreSender=True):
