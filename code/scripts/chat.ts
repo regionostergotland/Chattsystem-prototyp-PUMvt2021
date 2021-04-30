@@ -202,7 +202,7 @@ function removeAllChildNodes(parent) {
  */
 function showAllChats() {
 	var container = document.getElementById('masterChatselecter');
-	var chats = container.childNodes;
+	var chats = (<HTMLElement[]> <any> container.childNodes);
 	chats.forEach(chat => {
 		if (chat.tagName == "DIV") {
 			if (chat.style.display == "none") {
