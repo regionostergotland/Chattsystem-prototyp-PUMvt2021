@@ -19,6 +19,7 @@
 
 		<!-- Site headers -->
 		<header-component small></header-component>
+		<div id="masterChatselecter" onclick="showAllChats();">Alla chater</div>
 		<div class="chat-header">
 			<div class="chat-image-container" id="chat-selector-container"></div>
 			<div class="chat-header-border"></div>
@@ -104,6 +105,23 @@
 				<input type="text" name="" placeholder="Chatens namn här" value="" id="chatNameInput">
 				<button id="createChatButton">Klar</button>
 			</div>
+		</div>
+	</div>
+
+	<!-- Pop up box for highlighting in messages -->
+	<div id="modalHighlight" class="modal">
+		<div class="modal-content">
+			<span class="close" id="closeHighlight">&times;</span>
+			<h2>Markera viktiga delar av meddelandet</h2>
+			<div id="highlightMessageText" class="chat-bubble">
+
+			</div>
+			<div class="modalButtonContainer">
+				
+				<button id="highlightButton">Markera</button>
+				<button id="unhighlightButton">Avmarkera</button>
+			</div>
+			<button id="highlightDoneButton">Klar</button>
 		</div>
 	</div>
 

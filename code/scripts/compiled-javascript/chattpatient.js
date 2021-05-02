@@ -4,6 +4,13 @@ var pidInput = document.getElementById("pidInput");
 var modal = document.getElementById("myModal");
 // When the user clicks the button, open the modal
 const loginButton = document.getElementById("login-button");
+/**
+ * The event that invokes when a message is recieved from the server
+ */
+socket.on('message', function (data) {
+    // Creates the message locally
+    addMessage(data['chatName'], data['message'], data['id'], data['sender'], data['background'], data['icon-source']);
+});
 // ---------------------------- event liseners ------------------
 loginButton.onclick = function () {
     modal.style.display = "block";

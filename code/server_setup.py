@@ -6,6 +6,7 @@ import authentication
 
 
 clientIdCounter = 0
+messageIdCounter = 0
 
 class Client:
     """
@@ -45,8 +46,11 @@ class Message:
     """
 
     def __init__(self, sender, text):
+        global messageIdCounter
         self.sender = sender
         self.text = text
+        messageIdCounter += 1
+        self.id = messageIdCounter
 
 
 class Roles (Enum):
@@ -248,6 +252,8 @@ def message_event(json, methods=['GET', 'POST']):
 
     print("\nMessage: " + json['message'] + "(" + json['chatName'] + ")")
     sender = get_client(request.sid)
+
+
     chatName = json["chatName"]
     if chatName in chats:
         chat = chats[chatName]
@@ -270,6 +276,25 @@ def message_event(json, methods=['GET', 'POST']):
             send_info_message(200, "Chatten är avslutad", request.sid, chatName)
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
+
+@socketio.on('message_edited')
+def message_edited_event(json, methods=['GET', 'POST']):
+    """
+    The event for when a message is edited by a client
+    """
+    messageId = json["id"]
+    newMessageText = json['new-message']
+    sender = get_client(request.sid)
+    print("Message edited("+ str(messageId) +"): " + newMessageText)
+    for chatName in chats:
+        chat = chats[chatName]
+        for message in chat.history:
+            if message.id == messageId:
+                message.text = newMessageText
+                for client in chats[chatName].clients:
+                    if(not client.sid == sender.sid):
+                        socketio.emit('message_edited', json, room=client.sid)
+                return
 
 
 @socketio.on('chat_create')
@@ -423,7 +448,8 @@ def broadcast_message(message, chatName, ignoreSender=True):
             'icon-source': sender.userIconSource,
             'background': sender.backgroundColor,
             'message': message.text,
-            'chatName': chatName
+            'chatName': chatName,
+            'id': message.id
         }
 
     for client in chats[chatName].clients:
@@ -441,7 +467,8 @@ def send_message(message, reciever, chatName):
             'icon-source': sender.userIconSource,
             'background': sender.backgroundColor,
             'message': message.text,
-            'chatName': chatName
+            'chatName': chatName,
+            'id': message.id
         }
     socketio.emit('message', json, room=reciever.sid)
 

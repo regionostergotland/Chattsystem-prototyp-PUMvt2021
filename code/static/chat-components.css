@@ -35,6 +35,11 @@ message-component.right .chat-bubble{
 	max-width: 65vw;
 }
 
+.chat-bubble p b{
+	background-color: yellow;
+    font-weight: normal;
+}
+
 message-component.right .chat-bubble p{
 	color: #FFF;
 }

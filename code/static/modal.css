@@ -58,3 +58,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+#highlightMessageText{
+  margin: auto;
+  display: table;
+  font-size: x-large;
+}

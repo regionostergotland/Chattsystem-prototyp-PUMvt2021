@@ -9,13 +9,18 @@ const chatMessageContainer = document.getElementById("chat-message-container");
 var chatMessages = {};
 const writingInput = document.getElementById("writing-input");
 const sendbutton = document.getElementById("sendbutton");
+var allMessages = {};
 /**
  * Adds a message locally to the chat history
  *
+ * @param chatName The name of the chat
  * @param message The message
- * @param left Whether the message is a "left" or "right" message
+ * @param id The id of the message
+ * @param sender The sender of the message
+ * @param background The background color of the sender
+ * @param iconSource The icon source of the sender
  */
-function addMessage(chatName, message, sender = "", background = "", iconSource = "") {
+function addMessage(chatName, message, id = -1, sender = "", background = "", iconSource = "") {
     let messageComponent = new MessageComponent();
     messageComponent.classList.add((sender == "" ? "right" : "left"));
     messageComponent.setAttribute("message", message);
@@ -24,6 +29,9 @@ function addMessage(chatName, message, sender = "", background = "", iconSource 
         messageComponent.setAttribute("background-color", background);
     if (iconSource != "")
         messageComponent.setAttribute("src", iconSource);
+    messageComponent.setAttribute("message-id", "" + id);
+    if (id != -1)
+        allMessages[id] = messageComponent;
     chatMessages[chatName]["messages"].appendChild(messageComponent);
 }
 /**
@@ -215,13 +223,6 @@ document.getElementById('sendbutton').onclick = function () {
 };
 // ----------------------------- Socket code ----------------------------
 /**
- * The event that invokes when a message is recieved from the server
- */
-socket.on('message', function (data) {
-    // Creates the message locally
-    addMessage(data['chatName'], data['message'], data['sender'], data['background'], data['icon-source']);
-});
-/**
  * When a new user is connecting send user info and get info for server
  */
 socket.on('connect', function () {
@@ -306,4 +307,17 @@ socket.on("client_details_changed", function (data) {
     var userIconSource = data["userIconSource"];
     var id = data["id"];
     updateUserIcons(id, name, backgroundColor, userIconSource);
+});
+/**
+ * The event that invokes when a message has been edited
+ */
+socket.on('message_edited', function (data) {
+    var id = data['id'];
+    var messageBubble = allMessages[id];
+    if (messageBubble != undefined) {
+        messageBubble.chatBubbleDiv.children[0].innerHTML = data['new-message'];
+    }
+    else {
+        console.log("Message(" + id + ") was not found!");
+    }
 });

@@ -8,11 +8,18 @@ var modalAdd = document.getElementById("modalAdd");
 // Get the modal
 var modalCreate = document.getElementById("modalCreate");
 var modalBattery = document.getElementById("modalBattery");
+var modalHighlight = document.getElementById("modalHighlight");
 var questionContainer = document.getElementById("questionContainer");
 // Get the <span> element that closes the modal
 var spanBatery = document.getElementById("closeBattery");
 var spanUser = document.getElementById("closeAddUser");
 var spanChat = document.getElementById("closeCreatChat");
+var spanHighlight = document.getElementById("closeHighlight");
+// The elements in the highlight modal
+var highlightMessageText = document.getElementById("highlightMessageText");
+var highlightButton = document.getElementById("highlightButton");
+var unhighlightButton = document.getElementById("unhighlightButton");
+var highlightDoneButton = document.getElementById("highlightDoneButton");
 // Set the pop up box to visubole when loding the page
 modal.style.display = "block";
 // ---------------------- event listerners ----------------------
@@ -80,6 +87,10 @@ spanBatery.onclick = function () {
 spanChat.onclick = function () {
     modalCreate.style.display = "none";
 };
+// When the user clicks on <span> (x), close the modal
+spanHighlight.onclick = function () {
+    modalHighlight.style.display = "none";
+};
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modalCreate) {
@@ -92,6 +103,106 @@ window.onclick = function (event) {
         modalBattery.style.display = "none";
     }
 };
+// The onclick event for highlighting text
+highlightButton.onclick = () => {
+    var selection = window.getSelection();
+    if (selection.focusNode.parentElement == highlightMessageText) {
+        var start = Math.min(selection.anchorOffset, selection.focusOffset);
+        var end = Math.max(selection.anchorOffset, selection.focusOffset);
+        var innerHTML = highlightMessageText.innerHTML;
+        innerHTML = insertStrAt(innerHTML, "]", end);
+        innerHTML = insertStrAt(innerHTML, "[", start);
+        highlightMessageText.innerHTML = innerHTML;
+        removeGarbage();
+    }
+};
+// The onclick event for unhighlighting text
+unhighlightButton.onclick = () => {
+    var selection = window.getSelection();
+    if (selection.focusNode.parentElement == highlightMessageText) {
+        var start = Math.min(selection.anchorOffset, selection.focusOffset);
+        var end = Math.max(selection.anchorOffset, selection.focusOffset);
+        var innerHTML = highlightMessageText.innerHTML;
+        innerHTML = insertStrAt(innerHTML, "[", end);
+        innerHTML = insertStrAt(innerHTML, "]", start);
+        highlightMessageText.innerHTML = innerHTML;
+        removeGarbage();
+    }
+};
+var highlightChatMessageId = -1;
+// The onclick event for finishing highlighting text
+highlightDoneButton.onclick = () => {
+    if (highlightChatMessageId != -1) {
+        var innerHTML = highlightMessageText.innerHTML;
+        innerHTML = replaceAll(innerHTML, "[", "<b>");
+        innerHTML = replaceAll(innerHTML, "]", "</b>");
+        allMessages[highlightChatMessageId].chatBubbleDiv.children[0].innerHTML = innerHTML;
+        modalHighlight.style.display = "none";
+        socket.emit("message_edited", { "id": highlightChatMessageId, "new-message": innerHTML });
+        highlightChatMessageId = -1;
+    }
+};
+/**
+ * Inserts a string into another string at the position
+ *
+ * @param str The string that will be modified
+ * @param insertStr The string that will be inserted
+ * @param pos The position at which the string will be inserted
+ * @returns The new string
+ */
+function insertStrAt(str, insertStr, pos) {
+    return [str.slice(0, pos), insertStr, str.slice(pos)].join('');
+}
+/**
+ * Removes a character from a string at the position
+ *
+ * @param str The string that will be modified
+ * @param pos The position at which the char will be removed from the string
+ * @returns The new string
+ */
+function removeCharAt(str, pos) {
+    return [str.slice(0, pos), str.slice(pos + 1)].join('');
+}
+/**
+ * Removes all the unnecessary brackets from the highlighted text
+ */
+function removeGarbage() {
+    var innerHTML = highlightMessageText.innerHTML;
+    var bracketCounter = 0;
+    var len = innerHTML.length;
+    for (var i = 0; i < len; i++) {
+        switch (innerHTML[i]) {
+            case "[":
+                bracketCounter++;
+                if (bracketCounter != 1) {
+                    innerHTML = removeCharAt(innerHTML, i);
+                    i--;
+                    len--;
+                }
+                break;
+            case "]":
+                bracketCounter--;
+                if (bracketCounter != 0) {
+                    innerHTML = removeCharAt(innerHTML, i);
+                    i--;
+                    len--;
+                }
+                break;
+        }
+    }
+    highlightMessageText.innerHTML = innerHTML;
+}
+/**
+ * Replaces all occurrences of a string from a string
+ *
+ * @param str The string that will be modified
+ * @param removeStr The value of what will be removed
+ * @param replaceStr The string that will replace that which was removed
+ * @returns The new string
+ */
+function replaceAll(str, removeStr, replaceStr) {
+    return str.split(removeStr).join(replaceStr);
+}
 // Not used any more
 /*
 var xhttp = new XMLHttpRequest();
@@ -124,6 +235,25 @@ xhttp.open("GET", "resources/svarsbatteri.txt", true);
 xhttp.send();
 */
 // ---------------------- Socet code -------------------------
+/**
+ * The event that invokes when a message is recieved from the server
+ */
+socket.on('message', function (data) {
+    // Creates the message locally
+    var id = data['id'];
+    addMessage(data['chatName'], data['message'], id, data['sender'], data['background'], data['icon-source']);
+    var messageComponent = allMessages[id];
+    console.log(messageComponent.chatBubbleDiv.children[0]);
+    messageComponent.chatBubbleDiv.style.cursor = "pointer";
+    messageComponent.chatBubbleDiv.onclick = () => {
+        modalHighlight.style.display = "block";
+        var text = messageComponent.chatBubbleDiv.children[0].innerHTML.toString();
+        text = replaceAll(text, "<b>", "[");
+        text = replaceAll(text, "</b>", "]");
+        highlightMessageText.innerHTML = text;
+        highlightChatMessageId = id;
+    };
+});
 /**
  * Appends all standard questions and anwers to buttons in the a pop up window
  */

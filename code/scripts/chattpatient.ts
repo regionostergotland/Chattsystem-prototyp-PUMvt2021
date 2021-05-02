@@ -8,6 +8,15 @@ var modal = document.getElementById("myModal");
 const loginButton = document.getElementById("login-button");
 
 
+/**
+ * The event that invokes when a message is recieved from the server
+ */
+ socket.on('message', function(data){
+	// Creates the message locally
+	addMessage(data['chatName'], data['message'], data['id'], data['sender'], data['background'], data['icon-source']);
+});
+
+
 // ---------------------------- event liseners ------------------
 
 
