@@ -1,9 +1,10 @@
 // Declares io so not to recieve error when compiling
 var socket: any;
 
+var authColor = <HTMLInputElement>document.getElementById("authColor");
+var btn = document.getElementById("authButton");
 
 // Get the button that opens the modal
-var btn = document.getElementById("authButton");
 var pidInput = <HTMLInputElement>document.getElementById("pidInput");
 var modal = document.getElementById("myModal");
 var modalAdd = document.getElementById("modalAdd");
@@ -43,7 +44,7 @@ btn.addEventListener("click", (e:Event) => {
 
     socket.emit('details_assignment', {
 				name: pidInput.value,
-        backgroundColor:"red",
+        backgroundColor: authColor.value,
         userIconSource: "/images/user.png",
         role: "personal"
 		});

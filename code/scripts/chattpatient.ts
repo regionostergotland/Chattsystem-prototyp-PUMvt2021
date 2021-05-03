@@ -1,5 +1,7 @@
 var socket:any
 
+var authColor = <HTMLInputElement>document.getElementById("authColor");
+
 // Get the button that opens the modal
 var pidInput = <HTMLInputElement>document.getElementById("pidInput");
 var modal = document.getElementById("myModal");
@@ -32,7 +34,7 @@ document.getElementById("authButton").addEventListener("click", (e:Event) => {
     //username = nameInput.value;
 
     socket.emit('details_assignment', {
-				backgroundColor:"green",
+				backgroundColor:authColor.value,
 				userIconSource: "/images/user.png",
 				role: "patient"
 		});
