@@ -46,6 +46,34 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.authmodalButtonContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: auto;
+}
+
+.color-picker {
+  margin-left: 1vh auto;
+  width: 100%;
+  height: 6vh;
+  cursor: pointer;
+}
+
+.name-input {
+  text-align: center;
+  margin: 1vh auto;
+  width: 100%;
+  font-size: 3vh;
+  height: 6vh;
+}
+
+.authmodalButtonContainer > button {
+  margin: 1vh auto;
+  width: 100%;
+  padding: 1vh;
+  text-align: center;
+}
+
 @media only screen and (max-width:800px) {
   /* For tablets: */
   .modalButtonContainer {

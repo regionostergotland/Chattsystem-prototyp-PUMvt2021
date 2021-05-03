@@ -16,20 +16,21 @@
 <body>
 	<div class="flex-container">
 		<header-component small></header-component>
-		<div class="chat-container">
-			<div class="chat-header">
-				<div class="chat-image-container">
-					<div class="chat-image">
-						<user-icon-component background-color="#38D19D"></user-icon-component>
-						<div class="chat-indicator"></div>
-					</div>
-					<div class="chat-image active">
-						<user-icon-component src="/images/bot.png"></user-icon-component>
-						<div class="chat-indicator"></div>
-					</div>
+		<div class="chat-header">
+			<div class="chat-image-container">
+				<div class="chat-image">
+					<user-icon-component background-color="#38D19D"></user-icon-component>
+					<div class="chat-indicator"></div>
 				</div>
-				<div class="chat-header-border"></div>
+				<div class="chat-image active">
+					<user-icon-component src="/images/bot.png"></user-icon-component>
+					<div class="chat-indicator"></div>
+				</div>
 			</div>
+			<div class="chat-header-border"></div>
+		</div>
+		<div class="chat-container">
+
 
 			<div class="chat">
 				<div id="messages">
@@ -52,8 +53,14 @@
 		<div class="modal-content">
 			<span class="close">&times;</span>
 			<h2>Logga in som</h2>
-			<div class="modalButtonContainer">
-				<input type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
+			<div class="authmodalButtonContainer">
+
+				<input class="name-input" type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
+
+				<form class="action-page" action="/action_page.php">
+				  <input class="color-picker" type="color" id="authColor" name="favcolor" value="#ff0000">
+				</form>
+
 				<button type="button" name="button" id="authButton">Klar</button>
 			</div>
 		</div>
