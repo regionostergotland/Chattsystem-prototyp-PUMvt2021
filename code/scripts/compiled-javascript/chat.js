@@ -187,6 +187,7 @@ function showAllChats() {
         }
     });
 }
+document.getElementById('masterChatselecter').style.display = "none";
 // ----------------------------- event liseners -------------------------
 /**
  * Sends a message when the writing input is focused and "enter" is pressed

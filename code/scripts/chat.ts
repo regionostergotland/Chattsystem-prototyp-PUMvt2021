@@ -221,6 +221,7 @@ function showAllChats() {
 		}
 	});
 }
+document.getElementById('masterChatselecter').style.display = "none";
 
 
 // ----------------------------- event liseners -------------------------

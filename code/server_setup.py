@@ -158,7 +158,7 @@ def get_users_event(methods=['GET', 'POST']):
     for client in clients:
 
         json["users"].append(
-            {"name": client.name, "role": str(client.role.name) }
+            {"name": client.name, "role": str(client.role.name), "id":client.id }
         )
 
     socketio.emit('return_users', json, room=currentSocketId)
@@ -362,13 +362,11 @@ def chat_end_event(json, methods=['GET', 'POST']):
 @socketio.on('chat_join')
 def chat_join_event(json, methods=['GET', 'POST']):
     """
-    The event for creating a new chat
+    The event for joining a chat
     """
     client = get_client(request.sid)
     chatName = json["chatName"]
     print(request.sid + " has joined " + chatName)
-    print(chats["huvudchatt"].clients)
-    print(len(chats[chatName].clients))
 
     if chatName in chats:
         for otherClient in chats[chatName].clients :
@@ -383,6 +381,35 @@ def chat_join_event(json, methods=['GET', 'POST']):
         chats[chatName].clients.append(client)
         send_chat_info(client, chatName)
 
+    else:
+        send_info_message(404, "Chatten finns inte", request.sid)
+
+@socketio.on('add_user_to_chat')
+def chat_join_event(json, methods=['GET', 'POST']):
+    """
+    The event for adding a user to a chat
+    """
+    chatName = json["chatName"]
+    id = json["clientId"]
+
+    user = {}
+    for client in clients:
+        if client.id == id:
+            user = client
+            break
+
+    if chatName in chats:
+        for otherClient in chats[chatName].clients :
+            socketio.emit("client_connect", {
+                "chatName": chatName,
+                "client": user.name,
+                "color": user.backgroundColor,
+                "iconSource": user.userIconSource,
+                "id": user.id
+                }, room=otherClient.sid)
+
+        chats[chatName].clients.append(user)
+        send_chat_info(user, chatName)
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 

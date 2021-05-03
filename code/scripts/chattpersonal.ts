@@ -81,7 +81,7 @@ document.getElementById('createChatButton').onclick = function() {
  */
 document.getElementById("adduserbutton").onclick = function() {
   socket.emit("get_users");
-  document.getElementById("modalAdd").style.display = "block";
+  modalAdd.style.display = "block";
 };​
 
 
@@ -351,21 +351,37 @@ socket.on('return_users', function(data){
   var container = document.getElementById("userButtonList");
   removeAllChildNodes(container);
 
-  data['users'].forEach(user => {
-    if (user["role"] != "bot") {
-      var button = document.createElement('button');
-      if (user["name"] == "anonym") {
-        button.innerHTML = user["role"];
-      } else {
-        button.innerHTML = user["role"] + ": " + user["name"];
+  var idInChat: string[] = [];
+  if(selectedChatName != ""){
+    var clientContainer = chatMessages[selectedChatName]["clients"];
+    clientContainer.childNodes.forEach(userIconComponent => {
+      idInChat.push((<HTMLElement>userIconComponent).attributes["client-id"].value);
+    });
+    console.log(idInChat);
+    data['users'].forEach(user => {
+    
+      var id = user["id"];
+  
+      if (user["role"] != "bot"  && !idInChat.includes(id.toString())) {
+        
+        var button = document.createElement('button');
+        
+        if (user["name"] == "anonym") {
+          button.innerHTML = user["role"];
+        } else {
+          button.innerHTML = user["role"] + ": " + user["name"];
+        }
+  
+        // This part is not implemeted in the server side
+        button.onclick = function() {
+          socket.emit("add_user_to_chat", {chatName: selectedChatName, clientId: id});
+          modalAdd.style.display = "none";
+        }
+  
+        container.appendChild(button);
       }
+    });
+  }
 
-      // This part is not implemeted in the server side
-      //button.onclick = function() {
-      //  socket.emit("chat_join", {chatName: selectedChatName, name: user["name"]});
-      //}
-
-      container.appendChild(button);
-    }
-	});
+  
 });
