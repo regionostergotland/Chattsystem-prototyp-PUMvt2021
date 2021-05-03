@@ -6,16 +6,25 @@ var io: any;
 // Sets up a socket connection to the server
 var socket = io();
 
-const messages = document.getElementById("messages");
+//const messages = document.getElementById("messages");
+const chatSelectorContainer = document.getElementById("chat-selector-container");
+const chatMessageContainer = document.getElementById("chat-message-container");
+var chatMessages = {};
 const writingInput = <HTMLInputElement>document.getElementById("writing-input");
+const sendbutton = <HTMLInputElement>document.getElementById("sendbutton");
+var allMessages = {};
 
 /**
  * Adds a message locally to the chat history
  * 
+ * @param chatName The name of the chat
  * @param message The message
- * @param left Whether the message is a "left" or "right" message 
+ * @param id The id of the message
+ * @param sender The sender of the message
+ * @param background The background color of the sender
+ * @param iconSource The icon source of the sender
  */
-function addMessage(message: string, sender: string = "", background="", iconSource=""){
+function addMessage(chatName: string , message: string, id:number=-1, sender: string = "", background="", iconSource=""){
 	let messageComponent = new MessageComponent();
 	messageComponent.classList.add((sender == "" ? "right" : "left"));
 	messageComponent.setAttribute("message", message);
@@ -24,11 +33,198 @@ function addMessage(message: string, sender: string = "", background="", iconSou
 		messageComponent.setAttribute("background-color", background);
 	if(iconSource != "")
 		messageComponent.setAttribute("src", iconSource);
-		
-		
-	messages.appendChild(messageComponent);
 
+	messageComponent.setAttribute("message-id", ""+id);
+	if(id != -1)
+		allMessages[id] = messageComponent;
+
+	chatMessages[chatName]["messages"].appendChild(messageComponent);
 }
+
+
+/**
+* Logic for selecting the chat whit the name: chatName
+* The global varibule: selectedChatName is the active chat window
+*/
+var selectedChatName: string = "";
+function selectChat(chatName: string){
+	// Deactivate all chat windows
+	for (const key in chatMessages) {
+		chatMessages[key]["messages"].style.display = "none";
+		chatMessages[key]["selector"].removeAttribute("active")
+	}
+	// Activate the chat window whit name: chatName
+	chatMessages[chatName]["messages"].style.display = "block";
+	chatMessages[chatName]["selector"].setAttribute("active", "")
+	selectedChatName = chatName;
+}
+
+
+/**
+* Logic for creating a new chat for a curent one
+*/
+function addChat(chatName: string, color: string, imageSource: string, parent: string){
+	// Create chat name card at the top of the chat
+	var messageContainer = document.createElement('div');
+	var chatHeader = document.createElement('h2');
+	chatHeader.innerHTML = chatName;
+	chatHeader.classList.add("chat-header-text");
+	messageContainer.appendChild(chatHeader);
+
+	// Create the div that will contan all users at the top of the chat
+	var clientContainer = document.createElement('div');
+	clientContainer.classList.add("user-image-container")
+	messageContainer.appendChild(clientContainer);
+
+	// Append the created divs to the page
+	chatMessageContainer.appendChild(messageContainer);
+
+	// Create a chat componet for the header
+	let chatSelectorComponent = new ChatSelectorComponent();
+	chatSelectorComponent.setAttribute("color",color)
+	chatSelectorComponent.setAttribute("src",imageSource)
+	chatSelectorComponent.addEventListener("click", (e)=>{
+		selectChat(chatName);
+	});
+
+	// Append the chat componet the the page
+	chatSelectorContainer.appendChild(chatSelectorComponent);
+
+	// Append text to the page of the origen of the chat
+	// (frome what chat was this chat created)
+	if (parent != undefined){
+		var parentSelectorContainer = document.createElement('p');
+		parentSelectorContainer.classList.add("chat-info-message");
+		parentSelectorContainer.innerHTML = `
+			Den här chatten är skapad från <a>`+ parent + `</a>
+			`;
+
+		// Set the lest word to clickebol
+		let parentSelector = parentSelectorContainer.children[0];
+		parentSelector.addEventListener("click", (e)=>{
+			selectChat(parent);
+		});
+
+		// Append the text to the top of the chat
+		messageContainer.appendChild(parentSelectorContainer)
+	}
+
+	// Save chat
+	chatMessages[chatName] = {"messages": messageContainer,
+														"selector": chatSelectorComponent,
+														"clients": clientContainer};
+}
+
+
+/**
+ * Adds an usericon to represent an user who is active in the chat.
+ *
+ * @param chatName  The name of the chat
+ * @param clientName  The name of the user
+ * @param clientColor The color of the user
+ * @param clientIconSource The user iconSource
+ */
+
+function addChatUserIcon(chatName: string, clientName: string, clientColor: string, clientIconSource: string, id: number){
+	var clientContainer = chatMessages[chatName]["clients"]
+	var userIconComponent = new UserIconComponent()
+	userIconComponent.setAttribute("background-color", clientColor)
+	userIconComponent.setAttribute("src", clientIconSource)
+	userIconComponent.setAttribute("hover-text", clientName)
+	userIconComponent.setAttribute("client-id", ""+id)
+	clientContainer.appendChild(userIconComponent)
+}
+
+
+/**
+* Function for removing a user icon the top of the chat whit the client-id: id
+*/
+function removeUserIcons(id: number){
+	for (var key in chatMessages){
+		var chat = chatMessages[key]
+		var clientContainer:HTMLElement = chat["clients"]
+		var children = clientContainer.children
+
+		// Loop thro all users in the chat abd remove the one whit the client-id: id
+		for (var i = children.length - 1;i>= 0; i--){
+			var child = children[i]
+
+			console.log("ID: " + id + " - " + child.attributes["client-id"].value)
+			if (id.toString() == child.attributes["client-id"].value){
+				clientContainer.removeChild(child)
+			}
+		}
+
+	}
+}
+
+
+/**
+* Uppdate the information for the user whit the client-id: id
+*/
+function updateUserIcons(id: number, name:string, backgroundColor:string, userIconSource: string){
+	for (var key in chatMessages){
+		var chat = chatMessages[key]
+		var clientContainer:HTMLElement = chat["clients"]
+		var children = clientContainer.children
+		for (var i = children.length - 1;i>= 0; i--){
+			var child = children[i]
+
+			console.log("CHANGED ID: " + id + " - " + child.attributes["client-id"].value)
+			if (id.toString() == child.attributes["client-id"].value){
+				child.setAttribute("background-color", backgroundColor)
+				child.setAttribute("src", userIconSource)
+				child.setAttribute("hover-text", name)
+			}
+		}
+
+	}
+}
+
+/**
+ * Adds a info message to the chat
+ *
+ * @param chatName The name of the chat
+ * @param message The info message
+ */
+function addInfoMessage(chatName: string, message: string){
+	var textElement = document.createElement('p');
+	textElement.classList.add("chat-info-message");
+	textElement.innerHTML = message;
+	chatMessages[chatName]["messages"].appendChild(textElement);
+}
+
+
+/**
+ * Logic for removing all children of an element
+ */
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+
+/**
+ * Display all chats on the top of the page
+ */
+function showAllChats() {
+	var container = document.getElementById('masterChatselecter');
+	var chats = (<HTMLElement[]> <any> container.childNodes);
+	chats.forEach(chat => {
+		if (chat.tagName == "DIV") {
+			if (chat.style.display == "none") {
+				chat.style.display = "block";
+			}	else {
+				chat.style.display = "none";
+			}
+		}
+	});
+}
+
+
+// ----------------------------- event liseners -------------------------
+
 
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
@@ -40,54 +236,156 @@ writingInput.addEventListener("keyup", function(event) {
 			event.preventDefault();
 			// Sends the message to the server
 			socket.emit('message', {
-					message: writingInput.value, chatName:"huvudchatt"
+					message: writingInput.value, chatName: selectedChatName
 			});
 
-			// Creates the message locally
-			addMessage(writingInput.value);
+			// Creates the message locally (Do not do if chat is closed!)
+			addMessage(selectedChatName, writingInput.value);
 
 			// Clears the writing input
 			writingInput.value = "";
 		}
-    
   }
-
 });
+
 
 /**
- * The event that invokes when a message is recieved from the server
+ *  Sends a message when you press sendbutton
  */
-socket.on('message', function(data){
-	// Creates the message locally
-	addMessage(data['message'], data['sender'], data['background'], data['userIconSource']);
-});
+document.getElementById('sendbutton').onclick = function() {
+	if(writingInput.value != ""){
+		// Sends the message to the server
+		socket.emit('message', {
+				message: writingInput.value, chatName:"huvudchatt"
+		});
+		// Creates the message locally
+		addMessage(selectedChatName, writingInput.value);
+		// Clears the writing input
+		writingInput.value = "";
+	}
+ }​;​
 
+
+// ----------------------------- Socket code ----------------------------
+
+
+/**
+ * When a new user is connecting send user info and get info for server
+ */
 socket.on('connect', function(){
-	socket.emit('details_assignment', {
-		name: "anonym", backgroundColor: "white", userIconSource: "/images/user.png", role: "patient"});
-	socket.emit("chat_join", { chatName: "huvudchatt"})
-	socket.emit("get_users")
-	socket.emit("get_chats")
+	socket.emit('details_assignment', {name: "anonym",
+																		 backgroundColor: "white",
+																		 userIconSource: "/images/user.png",
+																		 role: "patient"});
+	socket.emit("chat_join", { chatName: "huvudchatt"});
 
+	// Debug, log info in terminal
+	socket.emit("get_users");
+	socket.emit("get_chats");
 });
+
 
 socket.on('info', function(data){
 	var code:number = data["status"]
 	var message = data["message"]
+	var chatName = data["chatName"]
+
 	if ( Math.floor(code/100) == 4)
-		console.error("Statuskod : " + code + " meddelande : " + message)  
-	else 
-		console.log("Statuskod : " + code + " meddelande : " + message)
+		console.error("Statuskod : " + code + " meddelande : " + message);
+	else
+		console.log("Statuskod : " + code + " meddelande : " + message);
+	if(chatName != "" && chatName in chatMessages)
+		addInfoMessage(chatName, message);
+	else if(selectedChatName != "")
+		addInfoMessage(selectedChatName, message);
 })
 
 
+// Debug log all user in terminal
 socket.on('return_users', function(data){
-
 	console.log(data)
 })
 
 
+/**
+ * Adds all chats to the list on the top of the page
+ * // TODO: Needs to remove chats that you dont have premison to
+ */
 socket.on('return_chats', function(data){
+	var container = document.getElementById('masterChatselecter');
+	removeAllChildNodes(container);
+	container.innerHTML = "Alla chater";
+
+
+	data["chats"].forEach(chat => {
+		var div = document.createElement('div');
+		div.innerHTML = chat;
+		div.style.display = "none";
+
+		div.onclick = function() {
+			selectChat(chat);
+		}
+
+		container.appendChild(div);
+	});
 
 	console.log(data)
 })
+
+
+socket.on('chat_info',function(data){
+	console.log(data)
+	var name = data['chatName']
+	var color = data['color']
+	var imageSource = data['imageSource']
+	var clients = data['clients']
+	var parent = data['parent']
+	addChat(name,color,imageSource,parent)
+	selectChat(name)
+	clients.forEach(client => {
+		addChatUserIcon(name, client["name"],client["background"], client["userIconSource"], client["id"])
+	});
+	socket.emit("get_chat_history", {chatName: name})
+})
+
+
+socket.on("client_disconnect", function(data){
+	var id: number = data['id']
+	removeUserIcons(id)
+})
+
+
+socket.on("client_connect", function(data){
+	var chatname = data["chatName"]
+	var name = data["client"]
+	var color = data["color"]
+	var iconSource = data["iconSource"]
+	var id = data["id"]
+	addChatUserIcon(chatname, name, color, iconSource, id)
+})
+
+
+/**
+ * Uppdate the user icon when details changs
+ */
+socket.on("client_details_changed", function(data){
+	//json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+	var name = data["name"]
+	var backgroundColor = data["backgroundColor"]
+	var userIconSource = data["userIconSource"]
+	var id = data["id"]
+	updateUserIcons(id, name, backgroundColor, userIconSource)
+})
+
+/**
+ * The event that invokes when a message has been edited
+ */
+ socket.on('message_edited', function(data){
+	var id:number = data['id'];
+	var messageBubble = allMessages[id];
+	if(messageBubble != undefined){
+		messageBubble.chatBubbleDiv.children[0].innerHTML = data['new-message'];
+	}else{
+		console.log("Message(" + id + ") was not found!");
+	}
+});

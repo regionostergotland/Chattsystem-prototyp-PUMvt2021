@@ -32,7 +32,9 @@ header-component.big img:nth-child(2){
 	margin: 2vh auto;
 }
 
-
+header-component img{
+	cursor: pointer;
+}
 
 drawer-component{
 	display: block;
@@ -170,4 +172,5 @@ drawer-component.open .drawer-trigger::after{
 		border-bottom: 1vh solid #222;
 		border-top: 0vh solid #222;
   }
+
 }

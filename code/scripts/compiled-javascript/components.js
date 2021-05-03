@@ -33,6 +33,10 @@ class HeaderComponent extends HTMLElement {
 			<img src="/images/1177.png"/>
 			<img src="/images/logo.png"/>
 		`;
+        this.children[0].onclick =
+            this.children[1].onclick = () => {
+                window.location.href = "/";
+            };
     }
 }
 //The collection of all DrawerComponents

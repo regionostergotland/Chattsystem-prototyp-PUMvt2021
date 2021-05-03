@@ -5,50 +5,57 @@
 	<link rel="icon" type="image/png" href="../images/favicon.png"/>
 	<link rel="stylesheet" href="/static/styles.css">
 	<link rel="stylesheet" href="/static/components.css">
+
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 	<script src="/scripts/components.js"></script>
 </head>
+
 <body>
+	<!-- Page header -->
 	<header-component small></header-component>
 	<h2>Vad behöver du hjälp med?</h1>
 
+	<!-- A list of categories -->
 	<div class="drawer-comp-items">
 
-		<div class="drawer-comp-item">
-			<drawer-component title="Liv & hälsa">
-				<div class="drawer-comp-item-text">
-					<p>Här får du veta mer om hur kroppen fungerar och råd om hur du kan leva hälsosamt. Du kan läsa om psykisk hälsa, sexuell hälsa, tandhälsa och om mat och träning. Det finns också texter om stress, övergrepp, alkohol och könsidentitet.</p>
-				</div>
-				<div class="drawer-comp-item-button">
-					<button href="chat">Kontakta vården</button>
-				</div>
-			</drawer-component>
-		</div>
+		<!-- A categorie -->
+		<drawer-component class="drawer-comp-item" title="Liv & Hälsa">
+			<p class="drawer-comp-item-text">Här får du veta mer om hur kroppen fungerar och råd om hur du kan leva hälsosamt. Du kan läsa om psykisk hälsa, sexuell hälsa, tandhälsa och om mat och träning. Det finns också texter om stress, övergrepp, alkohol och könsidentitet.</p>
+			<button class="drawer-comp-item-button" href="chat">Kontakta vården</button>
+		</drawer-component>
 
-		<div class="drawer-comp-item">
-			<drawer-component title="Liv & hälsa">
-				<div class="drawer-comp-item-text">
-					<p>Här får du veta mer om hur kroppen fungerar och råd om hur du kan leva hälsosamt. Du kan läsa om psykisk hälsa, sexuell hälsa, tandhälsa och om mat och träning. Det finns också texter om stress, övergrepp, alkohol och könsidentitet.</p>
-				</div>
-				<div class="drawer-comp-item-button">
-					<button href="chat">Kontakta vården</button>
-				</div>
-			</drawer-component>
-		</div>
+		<!-- A categorie -->
+		<drawer-component class="drawer-comp-item" title="Barn & Gravid">
+			<p class="drawer-comp-item-text">Information..</p>
+			<button class="drawer-comp-item-button" href="chat">Kontakta vården</button>
+		</drawer-component>
 
-		<div class="drawer-comp-item">
-			<drawer-component title="Liv & hälsa">
-				<div class="drawer-comp-item-text">
-					<p>Här får du veta mer om hur kroppen fungerar och råd om hur du kan leva hälsosamt. Du kan läsa om psykisk hälsa, sexuell hälsa, tandhälsa och om mat och träning. Det finns också texter om stress, övergrepp, alkohol och könsidentitet.</p>
-				</div>
-				<div class="drawer-comp-item-button">
-					<button href="chat">Kontakta vården</button>
-				</div>
-			</drawer-component>
-		</div>
+		<!-- A categorie -->
+		<drawer-component class="drawer-comp-item" title="Olyckor & Skador">
+			<p class="drawer-comp-item-text">Information..</p>
+			<button class="drawer-comp-item-button" href="chat">Kontakta vården</button>
+		</drawer-component>
+
+		<!-- A categorie -->
+		<drawer-component class="drawer-comp-item" title="Sjukdomar & Besvär">
+			<p class="drawer-comp-item-text">Information..</p>
+			<button class="drawer-comp-item-button" href="chat">Kontakta vården</button>
+		</drawer-component>
+
+		<!-- A categorie -->
+		<drawer-component class="drawer-comp-item" title="Behandling & Hjälpmedel">
+			<p class="drawer-comp-item-text">Information..</p>
+			<button class="drawer-comp-item-button" href="chat">Kontakta vården</button>
+		</drawer-component>
+
+		<!-- A categorie -->
+		<drawer-component class="drawer-comp-item" title="Övrigt">
+			<p class="drawer-comp-item-text">Information..</p>
+			<button class="drawer-comp-item-button" href="chat">Kontakta vården</button>
+		</drawer-component>
 
 	</div>
 
-
 </body>
+
 </html>
