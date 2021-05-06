@@ -5,12 +5,12 @@ def authenticate(pid):
 
 
 names = {   "0":"Ludwig", 
-            "1":"Lucy", 
-            "2":"Casper", 
-            "3":"Taha", 
-            "4":"Kevin", 
-            "5":"Hannes", 
-            "6":"Filip", 
+            "1":"Casper", 
+            "2":"Taha", 
+            "3":"Kevin", 
+            "4":"Hannes", 
+            "5":"Filip", 
+            "6":"Lucy", 
             "7":"Felicia"}
 
 def getName(pid):

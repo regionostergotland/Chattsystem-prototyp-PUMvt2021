@@ -30,7 +30,7 @@ class Chat:
     The Chat class
     """
 
-    def __init__(self, clients, color = "white", imageSource ="/images/user.png", parent= None ):
+    def __init__(self, clients, color = "white", imageSource ="/images/chat.svg", parent= None ):
         self.history = []
         self.clients = clients
         self.active = True
@@ -122,7 +122,7 @@ clients = []
 
 
 # All the chats
-chats = {"huvudchatt": Chat([])}
+chats = {"Grundchatt": Chat([])}
 
 
 @socketio.on('authenticate')

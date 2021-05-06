@@ -33,6 +33,8 @@ var highlightDoneButton = <HTMLButtonElement>document.getElementById("highlightD
 modal.style.display = "block";
 
 
+
+
 // ---------------------- event listerners ----------------------
 
 
@@ -45,7 +47,7 @@ btn.addEventListener("click", (e:Event) => {
     socket.emit('details_assignment', {
 				name: pidInput.value,
         backgroundColor: authColor.value,
-        userIconSource: "/images/user.png",
+        userIconSource: selectedAvatarString,
         role: "personal"
 		});
 
@@ -67,7 +69,7 @@ document.getElementById('createChatButton').onclick = function() {
     // Request to create a chat
     socket.emit("chat_create", {chatName: nameInput.value,
                                 color: "blue",
-                                imageSource: "/images/user.png",
+                                imageSource: "/images/chat.svg",
                                 parent: selectedChatName});
 
     // Request to join the chat
@@ -334,6 +336,8 @@ socket.on('return_qa', function(data){
 
 
       writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
+      writingInput.style.height = "";
+      writingInput.style.height = writingInput.scrollHeight + "px";
     };
 
     container.appendChild(button);

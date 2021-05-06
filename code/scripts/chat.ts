@@ -12,6 +12,10 @@ const chatMessageContainer = document.getElementById("chat-message-container");
 var chatMessages = {};
 const writingInput = <HTMLInputElement>document.getElementById("writing-input");
 const sendbutton = <HTMLInputElement>document.getElementById("sendbutton");
+const avatarSelector = <HTMLElement>document.getElementById("avatarSelector");
+var popupMessage = document.getElementById("popupMessage");
+var infoMessage = document.getElementById("infoMessage");
+var closePopup = document.getElementById("closePopup");
 var allMessages = {};
 
 /**
@@ -224,6 +228,22 @@ function showAllChats() {
 document.getElementById('masterChatselecter').style.display = "none";
 
 
+var selectedAvatarString = "/images/anonymous.svg";
+for(let avatar of avatarSelector.children){
+	let avatarImg = <HTMLImageElement>avatar;
+	avatarImg.onclick = ()=>{
+		for(let avatar2 of avatarSelector.children){
+			let avatarImg2 = <HTMLImageElement>avatar2;
+			avatarImg2.classList.remove("selected");
+			
+		};
+		avatarImg.classList.add("selected");
+		selectedAvatarString = avatarImg.src;
+	}
+};
+avatarSelector.children[0].classList.add("selected");
+selectedAvatarString = (<HTMLImageElement>avatarSelector.children[0]).src;
+
 // ----------------------------- event liseners -------------------------
 
 
@@ -245,10 +265,13 @@ writingInput.addEventListener("keyup", function(event) {
 
 			// Clears the writing input
 			writingInput.value = "";
+			writingInput.style.height = "";
+			writingInput.style.height = writingInput.scrollHeight + "px";
 		}
   }
 });
-
+writingInput.style.height = "";
+writingInput.style.height = writingInput.scrollHeight + "px";
 
 /**
  *  Sends a message when you press sendbutton
@@ -257,15 +280,28 @@ document.getElementById('sendbutton').onclick = function() {
 	if(writingInput.value != ""){
 		// Sends the message to the server
 		socket.emit('message', {
-				message: writingInput.value, chatName:"huvudchatt"
+				message: writingInput.value, chatName:"Grundchatt"
 		});
 		// Creates the message locally
 		addMessage(selectedChatName, writingInput.value);
 		// Clears the writing input
 		writingInput.value = "";
+		writingInput.style.height = "";
+		writingInput.style.height = writingInput.scrollHeight + "px";
 	}
  }​;​
 
+ // When the user clicks on <span> (x), close the popup
+closePopup.onclick = function() {
+	popupMessage.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.addEventListener("click", function(event) {
+	if (event.target == popupMessage) {
+		popupMessage.style.display = "none";
+	}
+});
 
 // ----------------------------- Socket code ----------------------------
 
@@ -276,9 +312,9 @@ document.getElementById('sendbutton').onclick = function() {
 socket.on('connect', function(){
 	socket.emit('details_assignment', {name: "anonym",
 																		 backgroundColor: "white",
-																		 userIconSource: "/images/user.png",
+																		 userIconSource: "/images/anonymous.svg",
 																		 role: "patient"});
-	socket.emit("chat_join", { chatName: "huvudchatt"});
+	socket.emit("chat_join", { chatName: "Grundchatt"});
 
 	// Debug, log info in terminal
 	socket.emit("get_users");
@@ -343,6 +379,8 @@ socket.on('chat_info',function(data){
 	var parent = data['parent']
 	addChat(name,color,imageSource,parent)
 	selectChat(name)
+	infoMessage.innerHTML = 'Du har nu gått med i chatten <b>'+ name +'</b>.';
+	popupMessage.style.display = "block";
 	clients.forEach(client => {
 		addChatUserIcon(name, client["name"],client["background"], client["userIconSource"], client["id"])
 	});

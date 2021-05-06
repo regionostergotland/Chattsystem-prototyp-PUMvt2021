@@ -35,7 +35,7 @@ document.getElementById("authButton").addEventListener("click", (e:Event) => {
 
     socket.emit('details_assignment', {
 				backgroundColor:authColor.value,
-				userIconSource: "/images/user.png",
+				userIconSource: selectedAvatarString,
 				role: "patient"
 		});
 

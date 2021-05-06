@@ -23,7 +23,7 @@ document.getElementById("authButton").addEventListener("click", (e) => {
         //username = nameInput.value;
         socket.emit('details_assignment', {
             backgroundColor: authColor.value,
-            userIconSource: "/images/user.png",
+            userIconSource: selectedAvatarString,
             role: "patient"
         });
         socket.emit('authenticate', { pid: pidInput.value });

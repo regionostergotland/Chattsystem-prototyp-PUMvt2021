@@ -97,7 +97,7 @@
     min-width: 0;
 }
 
-.writing-box input{
+.writing-box textarea{
     font-size: 3vh;
     padding: 1vh;
     flex: auto;
@@ -106,7 +106,7 @@
     border: 1px solid #A1C1CC;
 }
 
-.writing-box input:focus{
+.writing-box textarea:focus{
 	outline: none;
 	border: 1px solid #293134;
 }
@@ -184,3 +184,14 @@ chat-selector-component user-icon-component{
 	font-size: 2vh;
 	padding: 1vh;
 }
+
+.modalButtonContainer {
+	grid-template-columns: 1fr 2fr;
+}
+@media only screen and (max-width:800px) {
+	/* For tablets: */
+	.modalButtonContainer {
+		grid-template-columns: 1fr;
+	}
+}
+

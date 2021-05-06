@@ -32,7 +32,7 @@ btn.addEventListener("click", (e) => {
         socket.emit('details_assignment', {
             name: pidInput.value,
             backgroundColor: authColor.value,
-            userIconSource: "/images/user.png",
+            userIconSource: selectedAvatarString,
             role: "personal"
         });
         socket.emit('authenticate', { pid: pidInput.value });
@@ -48,7 +48,7 @@ document.getElementById('createChatButton').onclick = function () {
         // Request to create a chat
         socket.emit("chat_create", { chatName: nameInput.value,
             color: "blue",
-            imageSource: "/images/user.png",
+            imageSource: "/images/chat.svg",
             parent: selectedChatName });
         // Request to join the chat
         socket.emit("chat_join", { chatName: nameInput.value });
@@ -273,6 +273,8 @@ socket.on('return_qa', function (data) {
             writingInput.select();
             writingInput.selectionStart = writingInput.selectionEnd = writingInput.value.length;
             writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
+            writingInput.style.height = "";
+            writingInput.style.height = writingInput.scrollHeight + "px";
         };
         container.appendChild(button);
     });
