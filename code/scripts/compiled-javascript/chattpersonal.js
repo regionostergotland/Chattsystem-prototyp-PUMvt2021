@@ -73,7 +73,7 @@ document.getElementById("createchat").onclick = function () {
 };
 // When the user clicks the button, open the modal
 document.getElementById("answerbattery").onclick = function () {
-    socket.emit("get_chat_history");
+    socket.emit("get_standard_questons");
     modalBattery.style.display = "block";
 };
 // When the user clicks on <span> (x), close the add user modal
@@ -93,7 +93,7 @@ spanHighlight.onclick = function () {
     modalHighlight.style.display = "none";
 };
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
+window.addEventListener("click", function (event) {
     if (event.target == modalCreate) {
         modalCreate.style.display = "none";
     }
@@ -103,7 +103,7 @@ window.onclick = function (event) {
     if (event.target == modalBattery) {
         modalBattery.style.display = "none";
     }
-};
+});
 // The onclick event for highlighting text
 highlightButton.onclick = () => {
     var selection = window.getSelection();
@@ -242,7 +242,7 @@ xhttp.send();
 socket.on('message', function (data) {
     // Creates the message locally
     var id = data['id'];
-    addMessage(data['chatName'], data['message'], id, data['sender'], data['background'], data['icon-source']);
+    addMessage(data['chatName'], data['message'], data['client-id'], id, data['sender'], data['background'], data['icon-source']);
     var messageComponent = allMessages[id];
     console.log(messageComponent.chatBubbleDiv.children[0]);
     messageComponent.chatBubbleDiv.style.cursor = "pointer";

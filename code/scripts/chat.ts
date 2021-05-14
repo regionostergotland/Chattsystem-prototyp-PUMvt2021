@@ -28,11 +28,12 @@ var allMessages = {};
  * @param background The background color of the sender
  * @param iconSource The icon source of the sender
  */
-function addMessage(chatName: string , message: string, id:number=-1, sender: string = "", background="", iconSource=""){
+function addMessage(chatName: string , message: string, clientId:string="", id:number=-1, sender: string = "", background="", iconSource=""){
 	let messageComponent = new MessageComponent();
 	messageComponent.classList.add((sender == "" ? "right" : "left"));
 	messageComponent.setAttribute("message", message);
 	messageComponent.setAttribute("sender", sender);
+	messageComponent.setAttribute("client-id", clientId);
 	if(background != "")
 		messageComponent.setAttribute("background-color", background);
 	if(iconSource != "")
@@ -182,6 +183,20 @@ function updateUserIcons(id: number, name:string, backgroundColor:string, userIc
 			}
 		}
 
+		var messageContainer:HTMLElement = chat["messages"];
+		for (var i = messageContainer.children.length - 1;i>= 0; i--){
+			var child = messageContainer.children[i];
+			console.log(child.tagName);
+			if(child.tagName == "MESSAGE-COMPONENT"){
+				if (id.toString() == child.attributes["client-id"].value){
+					child.setAttribute("background-color", backgroundColor)
+					child.setAttribute("src", userIconSource)
+					child.setAttribute("hover-text", name)
+				}
+			}
+
+			
+		}
 	}
 }
 
@@ -252,22 +267,23 @@ selectedAvatarString = (<HTMLImageElement>avatarSelector.children[0]).src;
  */
 writingInput.addEventListener("keyup", function(event) {
   if (event.key === "Enter") {
-		if(writingInput.value != ""){
+	var text = writingInput.value.replace("\n", "");
+	if(text != ""){
 
-			event.preventDefault();
-			// Sends the message to the server
-			socket.emit('message', {
-					message: writingInput.value, chatName: selectedChatName
-			});
+		event.preventDefault();
+		// Sends the message to the server
+		socket.emit('message', {
+				message: text, chatName: selectedChatName
+		});
 
-			// Creates the message locally (Do not do if chat is closed!)
-			addMessage(selectedChatName, writingInput.value);
+		// Creates the message locally (Do not do if chat is closed!)
+		addMessage(selectedChatName, text);
 
-			// Clears the writing input
-			writingInput.value = "";
-			writingInput.style.height = "";
-			writingInput.style.height = writingInput.scrollHeight + "px";
-		}
+		// Clears the writing input
+		writingInput.value = "";
+		writingInput.style.height = "";
+		writingInput.style.height = writingInput.scrollHeight + "px";
+	}
   }
 });
 writingInput.style.height = "";
@@ -277,13 +293,14 @@ writingInput.style.height = writingInput.scrollHeight + "px";
  *  Sends a message when you press sendbutton
  */
 document.getElementById('sendbutton').onclick = function() {
-	if(writingInput.value != ""){
+	var text = writingInput.value.replace("\n", "");
+	if(text != ""){
 		// Sends the message to the server
 		socket.emit('message', {
-				message: writingInput.value, chatName:"Grundchatt"
+				message: text, chatName:"Grundchatt"
 		});
 		// Creates the message locally
-		addMessage(selectedChatName, writingInput.value);
+		addMessage(selectedChatName, text);
 		// Clears the writing input
 		writingInput.value = "";
 		writingInput.style.height = "";
@@ -393,14 +410,14 @@ socket.on("client_disconnect", function(data){
 	removeUserIcons(id)
 })
 
-
 socket.on("client_connect", function(data){
-	var chatname = data["chatName"]
-	var name = data["client"]
-	var color = data["color"]
-	var iconSource = data["iconSource"]
-	var id = data["id"]
-	addChatUserIcon(chatname, name, color, iconSource, id)
+
+	var chatname = data["chatName"];
+	var name = data["client"];
+	var color = data["color"];
+	var iconSource = data["iconSource"];
+	var id = data["id"];
+	addChatUserIcon(chatname, name, color, iconSource, id);
 })
 
 

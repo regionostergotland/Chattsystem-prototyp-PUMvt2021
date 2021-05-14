@@ -118,8 +118,9 @@ def bot_answer(user_input):
     user input does not exists, it searches for
     for something similar to the user input and returns an answer.
     """
-    if switchboard.DB_getQanswer(user_input):
-        return switchboard.DB_getQanswer(user_input)
+    answer = switchboard.DB_getQanswer(user_input)
+    if answer:
+        return answer
 
     else:
         return search(user_input)

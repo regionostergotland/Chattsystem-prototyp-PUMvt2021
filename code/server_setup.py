@@ -414,8 +414,8 @@ def chat_join_event(json, methods=['GET', 'POST']):
         send_info_message(404, "Chatten finns inte", request.sid)
 
 
-@socketio.on('get_chat_history')
-def get_chat_history_event(methods=['GET', 'POST']):
+@socketio.on('get_standard_questons')
+def get_standard_questons_event(methods=['GET', 'POST']):
     """
     Sends the whole chat history of the given chat to a client
     """
@@ -429,7 +429,7 @@ def get_chat_history_event(methods=['GET', 'POST']):
     socketio.emit("return_qa", json, room=currentSocketId)
 
 
-@socketio.on('get_standard_questons')
+@socketio.on('get_chat_history')
 def get_chat_history_event(json, methods=['GET', 'POST']):
     """
     Sends all the standard questions and anwers to a client
@@ -476,6 +476,7 @@ def broadcast_message(message, chatName, ignoreSender=True):
             'background': sender.backgroundColor,
             'message': message.text,
             'chatName': chatName,
+            'client-id':sender.id,
             'id': message.id
         }
 
@@ -495,6 +496,7 @@ def send_message(message, reciever, chatName):
             'background': sender.backgroundColor,
             'message': message.text,
             'chatName': chatName,
+            'client-id':sender.id,
             'id': message.id
         }
     socketio.emit('message', json, room=reciever.sid)
@@ -529,4 +531,9 @@ def run():
 
 
 #add bot-client
-add_client(-1, "Botten Anna", "Red", "/images/bot.png", Roles["bot"])
+bot_client = Client(-1, "Botten Anna", "#48B7FC", "/images/bot.svg", Roles["bot"])
+clients.append(bot_client)
+grundChatt = chats["Grundchatt"]
+grundChatt.clients.append(bot_client)
+grundChatt.history.append(Message(bot_client, "Hej och välkommen till Region Östergötlands chattjänst!"))
+grundChatt.history.append(Message(bot_client, "Om jag förstår rätt så vill du prata om Liv & Hälsa. Kan du förklara lite mer vad du behöver hjälp med."))

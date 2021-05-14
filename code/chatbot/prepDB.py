@@ -30,7 +30,7 @@ def prepare_db():
     switchboard.DB_addQ('jag har ont i ryggen', 'Har det varat i mer än 3 veckor?')
     switchboard.DB_addQ('jag har hög feber', 'Har det varat i mer än 5 dagar?')
     switchboard.DB_addQ('jag har svullna halsmandlar', 'Har det varat i mer än 1 vecka?')
-    
+
     #switchboard.DB_addQ('', '')
   
 
