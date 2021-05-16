@@ -11,6 +11,7 @@ const loginButton = document.getElementById("login-button");
 socket.on('message', function (data) {
     // Creates the message locally
     addMessage(data['chatName'], data['message'], data['client-id'], data['id'], data['sender'], data['background'], data['icon-source']);
+    window.scrollTo(0, document.body.scrollHeight);
 });
 // ---------------------------- event liseners ------------------
 loginButton.onclick = function () {

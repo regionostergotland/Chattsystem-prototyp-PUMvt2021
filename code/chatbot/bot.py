@@ -13,7 +13,6 @@ import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy
-import time
 import warnings
 warnings.filterwarnings('ignore')
 #Download the punkt package
@@ -170,7 +169,6 @@ def bot_main(input):
     if input in exit_list:
         return (random.choice(exit_list))
     else:
-        time.sleep(2)
         if greeting_response(input) != None:
             return(greeting_response(input))
         else:

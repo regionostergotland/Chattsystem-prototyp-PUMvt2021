@@ -5,6 +5,7 @@ from flask_socketio import SocketIO
 import authentication
 
 
+
 clientIdCounter = 0
 messageIdCounter = 0
 
@@ -265,12 +266,16 @@ def message_event(json, methods=['GET', 'POST']):
             #bot stuff:
             #print(bot_talking)
             if bot_talking:
-                bot_response = SB.get_bot_message(message.text)
                 bot = get_client(-1)
+
+                send_start_writing(bot)
+                bot_response = SB.get_bot_message(message.text)
+                socketio.sleep(2)
+
                 bot_msg = Message(bot, bot_response)
                 chat.history.append(bot_msg)
                 broadcast_message(bot_msg, chatName)
-
+                send_stop_writing(bot)
 
         else:
             send_info_message(200, "Chatten är avslutad", request.sid, chatName)
@@ -413,6 +418,14 @@ def chat_join_event(json, methods=['GET', 'POST']):
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
+@socketio.on('start_writing')
+def start_writing_event(methods=['GET', 'POST']):
+    send_start_writing(get_client(request.sid))
+
+@socketio.on('stop_writing')
+def stop_writing_event(methods=['GET', 'POST']):
+    send_stop_writing(get_client(request.sid))
+
 
 @socketio.on('get_standard_questons')
 def get_standard_questons_event(methods=['GET', 'POST']):
@@ -440,6 +453,16 @@ def get_chat_history_event(json, methods=['GET', 'POST']):
     for message in chat.history:
         send_message(message, client, chatName)
 
+def send_start_writing(client):
+    json = {"client": client.name, "color": client.backgroundColor, "iconSource": client.userIconSource, "id": client.id}
+    for otherClient in clients:
+        if not otherClient.id == -1 and not otherClient.id == client.id:
+            socketio.emit("start_writing", json, room=otherClient.sid)
+
+def send_stop_writing(client):
+    for otherClient in clients:
+        if not otherClient.id == -1 and not otherClient.id == client.id:
+            socketio.emit("stop_writing", room=otherClient.sid)
 
 def send_info_message(statusCode, message, sid, chatName = ""):
     """

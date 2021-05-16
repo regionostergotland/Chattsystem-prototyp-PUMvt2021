@@ -34,9 +34,13 @@
 				<!-- The list of messages -->
 				<div id="chat-message-container"></div>
 				<!-- Send menu -->
-				<div class="chat-footer">
+				<div id="chat-footer" class="chat-footer">
 					<div class="writing-box">
-						<textarea id="writing-input" placeholder="Aa" rows="1" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+						<div id="user-writing-indicator-container">
+							<user-icon-component id="user-writing"></user-icon-component>
+							<canvas id="user-writing-indicator" width="100" height="50"></canvas>
+						</div>
+						<textarea id="writing-input" placeholder="Aa" rows="1" ></textarea>
 					</div>
 					<div class="chat-send-button-container">
 						<button id="sendbutton"><img src="/images/send.png"></button>

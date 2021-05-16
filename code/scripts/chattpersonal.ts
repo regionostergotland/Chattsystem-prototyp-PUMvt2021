@@ -311,7 +311,7 @@ xhttp.send();
     highlightMessageText.innerHTML = text;
     highlightChatMessageId = id;
   }
-  
+  window.scrollTo(0,document.body.scrollHeight);
 });
 
 
@@ -340,6 +340,7 @@ socket.on('return_qa', function(data){
       writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
       writingInput.style.height = "";
       writingInput.style.height = writingInput.scrollHeight + "px";
+      chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight +"px";
     };
 
     container.appendChild(button);

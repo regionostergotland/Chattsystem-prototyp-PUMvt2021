@@ -254,6 +254,7 @@ socket.on('message', function (data) {
         highlightMessageText.innerHTML = text;
         highlightChatMessageId = id;
     };
+    window.scrollTo(0, document.body.scrollHeight);
 });
 /**
  * Appends all standard questions and anwers to buttons in the a pop up window
@@ -275,6 +276,7 @@ socket.on('return_qa', function (data) {
             writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
             writingInput.style.height = "";
             writingInput.style.height = writingInput.scrollHeight + "px";
+            chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
         };
         container.appendChild(button);
     });

@@ -17,6 +17,7 @@
 	background:#C21B41;
 	z-index: 2;
 	padding: 1vh 0 0 0;
+	top: -1px;
 }
 
 .chat-image-container{
@@ -33,7 +34,7 @@
 
 .chat-header-border{
 	background-color: #FFF;
-	height: 1vh;
+	height: 2vh;
 	width: 100%;
 	margin: -4px 0;
 }
@@ -114,10 +115,11 @@
 .user-image-container{
 	display: inline-flex;
     position: sticky;
-    width: 100%;
+    width: 97%;
     background: white;
-    top: 11vh;
+    top: 12vh;
     z-index: 1;
+	padding: 1vh;
 }
 
 #sendbutton{
@@ -151,8 +153,8 @@
 .chat-header-text{
 	position: sticky;
     color: #000;
-    z-index: 1;
-    top: 8vh;
+    z-index: 2;
+    top: 9vh;
     background: white;
     width: 100%;
 }
@@ -171,7 +173,7 @@ chat-selector-component user-icon-component{
 }
 
 #chat-message-container{
-	padding: 1vh 1vh 7vh 1vh;
+	padding: 1vh 1vh 9vh 1vh;
 }
 
 
@@ -194,4 +196,25 @@ chat-selector-component user-icon-component{
 		grid-template-columns: 1fr;
 	}
 }
+
+#user-writing-indicator-container{
+    height: 5vh;
+    width: auto;
+    position: absolute;
+    top: -4vh;
+	transform: scale(.75);
+	display: none;
+}
+
+#user-writing-indicator-container user-icon-component{
+	display: inline-block;
+}
+
+#user-writing-indicator-container canvas{
+	float: right;
+	height: 5vh;
+	width: 10vh;
+}
+
+
 

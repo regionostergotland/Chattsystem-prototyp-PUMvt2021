@@ -10,6 +10,9 @@ var chatMessages = {};
 const writingInput = document.getElementById("writing-input");
 const sendbutton = document.getElementById("sendbutton");
 const avatarSelector = document.getElementById("avatarSelector");
+const userWritingIndicatorContainer = document.getElementById("user-writing-indicator-container");
+const userWriting = document.getElementById("user-writing");
+const userWritingIndicator = document.getElementById("user-writing-indicator");
 var popupMessage = document.getElementById("popupMessage");
 var infoMessage = document.getElementById("infoMessage");
 var closePopup = document.getElementById("closePopup");
@@ -222,6 +225,18 @@ for (let avatar of avatarSelector.children) {
 avatarSelector.children[0].classList.add("selected");
 selectedAvatarString = avatarSelector.children[0].src;
 // ----------------------------- event liseners -------------------------
+writingInput.addEventListener("input", function (event) {
+    writingInput.style.height = "";
+    writingInput.style.height = writingInput.scrollHeight + "px";
+    chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
+    var text = writingInput.value.replace("\n", "");
+    if (text != "") {
+        socket.emit("start_writing");
+    }
+    else {
+        socket.emit("stop_writing");
+    }
+});
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
  */
@@ -240,11 +255,15 @@ writingInput.addEventListener("keyup", function (event) {
             writingInput.value = "";
             writingInput.style.height = "";
             writingInput.style.height = writingInput.scrollHeight + "px";
+            chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
+            window.scrollTo(0, document.body.scrollHeight);
         }
     }
 });
 writingInput.style.height = "";
 writingInput.style.height = writingInput.scrollHeight + "px";
+chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
+window.scrollTo(0, document.body.scrollHeight);
 /**
  *  Sends a message when you press sendbutton
  */
@@ -261,6 +280,8 @@ document.getElementById('sendbutton').onclick = function () {
         writingInput.value = "";
         writingInput.style.height = "";
         writingInput.style.height = writingInput.scrollHeight + "px";
+        chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
+        window.scrollTo(0, document.body.scrollHeight);
     }
 };
 // When the user clicks on <span> (x), close the popup
@@ -273,7 +294,39 @@ window.addEventListener("click", function (event) {
         popupMessage.style.display = "none";
     }
 });
+//const userWritingIndicatorContainer = <HTMLElement>document.getElementById("user-writing-indicator-container");
+//const userWriting = <HTMLElement>document.getElementById("user-writing");
+//const userWritingIndicator = <HTMLCanvasElement>document.getElementById("user-writing-indicator");
+var indicatorColors = ["#222", "#444", "#666"];
+var ctx = userWritingIndicator.getContext("2d");
+var indicatorColorIndex = 0;
+var indicatorSize = 8;
+setInterval(() => {
+    ctx.beginPath();
+    ctx.arc(25, 25, indicatorSize, 0, 2 * Math.PI, false);
+    ctx.fillStyle = indicatorColors[indicatorColorIndex];
+    ctx.fill();
+    indicatorColorIndex = (indicatorColorIndex + 1) % 3;
+    ctx.beginPath();
+    ctx.arc(50, 25, indicatorSize, 0, 2 * Math.PI, false);
+    ctx.fillStyle = indicatorColors[indicatorColorIndex];
+    ctx.fill();
+    indicatorColorIndex = (indicatorColorIndex + 1) % 3;
+    ctx.beginPath();
+    ctx.arc(75, 25, indicatorSize, 0, 2 * Math.PI, false);
+    ctx.fillStyle = indicatorColors[indicatorColorIndex];
+    ctx.fill();
+}, 200);
 // ----------------------------- Socket code ----------------------------
+socket.on('start_writing', function (data) {
+    userWritingIndicatorContainer.style.display = "block";
+    userWriting.setAttribute("hover-text", data["client"]);
+    userWriting.setAttribute("background-color", data["color"]);
+    userWriting.setAttribute("src", data["iconSource"]);
+});
+socket.on('stop_writing', function (data) {
+    userWritingIndicatorContainer.style.display = "none";
+});
 /**
  * When a new user is connecting send user info and get info for server
  */
