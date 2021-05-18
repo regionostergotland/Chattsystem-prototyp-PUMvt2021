@@ -35,6 +35,11 @@ message-component.right .chat-bubble{
 	max-width: 65vw;
 }
 
+.chat-bubble p b{
+	background-color: yellow;
+    font-weight: normal;
+}
+
 message-component.right .chat-bubble p{
 	color: #FFF;
 }
@@ -101,4 +106,5 @@ user-icon-component:hover .hover-text-container
 	color: #FFF;
 	border-radius: 1vh;
 	background-color: #e9214f;
+	font-size: 2vh;
 }

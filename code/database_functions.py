@@ -81,6 +81,19 @@ def get_question_answer(question_in):
         return False
 
 
+def get_all_questions_and_answers():
+    """
+    This function gets the bot answer to a user question from the database.
+    Returns the answer if it exist, False if not.
+    """
+
+    question_objekts = Questions.query.all()
+    if question_objekts is not None:
+        return [[x.get_queston(), x.get_answer()] for x in question_objekts]
+    else:
+        return False
+
+
 def get_matching_questions(word):
     """
     This function finds questions that contain the input word.

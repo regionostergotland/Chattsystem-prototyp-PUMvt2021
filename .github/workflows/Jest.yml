@@ -2,9 +2,9 @@ name: Jest
 on: 
   workflow_dispatch:
 
-  push:
-    paths:
-    - '**.js'
+  #push:
+  #  paths:
+  #  - '**.js'
     
 jobs:
   test:

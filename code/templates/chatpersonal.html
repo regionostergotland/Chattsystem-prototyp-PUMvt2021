@@ -8,58 +8,157 @@
 	<link rel="stylesheet" href="/static/chat.css">
 	<link rel="stylesheet" href="/static/chat-components.css">
 	<link rel="stylesheet" href="/static/modal.css">
+
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js" crossorigin="anonymous"></script>
 	<script src="/scripts/components.js"></script>
 	<script src="/scripts/chat-components.js"></script>
-
 </head>
+
 <body>
 	<div class="flex-container">
-		<header-component small></header-component>
-		<div class="chat-container">
-			<div class="chat-header">
-				<div class="chat-image-container">
-					<div class="chat-image">
-						<user-icon-component background-color="#38D19D"></user-icon-component>
-						<div class="chat-indicator"></div>
-					</div>
-					<div class="chat-image active">
-						<user-icon-component src="/images/bot.png"></user-icon-component>
-						<div class="chat-indicator"></div>
-					</div>
-				</div>
-				<div class="chat-header-border"></div>
-			</div>
 
+		<!-- Site headers -->
+		<header-component small></header-component>
+		<div id="masterChatselecter" onclick="showAllChats();">Alla chater</div>
+		<div class="chat-header">
+			<div class="chat-image-container" id="chat-selector-container"></div>
+			<div class="chat-header-border"></div>
+		</div>
+
+		<!-- Chat body -->
+		<div class="content-container">
+
+			<!-- The chat -->
 			<div class="chat">
-				<div id="messages">
-				</div>
-				<div class="chat-footer">
+
+				<!-- The list of messages -->
+				<div id="chat-message-container"></div>
+				<!-- Send menu -->
+				<div id="chat-footer" class="chat-footer">
 					<div class="writing-box">
-						<input id="writing-input" placeholder="Aa"></input>
+						<div id="user-writing-indicator-container">
+							<user-icon-component id="user-writing"></user-icon-component>
+							<canvas id="user-writing-indicator" width="100" height="50"></canvas>
+						</div>
+						<textarea id="writing-input" placeholder="Aa" rows="1" ></textarea>
 					</div>
 					<div class="chat-send-button-container">
-						<button type="send-button" name="button" id="sendbutton">send</button>
+						<button id="sendbutton"><img src="/images/send.png"></button>
 					</div>
 				</div>
+
 			</div>
 
+			<!-- Admin contol panel -->
+			<div class="admin-view">
+				<button  id="adduserbutton">Lägg till användare</button>
+				<button id="createchat"> Skapa chatt</button>
+				<button id="answerbattery"> Svarsbatteri</button>
+				<button id="closechat"> Avsluta chatt</button>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- Pop up box for login -->
+	<div id="myModal" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+			<h2>Logga in som</h2>
+			<input type="text" name="" placeholder="Ditt personnummer här" value="" id="pidInput">
+			<h3>Avatar inställningar</h3>
+			<div class="modalButtonContainer">
+				<h4>Bild</h4>
+				<div class="grid-container" id="avatarSelector">
+					<img class="grid-item" src="/images/avatar7.svg">
+					<img class="grid-item" src="/images/avatar8.svg">
+					<img class="grid-item" src="/images/avatar9.svg">
+					<img class="grid-item" src="/images/avatar10.svg">
+					<img class="grid-item" src="/images/avatar11.svg">
+					<img class="grid-item" src="/images/avatar12.svg">
+				</div>
+				<h4>Bakgrundsfärg</h4>
+				<form class="action-page" action="/action_page.php">
+					<input class="color-picker" type="color" id="authColor" name="favcolor" value="#66ff66">
+				</form>
+			</div>
+			<button type="button" name="button" id="authButton">Klar</button>
+			
+		</div>
+
+	</div>
+
+	<!-- Pop up box for Question battery -->
+	<div id="modalBattery" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close" id="closeBattery">&times;</span>
+			<h2>Svarsbatteri</h2>
+			<div id="questionContainer">
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Pop up box for adding users -->
+	<div id="modalAdd" class="modal">
+		<!-- Modal content -->
+			<div class="modal-content">
+				<span class="close" id="closeAddUser">&times;</span>
+				<h2>Lägg till användare</h2>
+				<div class="modalButtonContainer" id="userButtonList">
+					<!--temporär kod för att lägga till-->
+				</div>
+			</div>
+	</div>
+
+	<!-- Pop up box for creating new chat -->
+	<div id="modalCreate" class="modal">
+		<div class="modal-content">
+			<span class="close" id="closeCreatChat">&times;</span>
+			<h2>Skapa ny chat</h2>
+			<div class="modalButtonContainer">
+				<input type="text" name="" placeholder="Chatens namn här" value="" id="chatNameInput">
+				<button id="createChatButton">Klar</button>
+			</div>
 		</div>
 	</div>
 
-	<div id="myModal" class="modal">
-	<!-- Modal content -->
+	<!-- Pop up box for highlighting in messages -->
+	<div id="modalHighlight" class="modal">
 		<div class="modal-content">
-			<span class="close">&times;</span>
-			<h2>Logga in som</h2>
-			<div class="modalButtonContainer">
-				<input type="text" name="" placeholder="Ditt namn här" value="" id="nameInput">
-				<button type="button" name="button" id="authButton">Klar</button>
+			<span class="close" id="closeHighlight">&times;</span>
+			<h2>Markera viktiga delar av meddelandet</h2>
+			<div id="highlightMessageText" class="chat-bubble">
+
 			</div>
+			<div class="modalButtonContainer">
+
+				<button id="highlightButton">Markera</button>
+				<button id="unhighlightButton">Avmarkera</button>
+			</div>
+			<button id="highlightDoneButton">Klar</button>
 		</div>
+	</div>
+
+	<!-- Pop up box for info message -->
+	<div id="popupMessage" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close" id="closePopup">&times;</span>
+			<h2>Info</h2>
+			<p id="infoMessage"></p>
+			
+		</div>
+
 	</div>
 
 </body>
-<script src="/scripts/chattpersonal.js"></script>
+
 <script src="/scripts/chat.js"></script>
+<script src="/scripts/chattpersonal.js"></script>
 </html>
