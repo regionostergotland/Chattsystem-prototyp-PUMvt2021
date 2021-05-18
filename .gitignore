@@ -130,3 +130,4 @@ dmypy.json
 
 # jest test lockal folder
 node_modules/
+coverage/
