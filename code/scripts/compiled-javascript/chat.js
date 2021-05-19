@@ -225,18 +225,6 @@ for (let avatar of avatarSelector.children) {
 avatarSelector.children[0].classList.add("selected");
 selectedAvatarString = avatarSelector.children[0].src;
 // ----------------------------- event liseners -------------------------
-writingInput.addEventListener("input", function (event) {
-    writingInput.style.height = "";
-    writingInput.style.height = writingInput.scrollHeight + "px";
-    chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
-    var text = writingInput.value.replace("\n", "");
-    if (text != "") {
-        socket.emit("start_writing");
-    }
-    else {
-        socket.emit("stop_writing");
-    }
-});
 /**
  * Sends a message when the writing input is focused and "enter" is pressed
  */
@@ -257,6 +245,19 @@ writingInput.addEventListener("keyup", function (event) {
             writingInput.style.height = writingInput.scrollHeight + "px";
             chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
             window.scrollTo(0, document.body.scrollHeight);
+            socket.emit("stop_writing");
+        }
+    }
+    else {
+        writingInput.style.height = "";
+        writingInput.style.height = writingInput.scrollHeight + "px";
+        chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
+        var text = writingInput.value.replace("\n", "");
+        if (text != "") {
+            socket.emit("start_writing");
+        }
+        else {
+            socket.emit("stop_writing");
         }
     }
 });
@@ -282,6 +283,7 @@ document.getElementById('sendbutton').onclick = function () {
         writingInput.style.height = writingInput.scrollHeight + "px";
         chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
         window.scrollTo(0, document.body.scrollHeight);
+        socket.emit("stop_writing");
     }
 };
 // When the user clicks on <span> (x), close the popup

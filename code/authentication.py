@@ -4,14 +4,9 @@ def authenticate(pid):
 
 
 
-names = {   "0":"Ludwig", 
-            "1":"Casper", 
-            "2":"Taha", 
-            "3":"Kevin", 
-            "4":"Hannes", 
-            "5":"Filip", 
-            "6":"Lucy", 
-            "7":"Felicia"}
+names = {   "0":"Patienten Peter", 
+            "1":"Vårdpersonalen Viktor", 
+            "2":"Specialisten Sara"}
 
 def getName(pid):
     if(pid in names):

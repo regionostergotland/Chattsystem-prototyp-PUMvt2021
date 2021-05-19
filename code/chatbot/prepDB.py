@@ -6,6 +6,7 @@ import switchboard as switchboard
 
 def prepare_db():
     switchboard.DB_init()
+    switchboard.DB_addQ('hälsningsfras', 'Hej! Mitt namn är [namn]. Jag ser att du har ont i nedre delen av ryggen, kan du berätta vad för typ av smärta du känner?')
     switchboard.DB_addQ('vad är diabetes', 'Diabetes är en sjukdom som innebär att din kropp inte kan producera insulin som reglerar ditt blodsockervärde. ')
     switchboard.DB_addQ('hur är diabetes', 'Diabetes kan innebära trötthet på grund av lågt blodsocker.')
     switchboard.DB_addQ('varför är diabetes farligt', 'Då diabetes påverkar din förmåga att reglera blodsockret så kan ej reglerat blodsocker innebära trötthet, näringsbrist och potentiellt död.')
@@ -26,10 +27,11 @@ def prepare_db():
     switchboard.DB_addQ('jag har haft huvudvärk', 'Har det varat i två veckor?')
     switchboard.DB_addQ('ja', 'Jag kan tyvärr inte hjälpa dig med detta. Ifall du vill prata med vårdpersonal kan du logga in genom att trycka på knappen "Logga in" i övre vänstra hörn.')
     switchboard.DB_addQ('nej', 'Jag kan tyvärr inte hjälpa dig med detta. Ifall du vill prata med vårdpersonal kan du logga in genom att trycka på knappen "Logga in" i övre vänstra hörn.')
-    switchboard.DB_addQ('jag har ont i halsen', 'Har det varat i mer än 1 vecka?')
-    switchboard.DB_addQ('jag har ont i ryggen', 'Har det varat i mer än 3 veckor?')
     switchboard.DB_addQ('jag har hög feber', 'Har det varat i mer än 5 dagar?')
     switchboard.DB_addQ('jag har svullna halsmandlar', 'Har det varat i mer än 1 vecka?')
+    switchboard.DB_addQ('ont i ryggen', 'Skulle du kunna specificera vilken del av ryggen det är du har ont i?')
+    switchboard.DB_addQ('ont i nedre delen av ryggen', 'Ont i nedre delen av ryggen kan bero på olika saker som exempelvis överbelastning, mer information om ryggbesvär finns här: <a href="https://www.1177.se/Ostergotland/sjukdomar--besvar/skelett-leder-och-muskler/rygg-och-nacke/ont-i-ryggen/">1177-ont-i-ryggen</a>. Behöver du ytterligare hjälp med detta?')
+
 
     #switchboard.DB_addQ('', '')
   
