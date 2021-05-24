@@ -7,6 +7,7 @@ import switchboard as switchboard
 def prepare_db():
     switchboard.DB_init()
     switchboard.DB_addQ('hälsningsfras', 'Hej! Mitt namn är [namn]. Jag ser att du har ont i nedre delen av ryggen, kan du berätta vad för typ av smärta du känner?')
+    switchboard.DB_addQ('jag behöver en specialist', 'Jag bjuder in en specialist till konversationen som kan ge dig den hjälp du behöver.')
     switchboard.DB_addQ('vad är diabetes', 'Diabetes är en sjukdom som innebär att din kropp inte kan producera insulin som reglerar ditt blodsockervärde. ')
     switchboard.DB_addQ('hur är diabetes', 'Diabetes kan innebära trötthet på grund av lågt blodsocker.')
     switchboard.DB_addQ('varför är diabetes farligt', 'Då diabetes påverkar din förmåga att reglera blodsockret så kan ej reglerat blodsocker innebära trötthet, näringsbrist och potentiellt död.')
