@@ -1,13 +1,14 @@
+import switchboard as SB
+import database_functions as DB
 from enum import Enum
 from flask import Flask, render_template, send_from_directory, request
-from werkzeug.wrappers import CommonResponseDescriptorsMixin
 from flask_socketio import SocketIO
 import authentication
 
 
-
 clientIdCounter = 0
 messageIdCounter = 0
+
 
 class Client:
     """
@@ -31,14 +32,17 @@ class Chat:
     The Chat class
     """
 
-    def __init__(self, clients, color = "white", imageSource ="/images/chat.svg", parent= None ):
+    def __init__(self,
+                 clients,
+                 color="white",
+                 imageSource="/images/chat.svg",
+                 parent=None):
         self.history = []
         self.clients = clients
         self.active = True
         self.color = color
         self.imageSource = imageSource
         self.parent = parent
-
 
 
 class Message:
@@ -62,13 +66,11 @@ class Roles (Enum):
     patient = 1
     personal = 2
 
-    bot = 3  #?
+    bot = 3  # ?
+
 
 # Initializes the server
 app = Flask(__name__)
-
-# Needs ti imprt databas after creating the app var
-import database_functions as DB
 
 # Adds socket support for the server
 socketio = SocketIO(app)
@@ -97,6 +99,7 @@ def send_js(path):
     """
     return send_from_directory('scripts/compiled-javascript', path)
 
+
 @app.route('/resources/<path:path>')
 def send_res(path):
     """
@@ -112,14 +115,12 @@ def send_images(path):
     """
     return send_from_directory('images', path)
 
-#chatbot:
-import switchboard as SB
+
+# chatbot:
 bot_talking = False
 
 # All the connected clients
 clients = []
-
-
 
 
 # All the chats
@@ -135,18 +136,20 @@ def authenticate_event(json, methods=['GET', 'POST']):
 
     client = get_client(request.sid)
 
-
     if(not client.authenticated):
         client.authenticated = authentication.authenticate(pid)
     if client.authenticated:
         client.name = authentication.getName(pid)
-        json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+        json = {"id": client.id,
+                "name": client.name,
+                "backgroundColor":
+                client.backgroundColor,
+                "userIconSource": client.userIconSource}
         socketio.emit("client_details_changed", json)
         send_info_message(200, "Du är nu autentiserad", request.sid)
     else:
         send_info_message(
             400, "Det uppstod ett fel vid autentisering", request.sid)
-
 
 
 @socketio.on('get_users')
@@ -159,7 +162,8 @@ def get_users_event(methods=['GET', 'POST']):
     for client in clients:
 
         json["users"].append(
-            {"name": client.name, "role": str(client.role.name), "id":client.id }
+            {"name": client.name, "role": str(
+                client.role.name), "id": client.id}
         )
 
     socketio.emit('return_users', json, room=currentSocketId)
@@ -187,7 +191,7 @@ def connect_event(methods=['GET', 'POST']):
     The event for when clients connect
     """
     global bot_talking
-    print("CLIENTS LENGTH BEFORE: "+ str(len(clients)))
+    print("CLIENTS LENGTH BEFORE: " + str(len(clients)))
 
     print("\nUser connected: " + request.sid)
     currentSocketId = request.sid
@@ -197,15 +201,8 @@ def connect_event(methods=['GET', 'POST']):
     role = Roles["odefinierad"]
     add_client(currentSocketId, name, backgroundColor, userIconSource, role)
 
-    #bot stuff:
-    #print("CLIENTS LENGTH AFTER: "+ str(len(clients)))
     if len(clients) == 2:
         bot_talking = True
-        #bot_response = "Hej och välkommen, jag är botten Anna och kan hjälpa dig med enklare frågor. "
-        #bot = get_client(-1)
-        #bot_msg = Message(bot, bot_response)
-        #chat.history.append(bot_msg)
-        #broadcast_message(bot_msg, chatName)
     else:
         bot_talking = False
 
@@ -228,7 +225,7 @@ def disconnect_event(methods=['GET', 'POST']):
         bot_talking = True
     else:
         bot_talking = False
-    print("\n"+ client1.name + "(" + str(client1.id) + ") has disconnected")
+    print("\n" + client1.name + "(" + str(client1.id) + ") has disconnected")
 
 
 @socketio.on('details_assignment')
@@ -240,7 +237,10 @@ def details_assignment_event(json, methods=['GET', 'POST']):
     client.backgroundColor = json["backgroundColor"]
     client.userIconSource = json["userIconSource"]
     client.role = Roles[json["role"]]
-    json = {"id": client.id, "name": client.name, "backgroundColor": client.backgroundColor, "userIconSource": client.userIconSource}
+    json = {"id": client.id,
+            "name": client.name,
+            "backgroundColor": client.backgroundColor,
+            "userIconSource": client.userIconSource}
     socketio.emit("client_details_changed", json)
     send_info_message(200, "Användarinformation satt", request.sid)
 
@@ -254,7 +254,6 @@ def message_event(json, methods=['GET', 'POST']):
     print("\nMessage: " + json['message'] + "(" + json['chatName'] + ")")
     sender = get_client(request.sid)
 
-
     chatName = json["chatName"]
     if chatName in chats:
         chat = chats[chatName]
@@ -263,8 +262,8 @@ def message_event(json, methods=['GET', 'POST']):
             chat.history.append(message)
             broadcast_message(message, chatName)
 
-            #bot stuff:
-            #print(bot_talking)
+            # bot stuff:
+            # print(bot_talking)
             if bot_talking:
                 bot = get_client(-1)
 
@@ -278,9 +277,11 @@ def message_event(json, methods=['GET', 'POST']):
                 send_stop_writing(bot)
 
         else:
-            send_info_message(200, "Chatten är avslutad", request.sid, chatName)
+            send_info_message(200, "Chatten är avslutad",
+                              request.sid, chatName)
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
+
 
 @socketio.on('message_edited')
 def message_edited_event(json, methods=['GET', 'POST']):
@@ -290,7 +291,7 @@ def message_edited_event(json, methods=['GET', 'POST']):
     messageId = json["id"]
     newMessageText = json['new-message']
     sender = get_client(request.sid)
-    print("Message edited("+ str(messageId) +"): " + newMessageText)
+    print("Message edited(" + str(messageId) + "): " + newMessageText)
     for chatName in chats:
         chat = chats[chatName]
         for message in chat.history:
@@ -318,7 +319,8 @@ def chat_create_event(json, methods=['GET', 'POST']):
         if chatName in chats:
             send_info_message(400, "Chattnamnet är redan taget", request.sid)
         else:
-            chats[chatName] = Chat([],json["color"],json["imageSource"],json["parent"])
+            chats[chatName] = Chat(
+                [], json["color"], json["imageSource"], json["parent"])
             send_info_message(200, "Chatten är skapad", request.sid, chatName)
 
 
@@ -359,7 +361,8 @@ def chat_end_event(json, methods=['GET', 'POST']):
         chatName = json["chatName"]
         if chatName in chats:
             chats[chatName].active = False
-            send_info_message(200, "Chatten är avslutad", request.sid, chatName)
+            send_info_message(200, "Chatten är avslutad",
+                              request.sid, chatName)
         else:
             send_info_message(404, "Chatten finns inte", request.sid)
 
@@ -374,14 +377,14 @@ def chat_join_event(json, methods=['GET', 'POST']):
     print(request.sid + " has joined " + chatName)
 
     if chatName in chats:
-        for otherClient in chats[chatName].clients :
+        for otherClient in chats[chatName].clients:
             socketio.emit("client_connect", {
                 "chatName": chatName,
                 "client": client.name,
                 "color": client.backgroundColor,
                 "iconSource": client.userIconSource,
                 "id": client.id
-                }, room=otherClient.sid)
+            }, room=otherClient.sid)
 
         chats[chatName].clients.append(client)
         send_chat_info(client, chatName)
@@ -389,8 +392,9 @@ def chat_join_event(json, methods=['GET', 'POST']):
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
+
 @socketio.on('add_user_to_chat')
-def chat_join_event(json, methods=['GET', 'POST']):
+def add_user_to_chat_event(json, methods=['GET', 'POST']):
     """
     The event for adding a user to a chat
     """
@@ -404,26 +408,34 @@ def chat_join_event(json, methods=['GET', 'POST']):
             break
 
     if chatName in chats:
-        for otherClient in chats[chatName].clients :
+        for otherClient in chats[chatName].clients:
             socketio.emit("client_connect", {
                 "chatName": chatName,
                 "client": user.name,
                 "color": user.backgroundColor,
                 "iconSource": user.userIconSource,
                 "id": user.id
-                }, room=otherClient.sid)
+            }, room=otherClient.sid)
 
         chats[chatName].clients.append(user)
         send_chat_info(user, chatName)
     else:
         send_info_message(404, "Chatten finns inte", request.sid)
 
+
 @socketio.on('start_writing')
 def start_writing_event(methods=['GET', 'POST']):
+    """
+    The event for when a user starts writing
+    """
     send_start_writing(get_client(request.sid))
+
 
 @socketio.on('stop_writing')
 def stop_writing_event(methods=['GET', 'POST']):
+    """
+    The event for when a user stops writing
+    """
     send_stop_writing(get_client(request.sid))
 
 
@@ -453,18 +465,28 @@ def get_chat_history_event(json, methods=['GET', 'POST']):
     for message in chat.history:
         send_message(message, client, chatName)
 
+
 def send_start_writing(client):
-    json = {"client": client.name, "color": client.backgroundColor, "iconSource": client.userIconSource, "id": client.id}
+    """
+    Instructs the clients that a user started writing
+    """
+    json = {"client": client.name, "color": client.backgroundColor,
+            "iconSource": client.userIconSource, "id": client.id}
     for otherClient in clients:
         if not otherClient.id == -1 and not otherClient.id == client.id:
             socketio.emit("start_writing", json, room=otherClient.sid)
 
+
 def send_stop_writing(client):
+    """
+    Instructs the clients that a user stopped writing
+    """
     for otherClient in clients:
         if not otherClient.id == -1 and not otherClient.id == client.id:
             socketio.emit("stop_writing", room=otherClient.sid)
 
-def send_info_message(statusCode, message, sid, chatName = ""):
+
+def send_info_message(statusCode, message, sid, chatName=""):
     """
     Sends the given info message
     """
@@ -481,9 +503,13 @@ def send_chat_info(reciever, chatName):
     clients = []
 
     for client in chat.clients:
-        clients.append({'name': client.name, 'background': client.backgroundColor, 'userIconSource': client.userIconSource, 'id': client.id})
-    json = {'chatName': chatName, 'color': chat.color, 'imageSource': chat.imageSource, 'clients': clients}
-    if not chat.parent == None:
+        clients.append({'name': client.name,
+                        'background': client.backgroundColor,
+                       'userIconSource': client.userIconSource,
+                        'id': client.id})
+    json = {'chatName': chatName, 'color': chat.color,
+            'imageSource': chat.imageSource, 'clients': clients}
+    if chat.parent is not None:
         json["parent"] = chat.parent
     socketio.emit('chat_info', json, room=reciever.sid)
 
@@ -494,14 +520,14 @@ def broadcast_message(message, chatName, ignoreSender=True):
     """
     sender = message.sender
     json = {
-            'sender': sender.name,
-            'icon-source': sender.userIconSource,
-            'background': sender.backgroundColor,
-            'message': message.text,
-            'chatName': chatName,
-            'client-id':sender.id,
-            'id': message.id
-        }
+        'sender': sender.name,
+        'icon-source': sender.userIconSource,
+        'background': sender.backgroundColor,
+        'message': message.text,
+        'chatName': chatName,
+        'client-id': sender.id,
+        'id': message.id
+    }
 
     for client in chats[chatName].clients:
         if(not ignoreSender or not client.sid == sender.sid):
@@ -514,14 +540,14 @@ def send_message(message, reciever, chatName):
     """
     sender = message.sender
     json = {
-            'sender': sender.name,
-            'icon-source': sender.userIconSource,
-            'background': sender.backgroundColor,
-            'message': message.text,
-            'chatName': chatName,
-            'client-id':sender.id,
-            'id': message.id
-        }
+        'sender': sender.name,
+        'icon-source': sender.userIconSource,
+        'background': sender.backgroundColor,
+        'message': message.text,
+        'chatName': chatName,
+        'client-id': sender.id,
+        'id': message.id
+    }
     socketio.emit('message', json, room=reciever.sid)
 
 
@@ -529,7 +555,6 @@ def add_client(sid, name, backgroundColor, userIconSource, role):
     """
     Adds a client to the list of all clients
     """
-
     client = Client(sid, name, backgroundColor, userIconSource, role)
 
     clients.append(client)
@@ -553,10 +578,15 @@ def run():
     socketio.run(app, debug=True)
 
 
-#add bot-client
-bot_client = Client(-1, "Botten Anna", "#48B7FC", "/images/bot.svg", Roles["bot"])
+# add bot-client
+bot_client = Client(-1, "Botten Anna", "#48B7FC",
+                    "/images/bot.svg", Roles["bot"])
 clients.append(bot_client)
 grundChatt = chats["Grundchatt"]
 grundChatt.clients.append(bot_client)
-grundChatt.history.append(Message(bot_client, "Hej och välkommen till Region Östergötlands chattjänst!"))
-grundChatt.history.append(Message(bot_client, "Om jag förstår rätt så vill du prata om Liv & Hälsa. Kan du förklara lite mer vad du behöver hjälp med."))
+grundChatt.history.append(
+    Message(bot_client,
+            "Hej och välkommen till Region Östergötlands chattjänst!"))
+grundChatt.history.append(Message(
+    bot_client, "Om jag förstår rätt så vill du prata om Liv & Hälsa. " +
+    "Kan du förklara lite mer vad du behöver hjälp med."))

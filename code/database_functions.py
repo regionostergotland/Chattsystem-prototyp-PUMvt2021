@@ -1,5 +1,5 @@
 from database import db, Keyword, Questions, Bot_Phrases, User, Message, \
-                     Branch, Chatt
+    Branch, Chatt
 
 
 def init():

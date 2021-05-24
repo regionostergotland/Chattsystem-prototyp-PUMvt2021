@@ -38,20 +38,20 @@ modal.style.display = "block";
 // ---------------------- event listerners ----------------------
 
 
-btn.addEventListener("click", (e:Event) => {
+btn.addEventListener("click", (e: Event) => {
   if (pidInput.value != "") {
     //console.log(nameInput.value)
     modal.style.display = "none"
     //username = nameInput.value;
 
     socket.emit('details_assignment', {
-				name: pidInput.value,
-        backgroundColor: authColor.value,
-        userIconSource: selectedAvatarString,
-        role: "personal"
-		});
+      name: pidInput.value,
+      backgroundColor: authColor.value,
+      userIconSource: selectedAvatarString,
+      role: "personal"
+    });
 
-    socket.emit('authenticate', {pid: pidInput.value})
+    socket.emit('authenticate', { pid: pidInput.value })
   }
 });
 
@@ -59,7 +59,7 @@ btn.addEventListener("click", (e:Event) => {
 /**
  *  Sends a message when you press sendbutton
  */
-document.getElementById('createChatButton').onclick = function() {
+document.getElementById('createChatButton').onclick = function () {
 
   var nameInput = <HTMLInputElement>document.getElementById("chatNameInput");
 
@@ -67,87 +67,89 @@ document.getElementById('createChatButton').onclick = function() {
     document.getElementById("modalCreate").style.display = "none";
 
     // Request to create a chat
-    socket.emit("chat_create", {chatName: nameInput.value,
-                                color: "blue",
-                                imageSource: "/images/chat.svg",
-                                parent: selectedChatName});
+    socket.emit("chat_create", {
+      chatName: nameInput.value,
+      color: "blue",
+      imageSource: "/images/chat.svg",
+      parent: selectedChatName
+    });
 
     // Request to join the chat
-    socket.emit("chat_join", {chatName: nameInput.value});
+    socket.emit("chat_join", { chatName: nameInput.value });
   }
-}​;
+};
 
 
 /**
  * Get all users for the add user button
  */
-document.getElementById("adduserbutton").onclick = function() {
+document.getElementById("adduserbutton").onclick = function () {
   socket.emit("get_users");
   modalAdd.style.display = "block";
-};​
+};
 
 
 /**
  * Get all users for the add user button
  */
-document.getElementById("closechat").onclick = function() {
-  socket.emit("chat_end", {chatName: selectedChatName});
-};​
+document.getElementById("closechat").onclick = function () {
+  socket.emit("chat_end", { chatName: selectedChatName });
+};
 
 
 // When the user clicks the button, open the modal
-document.getElementById("createchat").onclick = function() {
+document.getElementById("createchat").onclick = function () {
   modalCreate.style.display = "block";
 }
 
 // When the user clicks the button, open the modal
-document.getElementById("answerbattery").onclick = function() {
+document.getElementById("answerbattery").onclick = function () {
   socket.emit("get_standard_questons");
   modalBattery.style.display = "block";
 }
 
 
 // When the user clicks on <span> (x), close the add user modal
-spanUser.onclick = function() {
+spanUser.onclick = function () {
   modalAdd.style.display = "none";
 }
 
 
 // When the user clicks on <span> (x), close the standard questions modal
-spanBatery.onclick = function() {
+spanBatery.onclick = function () {
   modalBattery.style.display = "none";
 }
 
 
 // When the user clicks on <span> (x), close the modal
-spanChat.onclick = function() {
+spanChat.onclick = function () {
   modalCreate.style.display = "none";
 }
 
 // When the user clicks on <span> (x), close the modal
-spanHighlight.onclick = function() {
+spanHighlight.onclick = function () {
   modalHighlight.style.display = "none";
 }
 
 
 // When the user clicks anywhere outside of the modal, close it
-window.addEventListener("click", function(event) {
+window.addEventListener("click", function (event) {
   if (event.target == modalCreate) {
     modalCreate.style.display = "none";
-  } 
+  }
   if (event.target == modalAdd) {
     modalAdd.style.display = "none";
-  } 
+  }
   if (event.target == modalBattery) {
     modalBattery.style.display = "none";
   }
 });
 
 // The onclick event for highlighting text
-highlightButton.onclick = ()=>{
+highlightButton.onclick = () => {
 
   var selection = window.getSelection();
-  if(selection.focusNode.parentElement == highlightMessageText){
+  if (selection.focusNode.parentElement == highlightMessageText) {
     var start = Math.min(selection.anchorOffset, selection.focusOffset);
     var end = Math.max(selection.anchorOffset, selection.focusOffset);
     var innerHTML = highlightMessageText.innerHTML;
@@ -159,10 +161,10 @@ highlightButton.onclick = ()=>{
 };
 
 // The onclick event for unhighlighting text
-unhighlightButton.onclick = ()=>{
+unhighlightButton.onclick = () => {
 
   var selection = window.getSelection();
-  if(selection.focusNode.parentElement == highlightMessageText){
+  if (selection.focusNode.parentElement == highlightMessageText) {
     var start = Math.min(selection.anchorOffset, selection.focusOffset);
     var end = Math.max(selection.anchorOffset, selection.focusOffset);
     var innerHTML = highlightMessageText.innerHTML;
@@ -176,8 +178,8 @@ unhighlightButton.onclick = ()=>{
 
 var highlightChatMessageId = -1;
 // The onclick event for finishing highlighting text
-highlightDoneButton.onclick = ()=>{
-  if(highlightChatMessageId != -1){
+highlightDoneButton.onclick = () => {
+  if (highlightChatMessageId != -1) {
 
     var innerHTML = highlightMessageText.innerHTML;
     innerHTML = replaceAll(innerHTML, "[", "<b>");
@@ -185,7 +187,7 @@ highlightDoneButton.onclick = ()=>{
     allMessages[highlightChatMessageId].chatBubbleDiv.children[0].innerHTML = innerHTML;
     modalHighlight.style.display = "none";
 
-    socket.emit("message_edited", {"id": highlightChatMessageId, "new-message": innerHTML});
+    socket.emit("message_edited", { "id": highlightChatMessageId, "new-message": innerHTML });
     highlightChatMessageId = -1;
 
   }
@@ -199,7 +201,7 @@ highlightDoneButton.onclick = ()=>{
  * @param pos The position at which the string will be inserted
  * @returns The new string
  */
-function insertStrAt(str:string, insertStr:string, pos: number){
+function insertStrAt(str: string, insertStr: string, pos: number) {
   return [str.slice(0, pos), insertStr, str.slice(pos)].join('');
 }
 
@@ -210,23 +212,23 @@ function insertStrAt(str:string, insertStr:string, pos: number){
  * @param pos The position at which the char will be removed from the string
  * @returns The new string
  */
-function removeCharAt(str:string, pos: number){
-  return [str.slice(0, pos), str.slice(pos+1)].join('');
+function removeCharAt(str: string, pos: number) {
+  return [str.slice(0, pos), str.slice(pos + 1)].join('');
 }
 
 /**
  * Removes all the unnecessary brackets from the highlighted text
  */
-function removeGarbage(){
+function removeGarbage() {
   var innerHTML = highlightMessageText.innerHTML;
   var bracketCounter = 0;
 
   var len = innerHTML.length;
-  for(var i = 0; i < len; i++){
-    switch(innerHTML[i]){
+  for (var i = 0; i < len; i++) {
+    switch (innerHTML[i]) {
       case "[":
         bracketCounter++;
-        if(bracketCounter != 1){
+        if (bracketCounter != 1) {
           innerHTML = removeCharAt(innerHTML, i);
           i--;
           len--;
@@ -234,7 +236,7 @@ function removeGarbage(){
         break;
       case "]":
         bracketCounter--;
-        if(bracketCounter != 0){
+        if (bracketCounter != 0) {
           innerHTML = removeCharAt(innerHTML, i);
           i--;
           len--;
@@ -253,41 +255,10 @@ function removeGarbage(){
  * @param replaceStr The string that will replace that which was removed
  * @returns The new string
  */
-function replaceAll(str:string, removeStr:string, replaceStr:string){
+function replaceAll(str: string, removeStr: string, replaceStr: string) {
   return str.split(removeStr).join(replaceStr);
 }
 
-// Not used any more
-/*
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    var str:string = xhttp.responseText;
-    str = str.split("\r").join("");
-    var questions = str.split("\n");
-    var writingInput = <HTMLInputElement>document.getElementById("writing-input");
-    questions.forEach(question => {
-      const text = question;
-      var questionButton = document.createElement('button');
-      questionButton.innerHTML = text;
-      questionButton.classList.add("question-button");
-      questionButton.onclick = ()=>{
-        modalBattery.style.display = "none";
-        writingInput.value = text;
-        writingInput.select();
-        writingInput.selectionStart = writingInput.selectionEnd = writingInput.value.length;
-
-
-        writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
-      };
-
-      questionContainer.appendChild(questionButton);
-    });
-  }
-};
-xhttp.open("GET", "resources/svarsbatteri.txt", true);
-xhttp.send();
-*/
 
 // ---------------------- Socet code -------------------------
 
@@ -295,15 +266,15 @@ xhttp.send();
 /**
  * The event that invokes when a message is recieved from the server
  */
- socket.on('message', function(data){
-	// Creates the message locally
+socket.on('message', function (data) {
+  // Creates the message locally
   var id = data['id'];
-	addMessage(data['chatName'], data['message'], data['client-id'], id, data['sender'], data['background'], data['icon-source']);
-  
+  addMessage(data['chatName'], data['message'], data['client-id'], id, data['sender'], data['background'], data['icon-source']);
+
   var messageComponent = allMessages[id];
   console.log(messageComponent.chatBubbleDiv.children[0]);
   messageComponent.chatBubbleDiv.style.cursor = "pointer";
-  messageComponent.chatBubbleDiv.onclick = ()=>{
+  messageComponent.chatBubbleDiv.onclick = () => {
     modalHighlight.style.display = "block";
     var text = messageComponent.chatBubbleDiv.children[0].innerHTML.toString();
     text = replaceAll(text, "<b>", "[");
@@ -311,14 +282,14 @@ xhttp.send();
     highlightMessageText.innerHTML = text;
     highlightChatMessageId = id;
   }
-  window.scrollTo(0,document.body.scrollHeight);
+  window.scrollTo(0, document.body.scrollHeight);
 });
 
 
 /**
  * Appends all standard questions and anwers to buttons in the a pop up window
  */
-socket.on('return_qa', function(data){
+socket.on('return_qa', function (data) {
 
   var writingInput = <HTMLInputElement>document.getElementById("writing-input");
   var container = document.getElementById("questionContainer");
@@ -330,7 +301,7 @@ socket.on('return_qa', function(data){
     button.classList.add("question-button");
     button.innerHTML = text;
 
-    button.onclick = ()=>{
+    button.onclick = () => {
       modalBattery.style.display = "none";
       writingInput.value = text.split("\n")[1];
       writingInput.select();
@@ -340,7 +311,7 @@ socket.on('return_qa', function(data){
       writingInput.setSelectionRange(writingInput.value.length, writingInput.value.length);
       writingInput.style.height = "";
       writingInput.style.height = writingInput.scrollHeight + "px";
-      chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight +"px";
+      chatMessageContainer.style.paddingBottom = document.getElementById('chat-footer').offsetHeight + "px";
     };
 
     container.appendChild(button);
@@ -351,44 +322,41 @@ socket.on('return_qa', function(data){
 
 /**
  * Append all users to the add users menu
- * // TODO: There needs to be an option to add a user for the server side
  */
-socket.on('return_users', function(data){
+socket.on('return_users', function (data) {
 
   var container = document.getElementById("userButtonList");
   removeAllChildNodes(container);
 
   var idInChat: string[] = [];
-  if(selectedChatName != ""){
+  if (selectedChatName != "") {
     var clientContainer = chatMessages[selectedChatName]["clients"];
     clientContainer.childNodes.forEach(userIconComponent => {
       idInChat.push((<HTMLElement>userIconComponent).attributes["client-id"].value);
     });
     console.log(idInChat);
     data['users'].forEach(user => {
-    
+
       var id = user["id"];
-  
-      if (user["role"] != "bot"  && !idInChat.includes(id.toString())) {
-        
+
+      if (user["role"] != "bot" && !idInChat.includes(id.toString())) {
+
         var button = document.createElement('button');
-        
+
         if (user["name"] == "anonym") {
           button.innerHTML = user["role"];
         } else {
           button.innerHTML = user["role"] + ": " + user["name"];
         }
-  
+
         // This part is not implemeted in the server side
-        button.onclick = function() {
-          socket.emit("add_user_to_chat", {chatName: selectedChatName, clientId: id});
+        button.onclick = function () {
+          socket.emit("add_user_to_chat", { chatName: selectedChatName, clientId: id });
           modalAdd.style.display = "none";
         }
-  
+
         container.appendChild(button);
       }
     });
   }
-
-  
 });

@@ -5,6 +5,6 @@
  * Dummy class
  */
 class Header {
-	
+
 }
 
