@@ -1,10 +1,10 @@
 Flask
+Flask-SQLAlchemy
+flask-socketio
 nltk
 sklearn
 numpy
 gunicorn
-flask-socketio
 eventlet
 gevent-websocket
 enum34
-Flask-SQLAlchemy
